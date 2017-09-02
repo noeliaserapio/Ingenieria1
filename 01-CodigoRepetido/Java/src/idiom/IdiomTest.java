@@ -47,8 +47,7 @@ public class IdiomTest extends TestCase {
 			customerBook.addCustomerNamed("");
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(e.getMessage(),CustomerBook.CUSTOMER_NAME_EMPTY);
-			assertTrue(customerBook.isEmpty());
+			assertEqualsMessageAndAssertCustomerBookIsEmty(e.getMessage(),CustomerBook.CUSTOMER_NAME_EMPTY);
 		}
 	}
 
@@ -58,8 +57,12 @@ public class IdiomTest extends TestCase {
 			customerBook.removeCustomerNamed("John Lennon");
 			fail();
 		} catch (IllegalArgumentException e) {
-			assertEquals(e.getMessage(),CustomerBook.INVALID_CUSTOMER_NAME);
-			assertEquals(0,customerBook.numberOfCustomers());
+			assertEqualsMessageAndAssertCustomerBookIsEmty(e.getMessage(),CustomerBook.INVALID_CUSTOMER_NAME);
 		}
+	}
+	
+	private void assertEqualsMessageAndAssertCustomerBookIsEmty(String exceptionMessage, String customerMessage){
+		assertEquals(exceptionMessage, customerMessage);
+		assertTrue(customerBook.isEmpty());  
 	}
 }
