@@ -10,6 +10,9 @@
  */
 package idiom;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
 import junit.framework.TestCase;
 
 public class IdiomTest extends TestCase {
@@ -20,25 +23,63 @@ public class IdiomTest extends TestCase {
 		customerBook = new CustomerBook ();
 	}
 	
-	public void testAddingCustomerShouldNotTakeMoreThan50Milliseconds(){
+	private void timeShouldNotTakeMoreThan(long milliseconds,String methodCustomerBook, String customer ) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		
-		long millisecondsBeforeRunning = System.currentTimeMillis();
-		customerBook.addCustomerNamed("John Lennon");
+		long millisecondsBeforeRunning = System.currentTimeMillis();	
+		Method methodMeasured = customerBook.getClass().getDeclaredMethod(methodCustomerBook,String.class);
+		methodMeasured.invoke(customerBook,customer);
 		long millisecondsAfterRunning = System.currentTimeMillis();
 		
-		assertTrue( (millisecondsAfterRunning-millisecondsBeforeRunning) < 50 );
+		assertTrue( (millisecondsAfterRunning-millisecondsBeforeRunning) < milliseconds);
+	}
+	
+	public void testAddingCustomerShouldNotTakeMoreThan50Milliseconds(){
+		
+		try {
+			timeShouldNotTakeMoreThan(50 ,"addCustomerNamed", "John Lennon" );
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 	}
 
 	public void testRemovingCustomerShouldNotTakeMoreThan100Milliseconds(){
 		String paulMcCartney = "Paul McCartney";
-		
 		customerBook.addCustomerNamed(paulMcCartney);
 
-		long millisecondsBeforeRunning = System.currentTimeMillis();
-		customerBook.removeCustomerNamed(paulMcCartney);
-		long millisecondsAfterRunning = System.currentTimeMillis();
+		try {
+			timeShouldNotTakeMoreThan(100 ,"removeCustomerNamed", paulMcCartney );
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		assertTrue( (millisecondsAfterRunning-millisecondsBeforeRunning) < 100 );
+
 	}
 	
 	public void testCanNotAddACustomerWithEmptyName (){
