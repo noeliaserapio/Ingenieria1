@@ -33,52 +33,17 @@ public class IdiomTest extends TestCase {
 		assertTrue( (millisecondsAfterRunning-millisecondsBeforeRunning) < milliseconds);
 	}
 	
-	public void testAddingCustomerShouldNotTakeMoreThan50Milliseconds(){
+	public void testAddingCustomerShouldNotTakeMoreThan50Milliseconds() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		
-		try {
-			timeShouldNotTakeMoreThan(50 ,"addCustomerNamed", "John Lennon" );
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		timeShouldNotTakeMoreThan(50 ,"addCustomerNamed", "John Lennon" );
 	
 	}
 
-	public void testRemovingCustomerShouldNotTakeMoreThan100Milliseconds(){
+	public void testRemovingCustomerShouldNotTakeMoreThan100Milliseconds() throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
 		String paulMcCartney = "Paul McCartney";
 		customerBook.addCustomerNamed(paulMcCartney);
 
-		try {
-			timeShouldNotTakeMoreThan(100 ,"removeCustomerNamed", paulMcCartney );
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
+		timeShouldNotTakeMoreThan(100 ,"removeCustomerNamed", paulMcCartney );
 
 	}
 	
