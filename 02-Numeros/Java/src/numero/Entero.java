@@ -24,7 +24,13 @@ public class Entero extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		return new Entero (value+((Entero) sumando).value());
+		if (sumando instanceof Fraccion){
+			Numero denominador =  ((Fraccion) sumando).denominador();
+			Numero numerador = this.por(denominador).mas(((Fraccion) sumando).numerador());
+			return numerador.dividido(denominador);
+		}else{
+			return new Entero (value+((Entero) sumando).value());
+		}
 	}
 
 	@Override
