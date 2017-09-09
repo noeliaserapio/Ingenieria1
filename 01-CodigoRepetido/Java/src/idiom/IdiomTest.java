@@ -10,7 +10,6 @@
  */
 package idiom;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -71,17 +70,5 @@ public class IdiomTest extends TestCase {
 	private void assertEqualsMessageAndAssertCustomerBookIsEmty(String exceptionMessage, String customerMessage){
 		assertEquals(exceptionMessage, customerMessage);
 		assertTrue(customerBook.isEmpty());  
-	}
-	
-	private void tryFunctionExceptionAndAssertCustomerBookIsEmty(String customerMessageError, String methodCustomerBook, String customer, Class<? extends Exception>  claseException) throws NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{		
-		try {
-			Method methodTry = customerBook.getClass().getDeclaredMethod(methodCustomerBook,String.class);
-			methodTry.invoke(customerBook,customer);		
-	        fail();
-	        claseException gg;//
-	    } catch (Exception(claseException) e) {
-			assertEquals(e.getMessage(), customerMessageError);
-			assertTrue(customerBook.isEmpty());
-	    }
 	}
 }
