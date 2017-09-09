@@ -91,8 +91,12 @@ public class Fraccion extends Numero {
 	
 	@Override
 	public Numero dividido(Numero divisor) {
-		Fraccion divisorAsFraccion = (Fraccion) divisor;
-		return numerador.por(divisorAsFraccion.denominador()).
-			dividido(denominador.por(divisorAsFraccion.numerador()));
+		if (divisor instanceof Fraccion){
+//			Fraccion divisorAsFraccion = (Fraccion) divisor;
+			return numerador.por(((Fraccion) divisor).denominador()).
+				dividido(denominador.por(((Fraccion) divisor).numerador()));
+		}else{
+			return this.numerador().dividido(this.denominador().por(divisor));
+		}
 	}
 }

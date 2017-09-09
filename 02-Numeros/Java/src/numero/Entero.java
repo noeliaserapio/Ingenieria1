@@ -35,12 +35,24 @@ public class Entero extends Numero {
 
 	@Override
 	public Numero por(Numero multiplicador) {
-		return new Entero (value*((Entero) multiplicador).value());
+		if (multiplicador instanceof Fraccion){
+			Numero denominador =  ((Fraccion) multiplicador).denominador();
+			Numero numerador = this.por(((Fraccion) multiplicador).numerador());
+			return numerador.dividido(denominador);
+		}else{
+			return new Entero (value*((Entero) multiplicador).value());
+		}	
 	}
 
 	@Override
 	public Numero dividido(Numero divisor) {
-		return Fraccion.dividir(this,(Entero) divisor);
+		if (divisor instanceof Fraccion){
+			Entero denominador =  ((Fraccion) divisor).numerador();
+			Entero numerador = (Entero) this.por(((Fraccion) divisor).denominador());
+			return Fraccion.dividir(numerador,denominador);
+		}else{
+			return Fraccion.dividir(this,(Entero) divisor);
+		}
 	}
 
 	@Override
