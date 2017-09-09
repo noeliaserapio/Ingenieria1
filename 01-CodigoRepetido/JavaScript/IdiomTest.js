@@ -40,7 +40,7 @@ CustomerBook.prototype.numberOfCustomers = function () {
 };
 
 CustomerBook.prototype.containsCustomerNamed = function (name) {
-    return this.customerNames.indexOf(name)!=-1;
+	return this.customerNames.indexOf(name)!=-1;
 };
 
 CustomerBook.prototype.removeCustomerNamed = function (name) {
@@ -79,7 +79,7 @@ suite('IdiomTest',function() {
     });
 
 	function tryFunctionExceptionAndAssertCustomerBookIsEmty(customerMessageError, methodCustomerBook, customer, typeException){
-		 try {
+		try {
             methodCustomerBook(customer);
             fail();
         } catch (e) {
