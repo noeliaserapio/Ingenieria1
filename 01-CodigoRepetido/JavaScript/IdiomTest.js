@@ -60,24 +60,21 @@ suite('IdiomTest',function() {
         customerBook = new CustomerBook();
     });
 	
+	function addCustomerClousure( customer ){
+		customerBook.addCustomerNamed(customer);
+	}
+	
+	function removeCustomerClousure( customer ){
+		customerBook.removeCustomerNamed(customer);
+	}
+	
 	function timeShouldNotTakeMoreThan( milliseconds, methodCustomerBook, customer ){
         var millisecondsBeforeRunning = new Date().getTime();
         methodCustomerBook(customer);
         var millisecondsAfterRunning = new Date().getTime();
 		assert((millisecondsAfterRunning - millisecondsBeforeRunning) < milliseconds);
 	}
-
-    test('AddingCustomerShouldNotTakeMoreThan50Milliseconds', function () {	
-		timeShouldNotTakeMoreThan( 50, customerBook.addCustomerNamed, "John Lennon" )	
-		
-    });
-
-    test('RemovingCustomerShouldNotTakeMoreThan100Milliseconds', function () {
-        var paulMcCartney = "Paul McCartney";
-        customerBook.addCustomerNamed(paulMcCartney);		
-		timeShouldNotTakeMoreThan( 100, customerBook.removeCustomerNamed, paulMcCartney );		
-    });
-
+	
 	function tryFunctionExceptionAndAssertCustomerBookIsEmty(customerMessageError, methodCustomerBook, customer, typeException){
 		try {
             methodCustomerBook(customer);
@@ -91,12 +88,23 @@ suite('IdiomTest',function() {
                 throw e;
         }
 	}
-		
+
+    test('AddingCustomerShouldNotTakeMoreThan50Milliseconds', function () {	
+		timeShouldNotTakeMoreThan( 50, addCustomerClousure, "John Lennon" );
+    });
+
+    test('RemovingCustomerShouldNotTakeMoreThan100Milliseconds', function () {
+        var paulMcCartney = "Paul McCartney";
+        customerBook.addCustomerNamed(paulMcCartney);		
+		timeShouldNotTakeMoreThan( 100, removeCustomerClousure, paulMcCartney );		
+    });
+	
     test('CanNotAddACustomerWithEmptyName', function () {	
-        tryFunctionExceptionAndAssertCustomerBookIsEmty(CustomerBook.prototype.CUSTOMER_NAME_EMPTY,customerBook.addCustomerNamed,"",Error);
+        tryFunctionExceptionAndAssertCustomerBookIsEmty(CustomerBook.prototype.CUSTOMER_NAME_EMPTY,addCustomerClousure,"",Error);
     });
 
     test('CanNotRemoveNotAddedCustomers', function () {	
-		tryFunctionExceptionAndAssertCustomerBookIsEmty(CustomerBook.prototype.INVALID_CUSTOMER_NAME,customerBook.removeCustomerNamed,"John Lennon",IllegalArgumentException);	
+		tryFunctionExceptionAndAssertCustomerBookIsEmty(CustomerBook.prototype.INVALID_CUSTOMER_NAME,removeCustomerClousure,"John Lennon",IllegalArgumentException);	
     });
+	
 });
