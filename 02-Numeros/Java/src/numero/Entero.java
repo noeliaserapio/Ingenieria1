@@ -24,7 +24,7 @@ public class Entero extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		return sumando.sumarEntero(this);
+		return sumando.sumar(this);
 //		if (sumando instanceof Fraccion){
 //			Numero denominador =  ((Fraccion) sumando).denominador();
 //			Numero numerador = this.por(denominador).mas(((Fraccion) sumando).numerador());
@@ -95,12 +95,12 @@ public class Entero extends Numero {
 	}
 
 	@Override
-	public Numero sumarEntero(Entero sumando) {
+	public Numero sumar(Entero sumando) {
 		return new Entero (value+ sumando.value());
 	}
 
 	@Override
-	public Numero sumarFraccion(Fraccion sumando) {
+	public Numero sumar(Fraccion sumando) {
 		Numero denominador =  sumando.denominador();
 		Numero numerador = this.por(denominador).mas(sumando.numerador());
 		return numerador.dividido(denominador);

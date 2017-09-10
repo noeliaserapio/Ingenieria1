@@ -76,7 +76,7 @@ public class Fraccion extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		return sumando.sumarFraccion(this);
+		return sumando.sumar(this);
 //		Fraccion sumandoAsFraccion = (Fraccion) sumando;
 //		return numerador.por(sumandoAsFraccion.denominador()).
 //				mas(denominador.por(sumandoAsFraccion.numerador())).
@@ -102,14 +102,14 @@ public class Fraccion extends Numero {
 	}
 
 	@Override
-	public Numero sumarEntero(Entero sumando) {
+	public Numero sumar(Entero sumando) {
 		Numero denominador =  this.denominador();
 		Numero numerador = sumando.por(denominador).mas(this.numerador());
 		return numerador.dividido(denominador);
 	}
 
 	@Override
-	public Numero sumarFraccion(Fraccion sumando) {	
+	public Numero sumar(Fraccion sumando) {	
 		return numerador.por(sumando.denominador()).
 				mas(denominador.por(sumando.numerador())).
 			dividido(denominador.por(sumando.denominador()));
