@@ -76,10 +76,11 @@ public class Fraccion extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		Fraccion sumandoAsFraccion = (Fraccion) sumando;
-		return numerador.por(sumandoAsFraccion.denominador()).
-				mas(denominador.por(sumandoAsFraccion.numerador())).
-			dividido(denominador.por(sumandoAsFraccion.denominador()));
+		return sumando.sumarFraccion(this);
+//		Fraccion sumandoAsFraccion = (Fraccion) sumando;
+//		return numerador.por(sumandoAsFraccion.denominador()).
+//				mas(denominador.por(sumandoAsFraccion.numerador())).
+//			dividido(denominador.por(sumandoAsFraccion.denominador()));
 	}
 
 	@Override
@@ -98,5 +99,19 @@ public class Fraccion extends Numero {
 		}else{
 			return this.numerador().dividido(this.denominador().por(divisor));
 		}
+	}
+
+	@Override
+	public Numero sumarEntero(Entero sumando) {
+		Numero denominador =  this.denominador();
+		Numero numerador = sumando.por(denominador).mas(this.numerador());
+		return numerador.dividido(denominador);
+	}
+
+	@Override
+	public Numero sumarFraccion(Fraccion sumando) {	
+		return numerador.por(sumando.denominador()).
+				mas(denominador.por(sumando.numerador())).
+			dividido(denominador.por(sumando.denominador()));
 	}
 }
