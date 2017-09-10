@@ -85,9 +85,13 @@ public class Fraccion extends Numero {
 
 	@Override
 	public Numero por(Numero multiplicador) {
-		Fraccion multiplicadorAsFraccion = (Fraccion) multiplicador;
-		return numerador.por(multiplicadorAsFraccion.numerador()).
-			dividido(denominador.por(multiplicadorAsFraccion.denominador()));
+		if (multiplicador instanceof Fraccion) {
+			Fraccion multiplicadorAsFraccion = (Fraccion) multiplicador;
+			return numerador.por(multiplicadorAsFraccion.numerador()).
+					dividido(denominador.por(multiplicadorAsFraccion.denominador()));
+		}else{
+			return numerador.por(multiplicador).dividido(denominador);
+		}
 	}
 	
 	@Override
