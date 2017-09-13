@@ -76,7 +76,7 @@ public class Fraccion extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		return sumando.sumar(this);
+		return sumando.sumarFraccion(this);
 //		Fraccion sumandoAsFraccion = (Fraccion) sumando;
 //		return numerador.por(sumandoAsFraccion.denominador()).
 //				mas(denominador.por(sumandoAsFraccion.numerador())).
@@ -96,26 +96,41 @@ public class Fraccion extends Numero {
 	
 	@Override
 	public Numero dividido(Numero divisor) {
-		if (divisor instanceof Fraccion){
-//			Fraccion divisorAsFraccion = (Fraccion) divisor;
-			return numerador.por(((Fraccion) divisor).denominador()).
-				dividido(denominador.por(((Fraccion) divisor).numerador()));
-		}else{
-			return this.numerador().dividido(this.denominador().por(divisor));
-		}
+		return divisor.dividirFraccion(this);
+//		if (divisor instanceof Fraccion){
+////			Fraccion divisorAsFraccion = (Fraccion) divisor;
+//			return numerador.por(((Fraccion) divisor).denominador()).
+//				dividido(denominador.por(((Fraccion) divisor).numerador()));
+//		}else{
+//			return this.numerador().dividido(this.denominador().por(divisor));
+//		}
 	}
 
 	@Override
-	public Numero sumar(Entero sumando) {
+	public Numero sumarEntero(Entero sumando) {
 		Numero denominador =  this.denominador();
 		Numero numerador = sumando.por(denominador).mas(this.numerador());
 		return numerador.dividido(denominador);
 	}
 
 	@Override
-	public Numero sumar(Fraccion sumando) {	
+	public Numero sumarFraccion(Fraccion sumando) {	
 		return numerador.por(sumando.denominador()).
 				mas(denominador.por(sumando.numerador())).
 			dividido(denominador.por(sumando.denominador()));
+	}
+
+	@Override
+	public Numero dividirEntero(Entero dividendo) {
+		Entero numerador =  (Entero) dividendo.por(this.denominador());
+		Entero denominador = this.numerador();
+		return Fraccion.dividir(numerador,denominador);
+	}
+
+	@Override
+	public Numero dividirFraccion(Fraccion dividendo) {
+		Entero numerador =  (Entero) dividendo.numerador().por(this.denominador());
+		Entero denominador = (Entero) dividendo.denominador().por(this.numerador());
+		return Fraccion.dividir(numerador,denominador);
 	}
 }

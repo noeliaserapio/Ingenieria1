@@ -19,8 +19,11 @@ public abstract class Numero {
 	public abstract Numero por(Numero multiplicador);
 	public abstract Numero dividido(Numero divisor);
 	
-	public abstract Numero sumar(Entero sumando);
-	public abstract Numero sumar(Fraccion sumando);
+	public abstract Numero sumarEntero(Entero sumando);
+	public abstract Numero sumarFraccion(Fraccion sumando);
+	
+	public abstract Numero dividirEntero(Entero dividendo);
+	public abstract Numero dividirFraccion(Fraccion dividendo);
 	
 	public static final String DESCRIPCION_DE_ERROR_NO_SE_PUEDE_DIVIDIR_POR_CERO = "No se puede dividir por cero";
 	

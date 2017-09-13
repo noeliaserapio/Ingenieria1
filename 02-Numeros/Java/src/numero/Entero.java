@@ -24,7 +24,7 @@ public class Entero extends Numero {
 	
 	@Override
 	public Numero mas(Numero sumando) {
-		return sumando.sumar(this);
+		return sumando.sumarEntero(this);
 //		if (sumando instanceof Fraccion){
 //			Numero denominador =  ((Fraccion) sumando).denominador();
 //			Numero numerador = this.por(denominador).mas(((Fraccion) sumando).numerador());
@@ -47,13 +47,15 @@ public class Entero extends Numero {
 
 	@Override
 	public Numero dividido(Numero divisor) {
-		if (divisor instanceof Fraccion){
-			Entero denominador =  ((Fraccion) divisor).numerador();
-			Entero numerador = (Entero) this.por(((Fraccion) divisor).denominador());
-			return Fraccion.dividir(numerador,denominador);
-		}else{
-			return Fraccion.dividir(this,(Entero) divisor);
-		}
+		return divisor.dividirEntero(this);
+		
+//		if (divisor instanceof Fraccion){
+//			Entero denominador =  ((Fraccion) divisor).numerador();
+//			Entero numerador = (Entero) this.por(((Fraccion) divisor).denominador());
+//			return Fraccion.dividir(numerador,denominador);
+//		}else{
+//			return Fraccion.dividir(this,(Entero) divisor);
+//		}
 	}
 
 	@Override
@@ -95,15 +97,27 @@ public class Entero extends Numero {
 	}
 
 	@Override
-	public Numero sumar(Entero sumando) {
+	public Numero sumarEntero(Entero sumando) {
 		return new Entero (value+ sumando.value());
 	}
 
 	@Override
-	public Numero sumar(Fraccion sumando) {
+	public Numero sumarFraccion(Fraccion sumando) {
 		Numero denominador =  sumando.denominador();
 		Numero numerador = this.por(denominador).mas(sumando.numerador());
 		return numerador.dividido(denominador);
+	}
+
+	@Override
+	public Numero dividirEntero(Entero dividendo) {
+		return Fraccion.dividir(dividendo,this);
+	}
+
+	@Override
+	public Numero dividirFraccion(Fraccion dividendo) {
+		Entero numerador =  dividendo.numerador();
+		Entero denominador = (Entero) this.por(dividendo.denominador());
+		return Fraccion.dividir(numerador,denominador);
 	}
 
 }
