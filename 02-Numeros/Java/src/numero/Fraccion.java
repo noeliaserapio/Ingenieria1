@@ -85,13 +85,14 @@ public class Fraccion extends Numero {
 
 	@Override
 	public Numero por(Numero multiplicador) {
-		if (multiplicador instanceof Fraccion) {
-			Fraccion multiplicadorAsFraccion = (Fraccion) multiplicador;
-			return numerador.por(multiplicadorAsFraccion.numerador()).
-					dividido(denominador.por(multiplicadorAsFraccion.denominador()));
-		}else{
-			return numerador.por(multiplicador).dividido(denominador);
-		}
+		return multiplicador.multiplicarFraccion(this);
+	//	if (multiplicador instanceof Fraccion) {
+	//		Fraccion multiplicadorAsFraccion = (Fraccion) multiplicador;
+	//		return numerador.por(multiplicadorAsFraccion.numerador()).
+	//				dividido(denominador.por(multiplicadorAsFraccion.denominador()));
+	//	}else{
+	//		return numerador.por(multiplicador).dividido(denominador);
+	//	}
 	}
 	
 	@Override
@@ -108,9 +109,10 @@ public class Fraccion extends Numero {
 
 	@Override
 	public Numero sumarEntero(Entero sumando) {
-		Numero denominador =  this.denominador();
-		Numero numerador = sumando.por(denominador).mas(this.numerador());
-		return numerador.dividido(denominador);
+		return sumando.sumarFraccion(this);
+	//	Numero denominador =  this.denominador();
+	//	Numero numerador = sumando.por(denominador).mas(this.numerador());
+	//	return numerador.dividido(denominador);
 	}
 
 	@Override
@@ -118,6 +120,19 @@ public class Fraccion extends Numero {
 		return numerador.por(sumando.denominador()).
 				mas(denominador.por(sumando.numerador())).
 			dividido(denominador.por(sumando.denominador()));
+	}
+	
+	@Override
+	public Numero multiplicarEntero(Entero multiplicador) {
+		return multiplicador.multiplicarFraccion(this);
+	//	return numerador.por(multiplicador).dividido(denominador);
+	}
+
+	@Override
+	public Numero multiplicarFraccion(Fraccion multiplicador) {
+		Fraccion multiplicadorAsFraccion = (Fraccion) multiplicador;
+		return numerador.por(multiplicadorAsFraccion.numerador()).
+				dividido(denominador.por(multiplicadorAsFraccion.denominador()));
 	}
 
 	@Override
@@ -133,4 +148,5 @@ public class Fraccion extends Numero {
 		Entero denominador = (Entero) dividendo.denominador().por(this.numerador());
 		return Fraccion.dividir(numerador,denominador);
 	}
+
 }

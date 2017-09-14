@@ -22,6 +22,9 @@ public abstract class Numero {
 	public abstract Numero sumarEntero(Entero sumando);
 	public abstract Numero sumarFraccion(Fraccion sumando);
 	
+	public abstract Numero multiplicarEntero(Entero multiplicador);
+	public abstract Numero multiplicarFraccion(Fraccion multiplicador);
+	
 	public abstract Numero dividirEntero(Entero dividendo);
 	public abstract Numero dividirFraccion(Fraccion dividendo);
 	

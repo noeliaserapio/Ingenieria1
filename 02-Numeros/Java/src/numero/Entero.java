@@ -36,13 +36,14 @@ public class Entero extends Numero {
 
 	@Override
 	public Numero por(Numero multiplicador) {
-		if (multiplicador instanceof Fraccion){
-			Numero denominador =  ((Fraccion) multiplicador).denominador();
-			Numero numerador = this.por(((Fraccion) multiplicador).numerador());
-			return numerador.dividido(denominador);
-		}else{
-			return new Entero (value*((Entero) multiplicador).value());
-		}	
+		return multiplicador.multiplicarEntero(this);
+	//	if (multiplicador instanceof Fraccion){
+	//		Numero denominador =  ((Fraccion) multiplicador).denominador();
+	//		Numero numerador = this.por(((Fraccion) multiplicador).numerador());
+	//		return numerador.dividido(denominador);
+	//	}else{
+	//		return new Entero (value*((Entero) multiplicador).value());
+	//	}	
 	}
 
 	@Override
@@ -105,6 +106,18 @@ public class Entero extends Numero {
 	public Numero sumarFraccion(Fraccion sumando) {
 		Numero denominador =  sumando.denominador();
 		Numero numerador = this.por(denominador).mas(sumando.numerador());
+		return numerador.dividido(denominador);
+	}
+	
+	@Override
+	public Numero multiplicarEntero(Entero multiplicador) {
+		return new Entero (value*((Entero) multiplicador).value());
+	}
+
+	@Override
+	public Numero multiplicarFraccion(Fraccion multiplicador) {
+		Numero denominador =  ((Fraccion) multiplicador).denominador();
+		Numero numerador = this.por(((Fraccion) multiplicador).numerador());
 		return numerador.dividido(denominador);
 	}
 
