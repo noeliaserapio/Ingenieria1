@@ -111,13 +111,13 @@ public class Entero extends Numero {
 	
 	@Override
 	public Numero multiplicarEntero(Entero multiplicador) {
-		return new Entero (value*((Entero) multiplicador).value());
+		return new Entero (value*multiplicador.value());
 	}
 
 	@Override
 	public Numero multiplicarFraccion(Fraccion multiplicador) {
-		Numero denominador =  ((Fraccion) multiplicador).denominador();
-		Numero numerador = this.por(((Fraccion) multiplicador).numerador());
+		Numero denominador =  multiplicador.denominador();
+		Numero numerador = this.por(multiplicador.numerador());
 		return numerador.dividido(denominador);
 	}
 
