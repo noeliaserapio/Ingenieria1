@@ -10,33 +10,51 @@
  */
 package stack;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Stack {
 
+	private List<Object> stack;
+	
 	public static final String STACK_EMPTY_DESCRIPTION = "Stack is Empty";
+	
+	public Stack()
+	{
+		stack = new ArrayList<Object>();
+	}
 
 	public void push (Object anObject)
 	{
-		shouldImplement();
+		stack.add(anObject);
 	}
 	
-	public Object pop()
+	public Object pop() throws Exception 
 	{
-		return shouldImplement();
+		if(this.isEmpty()){	
+			throw new Exception (STACK_EMPTY_DESCRIPTION);	
+		}else{
+			return stack.remove(this.size()-1);
+		}
 	}
 	
-	public Object top()
+	public Object top() throws Exception 
 	{
-		return shouldImplement();
+		if(this.isEmpty()){			
+			throw new Exception (STACK_EMPTY_DESCRIPTION);
+		}else{
+			return stack.get(this.size()-1);
+		}
 	}
 
 	public Boolean isEmpty()
 	{
-		return true;
+		return stack.isEmpty();
 	}
 
 	public Integer size()
 	{
-		return (Integer) shouldImplement();
+		return stack.size();
 	}
 	
 	private Object shouldImplement()

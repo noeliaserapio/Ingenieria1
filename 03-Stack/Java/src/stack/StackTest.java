@@ -27,7 +27,7 @@ public class StackTest extends TestCase {
 		assertFalse(stack.isEmpty());
 	}
 
-	public void testPopRemovesElementsFromTheStack(){
+	public void testPopRemovesElementsFromTheStack() throws Exception{
 		Stack stack = new Stack();
 		stack.push("Something");
 		stack.pop();
@@ -35,14 +35,14 @@ public class StackTest extends TestCase {
 		assertTrue(stack.isEmpty());
 	}
 	
-	public void testPopReturnsLastPushedObject(){
+	public void testPopReturnsLastPushedObject() throws Exception{
 		Stack stack = new Stack();
 		String pushedObject = "Something";
 		stack.push(pushedObject);
 		assertEquals(pushedObject, stack.pop());
 	}
 
-	public void testStackBehavesLIFO (){
+	public void testStackBehavesLIFO () throws Exception{
 		String firstPushed = "First";
 		String secondPushed = "Second";
 		Stack stack = new Stack();
@@ -54,7 +54,7 @@ public class StackTest extends TestCase {
 		assertTrue(stack.isEmpty());
 	}
 
-	public void testTopReturnsLastPushedObject(){
+	public void testTopReturnsLastPushedObject() throws Exception{
 		Stack stack = new Stack();
 		String pushedObject = "Something";
 
@@ -63,7 +63,7 @@ public class StackTest extends TestCase {
 		assertEquals(pushedObject, stack.top());
 	}
 
-	public void testTopDoesNotRemoveObjectFromStack(){
+	public void testTopDoesNotRemoveObjectFromStack() throws Exception{
 		Stack stack = new Stack();
 		String pushedObject = "Something";
 
