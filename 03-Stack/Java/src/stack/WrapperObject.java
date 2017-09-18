@@ -2,22 +2,20 @@ package stack;
 
 public class WrapperObject {
 	
-
-	private Object objeto;
-	private StackState stateAnterior;
+	private Object object;
+	private StackState previousState;
 	
-	public WrapperObject(Object objeto, StackState stateAnterior) {
-		this.objeto = objeto;
-		this.stateAnterior = stateAnterior;
+	public WrapperObject(Object anObject, StackState aPreviousState) {
+		this.object = anObject;
+		this.previousState = aPreviousState;
 	}
 
-	public Object getObjeto() {
-		return objeto;
+	public Object getObjet() {
+		return object;
 	}
 
-	public StackState getStateAnterior() {
-		return stateAnterior;
+	public StackState getPreviousState() {
+		return previousState;
 	}
 	
-
 }

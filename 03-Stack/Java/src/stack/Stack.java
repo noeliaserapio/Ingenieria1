@@ -18,7 +18,7 @@ public class Stack {
 	
 	public Stack()
 	{
-		state = new StackVaciaState(this);
+		state = new StackEmptyState(this);
 	}
 
 	public void push (Object anObject)
