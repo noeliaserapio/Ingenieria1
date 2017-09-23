@@ -18,7 +18,7 @@ public class Portfolio implements SummarizingAccount{
 	public static final String ACCOUNT_NOT_MANAGED = "No se maneja esta cuenta";
 	public static final String ACCOUNT_ALREADY_MANAGED = "La cuenta ya está manejada por otro portfolio";
 	
-	private ArrayList<SummarizingAccount> sumarizingAccounts = new ArrayList<SummarizingAccount>();
+	private List<SummarizingAccount> sumarizingAccounts = new ArrayList<SummarizingAccount>();
 	
 	
 	
@@ -48,7 +48,13 @@ public class Portfolio implements SummarizingAccount{
 	}
 
 	public List<AccountTransaction> transactionsOf(SummarizingAccount account) {
-		throw new UnsupportedOperationException();
+		List<AccountTransaction> accountTransactionResult = new ArrayList<AccountTransaction>();
+		if(this.manages(account)){
+			accountTransactionResult.addAll(account.transactions());
+		}else{
+			throw new RuntimeException(ACCOUNT_NOT_MANAGED);
+		}
+		return accountTransactionResult;
 	}
 	
 	public boolean manages(SummarizingAccount account) {
