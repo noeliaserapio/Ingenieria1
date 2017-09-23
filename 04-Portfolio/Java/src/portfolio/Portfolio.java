@@ -42,7 +42,10 @@ public class Portfolio implements SummarizingAccount{
 	}
 	
 	public boolean registers(AccountTransaction transaction) {
-		throw new UnsupportedOperationException();
+		for(SummarizingAccount account :sumarizingAccounts){
+			if(account.registers(transaction)) return true;
+		}
+		return false;
 	}
 
 	public List<AccountTransaction> transactionsOf(SummarizingAccount account) {
