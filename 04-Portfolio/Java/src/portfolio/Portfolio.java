@@ -11,7 +11,6 @@
 package portfolio;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 public class Portfolio implements SummarizingAccount{
@@ -53,14 +52,26 @@ public class Portfolio implements SummarizingAccount{
 	}
 	
 	public boolean manages(SummarizingAccount account) {
-		throw new UnsupportedOperationException();
+		if(this == account){
+			return true;
+		}else{
+			for(SummarizingAccount summAccount :sumarizingAccounts){
+				if(summAccount.manages(account)) return true;
+			}
+			return false;	
+		}
 	}
 	
 	public List<AccountTransaction> transactions() {
-		throw new UnsupportedOperationException();
+		List<AccountTransaction> accountTransactionResult = new ArrayList<AccountTransaction>();
+		for(SummarizingAccount account :sumarizingAccounts){
+			accountTransactionResult.addAll(account.transactions());
+		}
+		return accountTransactionResult;
 	}
 
 	public void addAccount(SummarizingAccount anAccount) {
+		if(this.manages(anAccount)) throw new RuntimeException(ACCOUNT_ALREADY_MANAGED);
 		sumarizingAccounts.add(anAccount);
 	}
 }
