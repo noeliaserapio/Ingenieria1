@@ -19,16 +19,26 @@ public class Portfolio implements SummarizingAccount{
 	public static final String ACCOUNT_NOT_MANAGED = "No se maneja esta cuenta";
 	public static final String ACCOUNT_ALREADY_MANAGED = "La cuenta ya está manejada por otro portfolio";
 	
+	private ArrayList<SummarizingAccount> sumarizingAccounts = new ArrayList<SummarizingAccount>();
+	
+	
+	
 	public static Portfolio createWith(SummarizingAccount anAccount1, SummarizingAccount anAccount2) {
-		throw new UnsupportedOperationException();
+		Portfolio aPortfolio = new Portfolio();
+		aPortfolio.addAccount(anAccount1);
+		aPortfolio.addAccount(anAccount2);
+		return aPortfolio;
 	}
 
 	public Portfolio(){
-		throw new UnsupportedOperationException();
 	}
 
 	public double balance() {
-		throw new UnsupportedOperationException();
+		double balance = 0.0;
+		for(SummarizingAccount account :sumarizingAccounts){
+			balance += account.balance();
+		}
+		return balance;
 	}
 	
 	public boolean registers(AccountTransaction transaction) {
@@ -48,6 +58,6 @@ public class Portfolio implements SummarizingAccount{
 	}
 
 	public void addAccount(SummarizingAccount anAccount) {
-		throw new UnsupportedOperationException();
+		sumarizingAccounts.add(anAccount);
 	}
 }
