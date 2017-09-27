@@ -221,4 +221,64 @@ public class PortfolioTest {
 			assertEquals(Portfolio.ACCOUNT_ALREADY_MANAGED, invalidPortfolio.getMessage()); 
 		}
 	}
+	
+	@Test
+	public void test16PortfolioKnowsItsAccountsTransactions(){
+		
+		
+		ReceptiveAccount account1 = new ReceptiveAccount ();
+		ReceptiveAccount account2 = new ReceptiveAccount ();
+		ReceptiveAccount  account3 =  new ReceptiveAccount ();
+		Portfolio complexPortfolio = Portfolio.createWith(account1,account2);
+		
+		Portfolio composedPortfolio = Portfolio.createWith(complexPortfolio,account3);
+		
+		Deposit deposit1 = Deposit.registerForOn(100,account1);
+			
+		assertTrue(1 == composedPortfolio.transactionsOf(account1).size());
+		assertTrue((composedPortfolio.transactionsOf(account1)).contains(deposit1));
+		
+	} 
+	
+	@Test
+	public void test17PortfolioKnowsItsPortfoliosTransactions (){
+
+		ReceptiveAccount account1 = new ReceptiveAccount ();
+		ReceptiveAccount account2 = new ReceptiveAccount ();
+		ReceptiveAccount account3 = new ReceptiveAccount ();
+		Portfolio complexPortfolio = Portfolio.createWith(account1,account2);
+		Portfolio composedPortfolio = Portfolio.createWith(complexPortfolio,account3);
+		
+		Deposit deposit1 = Deposit.registerForOn(100,account1);
+		Deposit deposit2 = Deposit.registerForOn(100,account2);
+		Deposit register = Deposit.registerForOn(100,account3);
+
+		assertTrue(2 == composedPortfolio.transactionsOf(complexPortfolio).size());
+		assertTrue((composedPortfolio.transactionsOf(complexPortfolio)).contains(deposit1));
+		assertTrue((composedPortfolio.transactionsOf(complexPortfolio)).contains(deposit2));
+	
+
+	}
+	
+	@Test
+	public void  test18PortfolioCanNotAnswerTransactionsOfNotManagedAccounts () {
+
+	
+	
+		ReceptiveAccount account1 = new ReceptiveAccount ();
+		ReceptiveAccount account2 = new ReceptiveAccount ();
+		ReceptiveAccount account3 = new ReceptiveAccount ();
+		Portfolio complexPortfolio = Portfolio.createWith(account1,account2);
+		
+		try{
+		complexPortfolio.transactionsOf(account3);
+		fail();
+		}catch(RuntimeException accountNotManaged){
+			assertEquals(Portfolio.ACCOUNT_NOT_MANAGED, accountNotManaged.getMessage()); 
+		}
+	
+	
+
+	}
+	
 }

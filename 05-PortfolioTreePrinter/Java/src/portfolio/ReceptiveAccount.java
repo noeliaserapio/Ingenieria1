@@ -20,7 +20,11 @@ public class ReceptiveAccount implements SummarizingAccount {
 	public double balance() {
 		double balance = 0.0;
 		for (AccountTransaction transaction : transactions) {
-			balance = balance + transaction.value();
+			if(transaction instanceof Withdraw){
+				balance = balance - transaction.value();
+			}else{
+				balance = balance + transaction.value();
+			}
 		}
 		
 		return balance;
