@@ -1,6 +1,6 @@
 package portfolio;
 
-public class TransferAccountTransactionDeposit extends TransferLeg{
+public class TransferAccountTransactionDeposit implements TransferLeg{
 
 	private double value;
 	private Transfer trans;
