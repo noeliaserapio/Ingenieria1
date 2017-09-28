@@ -29,6 +29,11 @@ public class Deposit implements AccountTransaction {
 	public double value() {
 		return value;
 	}
+	
+	public double sumar() {
+		return value;
+	}
 
+	
 }
 

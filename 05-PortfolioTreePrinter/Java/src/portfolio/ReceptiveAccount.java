@@ -17,14 +17,12 @@ public class ReceptiveAccount implements SummarizingAccount {
 
 	private ArrayList<AccountTransaction> transactions = new ArrayList<AccountTransaction>();
 	
+	
 	public double balance() {
 		double balance = 0.0;
 		for (AccountTransaction transaction : transactions) {
-			if(transaction instanceof Withdraw){
-				balance = balance - transaction.value();
-			}else{
-				balance = balance + transaction.value();
-			}
+
+				balance = balance + transaction.sumar();
 		}
 		
 		return balance;

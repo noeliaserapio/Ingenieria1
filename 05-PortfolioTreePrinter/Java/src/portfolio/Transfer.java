@@ -11,22 +11,52 @@
 package portfolio;
 
 public class Transfer {
+	
+	private double value;
+
+	private TransferAccountTransactionDeposit transactionDeposit;
+	private TransferAccountTransactionDraw transactionDraw;
 
 	public static Transfer registerFor(double value, ReceptiveAccount fromAccount,
 			ReceptiveAccount toAccount) {
-		throw new UnsupportedOperationException();
+
+		Transfer transf = new Transfer(value);
+		
+		TransferAccountTransactionDeposit nuevaTransactionDeposit = new TransferAccountTransactionDeposit(value,transf);
+		TransferAccountTransactionDraw nuevaTransactionDraw = new TransferAccountTransactionDraw(value,transf);
+		
+		transf.setTransactionDeposit(nuevaTransactionDeposit);
+		transf.setTransactionDraw(nuevaTransactionDraw);
+		
+		fromAccount.register(nuevaTransactionDraw);
+		toAccount.register(nuevaTransactionDeposit);
+		
+		return transf;
 	}
 
 	public double value() {
-		throw new UnsupportedOperationException();
+		return value;
+	}
+	
+	public Transfer (double value) {
+		this.value = value;
+	}
+	
+	public void setTransactionDeposit(TransferAccountTransactionDeposit transactionDeposit) {
+		this.transactionDeposit = transactionDeposit;
 	}
 
+	public void setTransactionDraw(TransferAccountTransactionDraw transactionDraw) {
+		this.transactionDraw = transactionDraw;
+	}
+
+
 	public TransferLeg depositLeg() {
-		throw new UnsupportedOperationException();
+		return transactionDeposit;
 	}
 	
 	public TransferLeg withdrawLeg() {
-		throw new UnsupportedOperationException();
+		return transactionDraw;
 	}
 
 

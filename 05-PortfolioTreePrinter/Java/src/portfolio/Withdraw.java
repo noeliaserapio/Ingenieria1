@@ -28,5 +28,9 @@ public class Withdraw implements AccountTransaction {
 	public double value() {
 		return value;
 	}
+	
+	public double sumar() {
+		return -value;
+	}
 
 }

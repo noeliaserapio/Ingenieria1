@@ -13,4 +13,5 @@ package portfolio;
 public interface AccountTransaction {
 
 	public double value();
+	public double sumar();
 } 

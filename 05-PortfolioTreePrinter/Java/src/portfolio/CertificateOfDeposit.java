@@ -22,4 +22,10 @@ public class CertificateOfDeposit implements AccountTransaction {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public double sumar() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
