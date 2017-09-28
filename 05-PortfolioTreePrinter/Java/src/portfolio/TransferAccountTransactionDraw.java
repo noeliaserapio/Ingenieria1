@@ -1,6 +1,6 @@
 package portfolio;
 
-public class TransferAccountTransactionDraw extends TransferLeg{
+public class TransferAccountTransactionDraw implements TransferLeg{
 
 	private double value;
 	private Transfer trans;
