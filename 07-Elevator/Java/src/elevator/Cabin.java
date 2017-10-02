@@ -9,11 +9,17 @@ public class Cabin {
 	private Motor motor;
 	private int currentFloorNumber;
 	
+	// Nuevo
+	private boolean isStopped;
+	
 	public Cabin(Elevator elevator) {
 		this.elevator = elevator;
 		this.door = new CabinDoor(this);
 		this.motor = new Motor();
 		currentFloorNumber = 0;
+		
+		// Nuevo
+		isStopped = true;
 	}
 
 	public int currentFloorNumber() {
@@ -22,7 +28,7 @@ public class Cabin {
 
 	//Cabin State
 	public boolean isStopped() {
-		throw new UnsupportedOperationException();
+		return isStopped;
 	}
 
 	public boolean isMoving() {

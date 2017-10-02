@@ -6,15 +6,21 @@ public class CabinDoor {
 	
 	private Cabin cabin;
 	private Motor motor;
+	
+	// Nuevo
+	private boolean isOpened;
 
 	public CabinDoor(Cabin cabin) {
 		this.cabin = cabin;
 		this.motor = new Motor();
+		
+		// Nuevo
+		isOpened = true;
 	}
 
 	//State
 	public boolean isOpened() {
-		throw new UnsupportedOperationException();
+		return isOpened;
 	}
 
 	public boolean isOpening() {

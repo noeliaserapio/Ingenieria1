@@ -24,7 +24,7 @@ public class Elevator {
 
 	//Elevator state
 	public boolean isIdle() {
-		throw new UnsupportedOperationException();
+		return cabin.isStopped();
 	}
 
 	public boolean isWorking() {
