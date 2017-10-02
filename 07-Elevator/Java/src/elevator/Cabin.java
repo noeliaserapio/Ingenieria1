@@ -9,8 +9,14 @@ public class Cabin {
 	private Motor motor;
 	private int currentFloorNumber;
 	
+	enum CabinState {
+		STOPPED,
+		MOVING,
+		WAITING_FOR_PEOPLE
+	};
+	
 	// Nuevo
-	private boolean isStopped;
+	private CabinState state;
 	
 	public Cabin(Elevator elevator) {
 		this.elevator = elevator;
@@ -19,7 +25,7 @@ public class Cabin {
 		currentFloorNumber = 0;
 		
 		// Nuevo
-		isStopped = true;
+		state = CabinState.STOPPED;
 	}
 
 	public int currentFloorNumber() {
@@ -28,15 +34,15 @@ public class Cabin {
 
 	//Cabin State
 	public boolean isStopped() {
-		return isStopped;
+		return state == CabinState.STOPPED;
 	}
 
 	public boolean isMoving() {
-		throw new UnsupportedOperationException();
+		return state == CabinState.MOVING;
 	}
 
 	public boolean isWaitingForPeople() {
-		throw new UnsupportedOperationException();
+		return state == CabinState.WAITING_FOR_PEOPLE;
 	}
 
 	//Cabin Actions

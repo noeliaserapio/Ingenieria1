@@ -7,32 +7,39 @@ public class CabinDoor {
 	private Cabin cabin;
 	private Motor motor;
 	
+	enum CabinDoorState {
+		OPENED,
+		OPENING,
+		CLOSING,
+		CLOSED
+	};
+	
 	// Nuevo
-	private boolean isOpened;
+	private CabinDoorState state;
 
 	public CabinDoor(Cabin cabin) {
 		this.cabin = cabin;
 		this.motor = new Motor();
 		
 		// Nuevo
-		isOpened = true;
+		state = CabinDoorState.OPENED;
 	}
 
 	//State
 	public boolean isOpened() {
-		return isOpened;
+		return state == CabinDoorState.OPENED;
 	}
 
 	public boolean isOpening() {
-		throw new UnsupportedOperationException();
+		return state == CabinDoorState.OPENING;
 	}
 
 	public boolean isClosing() {
-		throw new UnsupportedOperationException();
+		return state == CabinDoorState.CLOSING;
 	}
 
 	public boolean isClosed() {
-		throw new UnsupportedOperationException();
+		return state == CabinDoorState.CLOSED;
 	}
 
 	//Actions
@@ -50,11 +57,11 @@ public class CabinDoor {
 
 	//Sensor events
 	public void closed() {
-		throw new UnsupportedOperationException();
+		state = CabinDoorState.CLOSED;
 	}
 
 	public void opened() {
-		throw new UnsupportedOperationException();
+		state = CabinDoorState.OPENED;
 	}
 
 	//Button events

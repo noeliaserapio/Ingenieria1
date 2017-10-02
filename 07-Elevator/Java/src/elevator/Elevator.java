@@ -18,17 +18,20 @@ public class Elevator {
 	private Cabin cabin;
 	private SortedSet<Integer> floorsToGo = new TreeSet<Integer>();
 	
+	private boolean idle;
+	
 	public Elevator(){
 		cabin = new Cabin(this);
+		idle = true;
 	}
 
 	//Elevator state
 	public boolean isIdle() {
-		return cabin.isStopped();
+		return idle;
 	}
 
 	public boolean isWorking() {
-		throw new UnsupportedOperationException();
+		return !idle;
 	}
 
 	//Door state
@@ -67,7 +70,8 @@ public class Elevator {
 
 	//Button Events
 	public void goUpPushedFromFloor(int aFloorNumber) {
-		throw new UnsupportedOperationException();
+		//floorsToGo.add(aFloorNumber);
+		idle = false;
 	}
 	
 	public void openCabinDoor() {
