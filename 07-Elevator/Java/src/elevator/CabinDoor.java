@@ -75,7 +75,10 @@ public class CabinDoor {
 	//	startOpening();
 	//	state = CabinDoorState.OPENING;
 		if(isClosing()) state = CabinDoorState.OPENING;
-	//	motor.moveCounterClockwise();
+		if(motor.isMovingClockwise()){ 
+			motor.stop();
+			motor.moveCounterClockwise();
+		}
 	}
 
 	public void close() {
