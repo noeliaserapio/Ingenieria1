@@ -72,6 +72,7 @@ public class Elevator {
 	public void goUpPushedFromFloor(int aFloorNumber) {
 		//floorsToGo.add(aFloorNumber);
 		idle = false;
+		cabin.closeDoor();
 	}
 	
 	public void openCabinDoor() {

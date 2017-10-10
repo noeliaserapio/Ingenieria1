@@ -47,12 +47,16 @@ public class CabinDoor {
 		cabin.assertMotorIsNotMoving();
 		
 		motor.moveClockwise();
+		
+		state = CabinDoorState.CLOSING;
 	}
 
 	public void startOpening() {
 		cabin.assertMotorIsNotMoving();
 		
 		motor.moveCounterClockwise();
+		
+		state = CabinDoorState.OPENING;
 	}
 
 	//Sensor events
@@ -70,7 +74,7 @@ public class CabinDoor {
 	}
 
 	public void close() {
-		throw new UnsupportedOperationException();
+		startClosing();
 	}
 
 	public boolean isMotorMovingClockwise() {

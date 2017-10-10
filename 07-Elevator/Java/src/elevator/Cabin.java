@@ -82,7 +82,11 @@ public class Cabin {
 
 	//Door - Sensor events
 	public void doorClosed() {
+		state = CabinState.MOVING;
 		door.closed();
+		// ACA
+//		motor.stop();
+	//	motor.moveClockwise();
 	}
 
 	public void doorOpened() {
