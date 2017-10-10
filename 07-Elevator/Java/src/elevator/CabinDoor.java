@@ -67,11 +67,15 @@ public class CabinDoor {
 
 	public void opened() {
 		state = CabinDoorState.OPENED;
+		motor.stop();
 	}
 
 	//Button events
 	public void open() {
-		throw new UnsupportedOperationException();
+	//	startOpening();
+	//	state = CabinDoorState.OPENING;
+		if(isClosing()) state = CabinDoorState.OPENING;
+	//	motor.moveCounterClockwise();
 	}
 
 	public void close() {

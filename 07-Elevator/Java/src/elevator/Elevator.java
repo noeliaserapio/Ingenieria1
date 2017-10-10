@@ -76,7 +76,8 @@ public class Elevator {
 	}
 	
 	public void openCabinDoor() {
-		throw new UnsupportedOperationException();
+	//	idle = false;
+		cabin.openDoor();
 	}
 
 	public void closeCabinDoor() {

@@ -62,7 +62,8 @@ public class Cabin {
 	public void onFloor(int aFloorNumber) {
 		currentFloorNumber = aFloorNumber;
 		state = CabinState.STOPPED;
-	//	door.startOpening();
+		motor.stop();
+		door.startOpening();		
 	}
 
 	//Door state
