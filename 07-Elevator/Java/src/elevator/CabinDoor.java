@@ -62,6 +62,7 @@ public class CabinDoor {
 	//Sensor events
 	public void closed() {
 		state = CabinDoorState.CLOSED;
+		motor.stop();
 	}
 
 	public void opened() {

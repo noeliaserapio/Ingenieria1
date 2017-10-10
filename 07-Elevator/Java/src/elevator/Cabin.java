@@ -60,7 +60,9 @@ public class Cabin {
 	}
 
 	public void onFloor(int aFloorNumber) {
-		throw new UnsupportedOperationException();
+		currentFloorNumber = aFloorNumber;
+		state = CabinState.STOPPED;
+	//	door.startOpening();
 	}
 
 	//Door state
@@ -84,9 +86,7 @@ public class Cabin {
 	public void doorClosed() {
 		state = CabinState.MOVING;
 		door.closed();
-		// ACA
-//		motor.stop();
-	//	motor.moveClockwise();
+		motor.moveClockwise();
 	}
 
 	public void doorOpened() {
