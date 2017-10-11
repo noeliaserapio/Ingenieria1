@@ -1,19 +1,26 @@
 package elevator;
 
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
 public class Cabin {
 
 	public static final String SENSOR_DESINCRONIZED = "Sensor de cabina desincronizado";
 	
 	private Elevator elevator;
 	private CabinDoor door;
+//	private List<CabinDoor> door;
 	private Motor motor;
 	private int currentFloorNumber;
 	
-	enum CabinState {
+/*	enum CabinState {
 		STOPPED,
 		MOVING,
 		WAITING_FOR_PEOPLE
-	};
+	};  */
 	
 	// Nuevo
 	private CabinState state;
@@ -21,11 +28,13 @@ public class Cabin {
 	public Cabin(Elevator elevator) {
 		this.elevator = elevator;
 		this.door = new CabinDoor(this);
+	//	this.door = new ArrayList<CabinDoor>();
+	//	this.door.add(new CabinDoor(this));
 		this.motor = new Motor();
 		currentFloorNumber = 0;
 		
 		// Nuevo
-		state = CabinState.STOPPED;
+		state = new StoppedCabin();
 	}
 
 	public int currentFloorNumber() {
@@ -34,15 +43,15 @@ public class Cabin {
 
 	//Cabin State
 	public boolean isStopped() {
-		return state == CabinState.STOPPED;
+		return state.isStopped();
 	}
 
 	public boolean isMoving() {
-		return state == CabinState.MOVING;
+		return state.isMoving();
 	}
 
 	public boolean isWaitingForPeople() {
-		return state == CabinState.WAITING_FOR_PEOPLE;
+		return state.isWaitingForPeople();
 	}
 
 	//Cabin Actions
@@ -61,9 +70,12 @@ public class Cabin {
 
 	public void onFloor(int aFloorNumber) {
 		currentFloorNumber = aFloorNumber;
-		state = CabinState.STOPPED;
+		state = new StoppedCabin();
 		motor.stop();
-		door.startOpening();		
+	//	if(aFloorNumber == 1){
+			door.startOpening();
+		//	door.get(aFloorNumber-1).startOpening();
+	//	}
 	}
 
 	//Door state
@@ -85,7 +97,7 @@ public class Cabin {
 
 	//Door - Sensor events
 	public void doorClosed() {
-		state = CabinState.MOVING;
+		state = new MovingCabin();
 		door.closed();
 		motor.moveClockwise();
 	}

@@ -70,7 +70,7 @@ public class Elevator {
 
 	//Button Events
 	public void goUpPushedFromFloor(int aFloorNumber) {
-	//	floorsToGo.add(aFloorNumber);
+		floorsToGo.add(aFloorNumber);
 		idle = false;
 		cabin.closeDoor();
 	}

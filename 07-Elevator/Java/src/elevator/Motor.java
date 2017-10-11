@@ -4,44 +4,44 @@ public class Motor {
 	
 	public static final String MOTOR_IS_MOVING = "El motor se esta moviendo";
 
-	enum MotorState {
+/*	enum MotorState {
 		STOPPED,
 		MOVING_CLOCKWISE,
 		MOVING_COUNTER_CLOCKWISE
-	};
+	}; */
 	
 	private MotorState state;
 	
 	public Motor() {
-		state = MotorState.STOPPED;
+		state = new StoppedMotor();
 	}
 	
 	public void stop() {
-		state = MotorState.STOPPED;
+		state = new StoppedMotor();
 	}
 
 	public void moveClockwise() {
 		assertIsNotMoving();
 		
-		state = MotorState.MOVING_CLOCKWISE;
+		state = new MovingClockwiseMotor();
 	}
 
 	public void moveCounterClockwise() {
 		assertIsNotMoving();
 		
-		state = MotorState.MOVING_COUNTER_CLOCKWISE;
+		state = new MovingCounterClockwiseMotor();
 	}
 
 	public boolean isMovingCounterClockwise() {
-		return state==MotorState.MOVING_COUNTER_CLOCKWISE;
+		return state.isMovingCounterClockwise();
 	}
 
 	public boolean isMovingClockwise() {
-		return state==MotorState.MOVING_CLOCKWISE;
+		return state.isMovingClockwise();
 	}
 
 	public boolean isStopped() {
-		return state==MotorState.STOPPED;
+		return state.isStopped();
 	}
 
 	public boolean isMoving() {

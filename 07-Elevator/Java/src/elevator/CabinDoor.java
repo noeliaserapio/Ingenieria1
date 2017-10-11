@@ -7,48 +7,42 @@ public class CabinDoor {
 	private Cabin cabin;
 	private Motor motor;
 	
-	enum CabinDoorState {
-		OPENED,
-		OPENING,
-		CLOSING,
-		CLOSED
-	};
-	
 	// Nuevo
-	private CabinDoorState state;
+	private static CabinDoorState state;
 
 	public CabinDoor(Cabin cabin) {
 		this.cabin = cabin;
 		this.motor = new Motor();
 		
 		// Nuevo
-		state = CabinDoorState.OPENED;
+		state = new OpenedCabinDoor();
 	}
 
 	//State
 	public boolean isOpened() {
-		return state == CabinDoorState.OPENED;
+		return state.isOpened();
 	}
 
 	public boolean isOpening() {
-		return state == CabinDoorState.OPENING;
+		return state.isOpening();
 	}
 
 	public boolean isClosing() {
-		return state == CabinDoorState.CLOSING;
+		return state.isClosing();
 	}
 
 	public boolean isClosed() {
-		return state == CabinDoorState.CLOSED;
+		return state.isClosed();
 	}
 
 	//Actions
 	public void startClosing() {
 		cabin.assertMotorIsNotMoving();
 		
+		// Falla en este metodo el 10, en motor de cabin door no esta stopped
 		motor.moveClockwise();
 		
-		state = CabinDoorState.CLOSING;
+		state = new ClosingCabinDoor(); 
 	}
 
 	public void startOpening() {
@@ -56,17 +50,17 @@ public class CabinDoor {
 		
 		motor.moveCounterClockwise();
 		
-		state = CabinDoorState.OPENING;
+		state = new OpeningCabinDoor();
 	}
 
 	//Sensor events
 	public void closed() {
-		state = CabinDoorState.CLOSED;
+		state = new ClosedCabinDoor();
 		motor.stop();
 	}
 
 	public void opened() {
-		state = CabinDoorState.OPENED;
+		state = new OpenedCabinDoor();
 		motor.stop();
 	}
 
@@ -74,7 +68,7 @@ public class CabinDoor {
 	public void open() {
 	//	startOpening();
 	//	state = CabinDoorState.OPENING;
-		if(isClosing()) state = CabinDoorState.OPENING;
+		if(isClosing()) state = new OpeningCabinDoor();
 		if(motor.isMovingClockwise()){ 
 			motor.stop();
 			motor.moveCounterClockwise();
