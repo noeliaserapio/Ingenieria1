@@ -65,7 +65,8 @@ public class Cabin {
 
 	//Cabin events
 	public void waitForPeopleTimedOut() {
-		throw new UnsupportedOperationException();
+		state = new StoppedCabin();
+		door.startClosing();
 	}
 
 	public void onFloor(int aFloorNumber) {
