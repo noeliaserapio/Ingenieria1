@@ -73,16 +73,14 @@ public class Cabin {
 		if(aFloorNumber == 0){
 			throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
 		}else{
-		//	if(currentFloorNumber == aFloorNumber + 1){
+			if(aFloorNumber ==  currentFloorNumber + 1){
 				currentFloorNumber = aFloorNumber;
 				state = new StoppedCabin();
 				motor.stop();
-		//	if(aFloorNumber == 1){
 				door.startOpening();
-			//	door.get(aFloorNumber-1).startOpening();
-		//	}
-		//	}
-			
+			}else{
+				throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
+			}	
 		}
 			
 	}
