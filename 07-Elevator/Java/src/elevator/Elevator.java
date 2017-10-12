@@ -88,17 +88,21 @@ public class Elevator {
 	
 	//Sensor Events
 	public void cabinOnFloor(int aFloorNumber) {
-//		if(floorsToGo.last().equals(cabin.currentFloorNumber())){
+		if(floorsToGo.size() == aFloorNumber){
 			idle = false;
 			cabin.onFloor(aFloorNumber);
-	//	}//else{
+		}else{
 	//		idle = true;
-	//	}
+			throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
+		}
 	}
 	
 	public void cabinDoorClosed() {
+	//	if(!floorsToGo.isEmpty()){
 		idle = false;
 		cabin.doorClosed();
+	//	}
+		
 	}
 	
 	public void cabinDoorOpened() {
