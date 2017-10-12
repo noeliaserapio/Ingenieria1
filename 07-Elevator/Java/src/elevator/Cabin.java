@@ -60,7 +60,7 @@ public class Cabin {
 	}
 
 	public void waitForPeople() {
-		throw new UnsupportedOperationException();
+		state = new WaitingForPeopleCabin();
 	}
 
 	//Cabin events
@@ -72,13 +72,16 @@ public class Cabin {
 		if(aFloorNumber == 0){
 			throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
 		}else{
-			currentFloorNumber = aFloorNumber;
-			state = new StoppedCabin();
-			motor.stop();
-	//	if(aFloorNumber == 1){
-			door.startOpening();
-		//	door.get(aFloorNumber-1).startOpening();
-	//	}
+		//	if(currentFloorNumber == aFloorNumber + 1){
+				currentFloorNumber = aFloorNumber;
+				state = new StoppedCabin();
+				motor.stop();
+		//	if(aFloorNumber == 1){
+				door.startOpening();
+			//	door.get(aFloorNumber-1).startOpening();
+		//	}
+		//	}
+			
 		}
 			
 	}

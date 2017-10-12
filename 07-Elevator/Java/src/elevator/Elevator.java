@@ -81,21 +81,33 @@ public class Elevator {
 	}
 
 	public void closeCabinDoor() {
-		throw new UnsupportedOperationException();
+		cabin.closeDoor();
 	}
 	
 	//Sensor Events
 	public void cabinOnFloor(int aFloorNumber) {
-		cabin.onFloor(aFloorNumber);
+	//	if(floorsToGo.last().equals(cabin.currentFloorNumber())){
+			idle = false;
+			cabin.onFloor(aFloorNumber);
+	//	}else{
+	//		idle = true;
+	//	}
 	}
 	
 	public void cabinDoorClosed() {
+		idle = false;
 		cabin.doorClosed();
 	}
 	
 	public void cabinDoorOpened() {
-		idle = true;
+		if(hasFloorsToGo() && floorsToGo.last().equals(cabin.currentFloorNumber())){
+			idle = true;
+		}else{
+			idle = false;
+			cabin.waitForPeople();
+		}
 		cabin.doorOpened();
+		
 	}
 
 	public void waitForPeopleTimedOut() {

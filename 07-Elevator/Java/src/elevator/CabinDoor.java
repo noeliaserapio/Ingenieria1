@@ -40,8 +40,10 @@ public class CabinDoor {
 		cabin.assertMotorIsNotMoving();
 		
 		// Falla en este metodo el 10, en motor de cabin door no esta stopped
+		if(motor.isMoving()){
+			motor.stop();
+		}
 		motor.moveClockwise();
-		
 		state = new ClosingCabinDoor(); 
 	}
 
