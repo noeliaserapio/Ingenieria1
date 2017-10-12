@@ -1,5 +1,7 @@
 package elevator;
 
+import org.hamcrest.core.IsSame;
+
 public class CabinDoor {
 
 	public static final String SENSOR_DESINCRONIZED = "Sensor de puerta desincronizado";
@@ -39,12 +41,12 @@ public class CabinDoor {
 	public void startClosing() {
 		cabin.assertMotorIsNotMoving();
 		
-		// Falla en este metodo el 10, en motor de cabin door no esta stopped
 		if(motor.isMoving()){
 			motor.stop();
 		}
+		
 		motor.moveClockwise();
-		state = new ClosingCabinDoor(); 
+		state = new ClosingCabinDoor();
 	}
 
 	public void startOpening() {

@@ -76,12 +76,13 @@ public class Elevator {
 	}
 	
 	public void openCabinDoor() {
-	//	idle = false;
 		cabin.openDoor();
 	}
 
 	public void closeCabinDoor() {
+		if(isWorking()){
 		cabin.closeDoor();
+		}
 	}
 	
 	//Sensor Events
