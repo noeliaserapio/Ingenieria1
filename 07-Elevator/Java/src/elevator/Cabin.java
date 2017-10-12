@@ -69,13 +69,18 @@ public class Cabin {
 	}
 
 	public void onFloor(int aFloorNumber) {
-		currentFloorNumber = aFloorNumber;
-		state = new StoppedCabin();
-		motor.stop();
+		if(aFloorNumber == 0){
+			throw new RuntimeException(Cabin.SENSOR_DESINCRONIZED);
+		}else{
+			currentFloorNumber = aFloorNumber;
+			state = new StoppedCabin();
+			motor.stop();
 	//	if(aFloorNumber == 1){
 			door.startOpening();
 		//	door.get(aFloorNumber-1).startOpening();
 	//	}
+		}
+			
 	}
 
 	//Door state
