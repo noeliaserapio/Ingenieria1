@@ -17,6 +17,14 @@ public class StoppedMotor implements MotorState{
 		return true;
 	}
 
+	@Override
+	public boolean isMoving() {
+		return false;
+	}
+
+	@Override
+	public void assertIsNotMoving() {
+	}
 
 
 }

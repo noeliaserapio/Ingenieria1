@@ -7,5 +7,9 @@ public interface MotorState {
 	public boolean isMovingClockwise();
 
 	public boolean isStopped();
+	
+	public boolean isMoving();
+
+	void assertIsNotMoving();
 
 }

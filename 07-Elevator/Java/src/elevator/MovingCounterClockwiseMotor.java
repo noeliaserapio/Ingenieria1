@@ -17,6 +17,14 @@ public class MovingCounterClockwiseMotor implements MotorState{
 		return false;
 	}
 
+	@Override
+	public boolean isMoving() {
+		return true;
+	}
 
+	@Override
+	public void assertIsNotMoving() {
+		throw new RuntimeException(Motor.MOTOR_IS_MOVING);	
+	}
 
 }

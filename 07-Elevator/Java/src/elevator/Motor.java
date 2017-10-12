@@ -45,10 +45,10 @@ public class Motor {
 	}
 
 	public boolean isMoving() {
-		return !isStopped();
+		return state.isMoving();
 	}
 
 	void assertIsNotMoving() {
-		if(isMoving()) throw new RuntimeException(Motor.MOTOR_IS_MOVING);
+		state.assertIsNotMoving();
 	}
 }
