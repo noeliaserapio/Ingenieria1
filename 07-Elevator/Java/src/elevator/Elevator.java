@@ -81,16 +81,17 @@ public class Elevator {
 
 	public void closeCabinDoor() {
 		if(isWorking()){
-		cabin.closeDoor();
+	//	if(hasFloorsToGo()){
+			cabin.closeDoor();
 		}
 	}
 	
 	//Sensor Events
 	public void cabinOnFloor(int aFloorNumber) {
-	//	if(floorsToGo.last().equals(cabin.currentFloorNumber())){
+//		if(floorsToGo.last().equals(cabin.currentFloorNumber())){
 			idle = false;
 			cabin.onFloor(aFloorNumber);
-	//	}else{
+	//	}//else{
 	//		idle = true;
 	//	}
 	}

@@ -41,12 +41,13 @@ public class CabinDoor {
 	public void startClosing() {
 		cabin.assertMotorIsNotMoving();
 		
-		if(motor.isMoving()){
-			motor.stop();
+		if(!state.isOpening()){
+			if(motor.isMoving()){
+					motor.stop();
+			}
+			state = new ClosingCabinDoor();
+			motor.moveClockwise();
 		}
-		
-		motor.moveClockwise();
-		state = new ClosingCabinDoor();
 	}
 
 	public void startOpening() {
