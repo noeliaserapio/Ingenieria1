@@ -121,6 +121,7 @@ public class Cabin {
 	}
 
 	public void closeDoor() {
+		state = new StoppedCabin();
 		door.close();
 	}
 
