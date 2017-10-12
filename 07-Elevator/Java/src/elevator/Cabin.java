@@ -121,12 +121,10 @@ public class Cabin {
 	}
 
 	public void closeDoor() {
-		state = new StoppedCabin();
-	//	if(currentFloorNumber() == 0){
+		if(!isMoving()){
+			state = new StoppedCabin();
 			door.close();
-	//	}else{
-			
-	//	}
+		}
 	}
 
 	public void assertMotorIsNotMoving() {
