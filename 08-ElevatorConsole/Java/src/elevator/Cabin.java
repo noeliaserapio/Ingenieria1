@@ -14,6 +14,8 @@ public class Cabin {
 
 	public static final String SENSOR_DESINCRONIZED = "Sensor de cabina desincronizado";
 	
+
+
 	private Elevator elevator;
 	private CabinState state;
 	private CabinDoor door;
@@ -31,18 +33,31 @@ public class Cabin {
 	public int currentFloorNumber() {
 		return currentFloorNumber;
 	}
+	
+	public Elevator getElevator() {
+		return elevator;
+	}
+	
+	private void notifyAllVisit() {
+		for(StateVisitor v : elevator.getVisitors()){
+			this.state.accept(v);
+		}
+	}
 
 	//Cabin State
 	private void makeStopped() {
 		this.state = new CabinStoppedState(this);
+		notifyAllVisit();
 	}
 
 	private void makeMoving() {
 		this.state = new CabinMovingState(this);
+		notifyAllVisit();
 	}
 	
 	private void makeWaitingForPeople() {
 		this.state = new CabinWaitingForPeopleState(this);
+		notifyAllVisit();
 	}
 
 	public boolean isStopped() {

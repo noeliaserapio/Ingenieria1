@@ -10,6 +10,8 @@
  */
 package elevator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
@@ -18,10 +20,19 @@ public class Elevator {
 	private ElevatorState state;
 	private Cabin cabin;
 	private SortedSet<Integer> floorsToGo = new TreeSet<Integer>();
+	private List<StateVisitor> visitors = new ArrayList<StateVisitor>();
 	
 	public Elevator(){
 		cabin = new Cabin(this);
 		makeIdle();
+	}
+	
+	public void addVisitor(StateVisitor v) {
+		visitors.add(v);
+	}
+	
+	public List<StateVisitor> getVisitors() {
+		return visitors;
 	}
 
 	//Elevator state
