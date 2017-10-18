@@ -38,8 +38,8 @@ public class Cabin {
 		return elevator;
 	}
 	
-	private void notifyAllVisit() {
-		for(StateVisitor v : elevator.getVisitors()){
+	private void notifyAllVisitCabin() {
+		for(CabinStateVisitor v : elevator.getVisitorsCabin()){
 			this.state.accept(v);
 		}
 	}
@@ -47,17 +47,17 @@ public class Cabin {
 	//Cabin State
 	private void makeStopped() {
 		this.state = new CabinStoppedState(this);
-		notifyAllVisit();
+		notifyAllVisitCabin();
 	}
 
 	private void makeMoving() {
 		this.state = new CabinMovingState(this);
-		notifyAllVisit();
+		notifyAllVisitCabin();
 	}
 	
 	private void makeWaitingForPeople() {
 		this.state = new CabinWaitingForPeopleState(this);
-		notifyAllVisit();
+		notifyAllVisitCabin();
 	}
 
 	public boolean isStopped() {

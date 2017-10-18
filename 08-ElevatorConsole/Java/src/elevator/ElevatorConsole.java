@@ -14,13 +14,14 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
-public class ElevatorConsole implements StateVisitor, CabinStateVisitor, CabinDoorStateVisitor{
+public class ElevatorConsole implements CabinStateVisitor, CabinDoorStateVisitor{
 
 	private StringWriter console;
 	
 	public ElevatorConsole(Elevator elevator) {
 		console = new StringWriter();
-		elevator.addVisitor(this);
+		elevator.addVisitorCabin(this);
+		elevator.addVisitorDoor(this);
 	}
 
 	protected void cabinDoorStateChangedTo(CabinDoorState cabinDoorState) {

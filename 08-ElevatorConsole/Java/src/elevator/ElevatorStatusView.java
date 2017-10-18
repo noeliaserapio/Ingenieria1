@@ -10,13 +10,14 @@
  */
 package elevator;
 
-public class ElevatorStatusView implements StateVisitor, CabinStateVisitor,CabinDoorStateVisitor {
+public class ElevatorStatusView implements CabinStateVisitor,CabinDoorStateVisitor {
 
 	private String cabinFieldModel;
 	private String cabinDoorFieldModel;
 
 	public ElevatorStatusView(Elevator elevator) {
-		elevator.addVisitor(this);
+		elevator.addVisitorCabin(this);
+		elevator.addVisitorDoor(this);
 	}
 
 	protected void cabinDoorStateChangedTo(CabinDoorState cabinDoorState) {

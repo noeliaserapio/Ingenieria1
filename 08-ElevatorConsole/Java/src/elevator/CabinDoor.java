@@ -24,8 +24,8 @@ public class CabinDoor {
 		makeOpened();
 	}
 	
-	private void notifyAllVisit() {
-		for(StateVisitor v : cabin.getElevator().getVisitors()){
+	private void notifyAllVisitDoor() {
+		for(CabinDoorStateVisitor v : cabin.getElevator().getVisitorsDoor()){
 			this.state.accept(v);
 		}
 	}
@@ -33,22 +33,22 @@ public class CabinDoor {
 	//State
 	private void makeOpened() {
 		this.state = new CabinDoorOpenedState(this);
-		notifyAllVisit();
+		notifyAllVisitDoor();
 	}
 
 	private void makeClosing() {
 		this.state = new CabinDoorClosingState(this);
-		notifyAllVisit();
+		notifyAllVisitDoor();
 	}
 	
 	private void makeClosed() {
 		this.state = new CabinDoorClosedState(this);
-		notifyAllVisit();
+		notifyAllVisitDoor();
 	}
 
 	private void makeOpening() {
 		this.state = new CabinDoorOpeningState(this);
-		notifyAllVisit();
+		notifyAllVisitDoor();
 	}
 
 	public boolean isOpened() {

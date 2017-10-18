@@ -20,20 +20,30 @@ public class Elevator {
 	private ElevatorState state;
 	private Cabin cabin;
 	private SortedSet<Integer> floorsToGo = new TreeSet<Integer>();
-	private List<StateVisitor> visitors = new ArrayList<StateVisitor>();
+	private List<CabinStateVisitor> visitorsCabin = new ArrayList<CabinStateVisitor>();
+	private List<CabinDoorStateVisitor> visitorsDoor = new ArrayList<CabinDoorStateVisitor>();
 	
 	public Elevator(){
 		cabin = new Cabin(this);
 		makeIdle();
 	}
 	
-	public void addVisitor(StateVisitor v) {
-		visitors.add(v);
+	public void addVisitorCabin(CabinStateVisitor v) {
+		visitorsCabin.add(v);
 	}
 	
-	public List<StateVisitor> getVisitors() {
-		return visitors;
+	public void addVisitorDoor(CabinDoorStateVisitor v) {
+		visitorsDoor.add(v);
 	}
+	
+	public List<CabinStateVisitor> getVisitorsCabin() {
+		return visitorsCabin;
+	}
+	
+	public List<CabinDoorStateVisitor> getVisitorsDoor() {
+		return visitorsDoor;
+	}
+
 
 	//Elevator state
 	private void makeIdle() {
