@@ -16,8 +16,8 @@ public class ElevatorStatusView implements CabinStateVisitor,CabinDoorStateVisit
 	private String cabinDoorFieldModel;
 
 	public ElevatorStatusView(Elevator elevator) {
-		elevator.addVisitorCabin(this);
-		elevator.addVisitorDoor(this);
+		elevator.addObserverCabin(this);
+		elevator.addObserverCabinDoor(this);
 	}
 
 	protected void cabinDoorStateChangedTo(CabinDoorState cabinDoorState) {

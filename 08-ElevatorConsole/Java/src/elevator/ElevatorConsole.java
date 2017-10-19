@@ -20,8 +20,8 @@ public class ElevatorConsole implements CabinStateVisitor, CabinDoorStateVisitor
 	
 	public ElevatorConsole(Elevator elevator) {
 		console = new StringWriter();
-		elevator.addVisitorCabin(this);
-		elevator.addVisitorDoor(this);
+		elevator.addObserverCabin(this);
+		elevator.addObserverCabinDoor(this);
 	}
 
 	protected void cabinDoorStateChangedTo(CabinDoorState cabinDoorState) {

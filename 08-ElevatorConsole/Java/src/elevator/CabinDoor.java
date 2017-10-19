@@ -10,6 +10,9 @@
  */
 package elevator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CabinDoor {
 
 	public static final String SENSOR_DESINCRONIZED = "Sensor de puerta desincronizado";
@@ -17,6 +20,7 @@ public class CabinDoor {
 	private Cabin cabin;
 	private CabinDoorState state;
 	private Motor motor;
+	private List<CabinDoorStateVisitor> observers = new ArrayList<CabinDoorStateVisitor>();
 
 	public CabinDoor(Cabin cabin) {
 		this.cabin = cabin;
@@ -24,8 +28,12 @@ public class CabinDoor {
 		makeOpened();
 	}
 	
-	private void notifyAllVisitDoor() {
-		for(CabinDoorStateVisitor v : cabin.getElevator().getVisitorsDoor()){
+	public void addObserverCabinDoor(CabinDoorStateVisitor v) {
+		observers.add(v);
+	}
+	
+	private void notifyObservers() {
+		for(CabinDoorStateVisitor v : observers){
 			this.state.accept(v);
 		}
 	}
@@ -33,22 +41,22 @@ public class CabinDoor {
 	//State
 	private void makeOpened() {
 		this.state = new CabinDoorOpenedState(this);
-		notifyAllVisitDoor();
+		notifyObservers();
 	}
 
 	private void makeClosing() {
 		this.state = new CabinDoorClosingState(this);
-		notifyAllVisitDoor();
+		notifyObservers();
 	}
 	
 	private void makeClosed() {
 		this.state = new CabinDoorClosedState(this);
-		notifyAllVisitDoor();
+		notifyObservers();
 	}
 
 	private void makeOpening() {
 		this.state = new CabinDoorOpeningState(this);
-		notifyAllVisitDoor();
+		notifyObservers();
 	}
 
 	public boolean isOpened() {

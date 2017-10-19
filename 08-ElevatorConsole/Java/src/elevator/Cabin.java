@@ -10,6 +10,9 @@
  */
 package elevator;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Cabin {
 
 	public static final String SENSOR_DESINCRONIZED = "Sensor de cabina desincronizado";
@@ -21,6 +24,7 @@ public class Cabin {
 	private CabinDoor door;
 	private Motor motor;
 	private int currentFloorNumber;
+	private List<CabinStateVisitor> observers = new ArrayList<CabinStateVisitor>();
 	
 	public Cabin(Elevator elevator) {
 		this.elevator = elevator;
@@ -28,6 +32,14 @@ public class Cabin {
 		this.motor = new Motor();
 		currentFloorNumber = 0;
 		makeStopped();
+	}
+	
+	public void addObserverCabin(CabinStateVisitor v) {
+		observers.add(v);
+	}
+	
+	public void addObserverCabinDoor(CabinDoorStateVisitor v) {
+		door.addObserverCabinDoor(v);
 	}
 
 	public int currentFloorNumber() {
@@ -38,8 +50,8 @@ public class Cabin {
 		return elevator;
 	}
 	
-	private void notifyAllVisitCabin() {
-		for(CabinStateVisitor v : elevator.getVisitorsCabin()){
+	private void notifyObservers() {
+		for(CabinStateVisitor v : observers){
 			this.state.accept(v);
 		}
 	}
@@ -47,17 +59,17 @@ public class Cabin {
 	//Cabin State
 	private void makeStopped() {
 		this.state = new CabinStoppedState(this);
-		notifyAllVisitCabin();
+		notifyObservers();
 	}
 
 	private void makeMoving() {
 		this.state = new CabinMovingState(this);
-		notifyAllVisitCabin();
+		notifyObservers();
 	}
 	
 	private void makeWaitingForPeople() {
 		this.state = new CabinWaitingForPeopleState(this);
-		notifyAllVisitCabin();
+		notifyObservers();
 	}
 
 	public boolean isStopped() {
