@@ -22,7 +22,7 @@ public class TusLibrosTest {
 		int elem = 1;
 		catalogo.add(elem);
 		Carrito carrito = new Carrito(catalogo);	
-		carrito.agregar(elem);
+		carrito.agregar(elem, 1);
 		assertTrue(catalogo.contains(elem));
 		assertTrue(!carrito.esVacio());
 	}
@@ -34,10 +34,54 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);	
 	
 		try {
-			carrito.agregar(elem);
+			carrito.agregar(elem, 1);
 			fail();
 		} catch (Error e){
-			assertEquals(Carrito.ERROR_AL_AGREGAR_PRODUCTO,e.getMessage());
+			assertEquals(Carrito.ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO,e.getMessage());
+			assertTrue(catalogo.isEmpty());
+			assertTrue(carrito.esVacio());
+		}
+		
+	}
+	
+	@Test
+	public void test04SeCuandoSeAgreganVariosProductosDeUnTipoAlCarritoNoEstaVacio(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		catalogo.add(elem);
+		Carrito carrito = new Carrito(catalogo);	
+		carrito.agregar(elem, 5);
+		assertTrue(catalogo.contains(elem));
+		assertTrue(!carrito.esVacio());
+	}
+
+	@Test
+	public void test05NoSePuedenAgregarProductosDeUnTipoQueNoEsDeLaEditorialAlCarrito(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		Carrito carrito = new Carrito(catalogo);	
+	
+		try {
+			carrito.agregar(elem, 5);
+			fail();
+		} catch (Error e){
+			assertEquals(Carrito.ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO,e.getMessage());
+			assertTrue(catalogo.isEmpty());
+			assertTrue(carrito.esVacio());
+		}
+	}
+		
+	@Test
+	public void test06NoPuedeSerMenorAUnoLaCantidadDeProductosAAgregarAlCarrito(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		Carrito carrito = new Carrito(catalogo);	
+		
+		try {
+			carrito.agregar(elem, 0);
+			fail();
+		} catch (Error e){
+			assertEquals(Carrito.ERROR_CANTIDAD_NO_PUEDE_SER_NEGATIVA_O_CERO,e.getMessage());
 			assertTrue(catalogo.isEmpty());
 			assertTrue(carrito.esVacio());
 		}
