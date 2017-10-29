@@ -1,8 +1,6 @@
 package tusLibros;
 
-import java.util.Collection;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.lang.Integer;
 
@@ -26,4 +24,10 @@ public class Multiconjunto<E,Integer> extends TreeMap<E,Integer>{
 	public boolean isEmpty() {
 		return elementos.isEmpty();
 	}
+	
+	public Integer cantidad(E elemento) {
+		return elementos.get(elemento);
+	}
+	
+	
 }

@@ -1,14 +1,12 @@
 package tusLibros;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 
 public class Carrito {
 	
-	private  Map<Object, Integer> productos = new Multiconjunto<Object, Integer>();
+	private  Multiconjunto<Object, Integer> productos = new Multiconjunto<Object, Integer>();
 	private List<Object> catalogo;
 	
 	public static final String ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO = "No se puede	agregar un producto que no esta en el catalogo";
@@ -29,6 +27,10 @@ public class Carrito {
 		}else{
 			throw new Error(ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO);
 		}
+	}
+	
+	public Integer cantidad(Object producto){
+		return productos.cantidad(producto);
 	}
 	
 }

@@ -5,8 +5,11 @@ import static org.junit.Assert.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class TusLibrosTest {
 	
 	@Test
@@ -45,7 +48,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test04SeCuandoSeAgreganVariosProductosDeUnTipoAlCarritoNoEstaVacio(){
+	public void test04CuandoSeAgreganVariosProductosDeUnTipoAlCarritoNoEstaVacio(){
 		List<Object> catalogo = new ArrayList<Object>();
 		int elem = 1;
 		catalogo.add(elem);
@@ -85,6 +88,20 @@ public class TusLibrosTest {
 			assertTrue(catalogo.isEmpty());
 			assertTrue(carrito.esVacio());
 		}
+		
+	}
+	
+	@Test
+	public void test07AlAgregarElMismoProductoVariasVecesLaCantidadEsLaSumaDeTodasLasCantidades(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		catalogo.add(elem);
+		Carrito carrito = new Carrito(catalogo);	
+		carrito.agregar(elem, 2);
+		carrito.agregar(elem, 5);
+		assertTrue(catalogo.contains(elem));
+		assertTrue(!carrito.esVacio());
+		assertEquals(carrito.cantidad(elem), new Integer(5+2));
 		
 	}
 
