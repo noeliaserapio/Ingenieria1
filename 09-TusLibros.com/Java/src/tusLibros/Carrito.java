@@ -32,5 +32,8 @@ public class Carrito {
 	public Integer cantidad(Object producto){
 		return productos.cantidad(producto);
 	}
-	
+
+	public String listar() {
+		return productos.listar();
+	}		
 }

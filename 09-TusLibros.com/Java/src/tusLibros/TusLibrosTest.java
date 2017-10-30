@@ -48,14 +48,16 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test04CuandoSeAgreganVariosProductosDeUnTipoAlCarritoNoEstaVacio(){
+	public void test04CuandoSeAgreganVariosProductosDeUnTipoAlCarritoLaCantidadEsLaAgregada(){
 		List<Object> catalogo = new ArrayList<Object>();
 		int elem = 1;
+		Integer cantidad = 5;
 		catalogo.add(elem);
 		Carrito carrito = new Carrito(catalogo);	
-		carrito.agregar(elem, 5);
+		carrito.agregar(elem, cantidad);
 		assertTrue(catalogo.contains(elem));
 		assertTrue(!carrito.esVacio());
+		assertEquals(carrito.cantidad(elem), cantidad);
 	}
 
 	@Test
@@ -104,5 +106,32 @@ public class TusLibrosTest {
 		assertEquals(carrito.cantidad(elem), new Integer(5+2));
 		
 	}
-
+	
+	@Test
+	public void test08LaListaDeProductosDeUnCarritoVacioEsVacia(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		catalogo.add(elem);
+		Carrito carrito = new Carrito(catalogo);	
+		String lista = carrito.listar();
+		assertTrue(catalogo.contains(elem));
+		assertTrue(carrito.esVacio());
+		assertTrue(lista.isEmpty());
+		
+	}
+	
+	@Test
+	public void test09LaListaDeProductosDeUnCarritoConProductosEsNoVacia(){
+		List<Object> catalogo = new ArrayList<Object>();
+		int elem = 1;
+		catalogo.add(elem);
+		Carrito carrito = new Carrito(catalogo);	
+		carrito.agregar(elem, 2);
+		String lista = carrito.listar();
+		assertTrue(catalogo.contains(elem));
+		assertTrue(!carrito.esVacio());
+		assertNotEquals(lista, "");
+		
+	}  
+	
 }
