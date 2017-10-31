@@ -3,7 +3,11 @@ package tusLibros;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -14,25 +18,25 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test01CuandoSeCreaUnCarritoEstaVacio(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);	
 		assertTrue(carrito.esVacio());
 	}
 	
 	@Test
 	public void test02CuandoSeAgregaUnProductoAlCarritoNoEstaVacio(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
-		catalogo.add(elem);
+		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 1);
-		assertTrue(catalogo.contains(elem));
+		assertTrue(catalogo.containsKey(elem));
 		assertTrue(!carrito.esVacio());
 	}
 	
 	@Test
 	public void test03NoSePuedeAgregaUnProductoQueNoEsDeLaEditorialAlCarrito(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		Carrito carrito = new Carrito(catalogo);	
 	
@@ -49,20 +53,20 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test04CuandoSeAgreganVariosProductosDeUnTipoAlCarritoLaCantidadEsLaAgregada(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		Integer cantidad = 5;
-		catalogo.add(elem);
+		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, cantidad);
-		assertTrue(catalogo.contains(elem));
+		assertTrue(catalogo.containsKey(elem));
 		assertTrue(!carrito.esVacio());
 		assertEquals(carrito.cantidad(elem), cantidad);
 	}
 
 	@Test
 	public void test05NoSePuedenAgregarProductosDeUnTipoQueNoEsDeLaEditorialAlCarrito(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		Carrito carrito = new Carrito(catalogo);	
 	
@@ -78,7 +82,7 @@ public class TusLibrosTest {
 		
 	@Test
 	public void test06NoPuedeSerMenorAUnoLaCantidadDeProductosAAgregarAlCarrito(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		Carrito carrito = new Carrito(catalogo);	
 		
@@ -95,13 +99,13 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test07AlAgregarElMismoProductoVariasVecesLaCantidadEsLaSumaDeTodasLasCantidades(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
-		catalogo.add(elem);
+		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 2);
 		carrito.agregar(elem, 5);
-		assertTrue(catalogo.contains(elem));
+		assertTrue(catalogo.containsKey(elem));
 		assertTrue(!carrito.esVacio());
 		assertEquals(carrito.cantidad(elem), new Integer(5+2));
 		
@@ -109,12 +113,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test08LaListaDeProductosDeUnCarritoVacioEsVacia(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
-		catalogo.add(elem);
+		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		String lista = carrito.listar();
-		assertTrue(catalogo.contains(elem));
+		assertTrue(catalogo.containsKey(elem));
 		assertTrue(carrito.esVacio());
 		assertTrue(lista.isEmpty());
 		
@@ -122,15 +126,57 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test09LaListaDeProductosDeUnCarritoConProductosEsNoVacia(){
-		List<Object> catalogo = new ArrayList<Object>();
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
-		catalogo.add(elem);
+		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 2);
 		String lista = carrito.listar();
-		assertTrue(catalogo.contains(elem));
+		assertTrue(catalogo.containsKey(elem));
 		assertTrue(!carrito.esVacio());
 		assertNotEquals(lista, "");
+		
+	}  
+	
+	@Test
+	public void test10CheckOutDeUnCarritoVacioDaError(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		Calendar fecha = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
+		Cajero cajero = new Cajero(carrito, fecha, tarjeta);
+		
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(Cajero.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
+			assertTrue(cajero.libroDeVentas().isEmpty());
+			assertTrue(catalogo.isEmpty());
+			assertTrue(carrito.esVacio());
+		}
+		
+	}
+	
+	@Test
+	public void test11AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
+		
+		//TODO hay que hacer este test
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		Calendar fecha = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
+		Cajero cajero = new Cajero(carrito, fecha, tarjeta);
+		
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(Cajero.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
+			assertTrue(cajero.libroDeVentas().isEmpty());
+			assertTrue(catalogo.isEmpty());
+			assertTrue(carrito.esVacio());
+		}
 		
 	}  
 	

@@ -1,14 +1,15 @@
 package tusLibros;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.lang.Integer;
 
 
-public class Multiconjunto<E,Integer> extends TreeMap<E,Integer>{
+public class Multiconjunto<E,Integer> extends HashMap<E,Integer>{
 
-	private  Map<E,Integer> elementos = new TreeMap<E,Integer>();
+	private  Map<E,Integer> elementos = new HashMap<E,Integer>();
 	
 	public Integer put(E elemento, Integer cantidad) { 
 		Integer viejoValor = null;
