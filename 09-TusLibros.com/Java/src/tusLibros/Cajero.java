@@ -13,10 +13,11 @@ public class Cajero {
 	
 	public static final String ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO = "No se puede	hacer checkout de un carrito vacio";
 	
-	public Cajero(Carrito carrito, Calendar fecha, TarjetaDeCredito tarjeta){
+	public Cajero(Carrito carrito, Calendar fecha, TarjetaDeCredito tarjeta, Map<Object,Integer> libroDeVentas){
 		this.carrito = carrito;
 		this.fecha = fecha;
 		this.tarjeta = tarjeta;
+		this.libroDeVentas = libroDeVentas;
 	}
 	
 	public Integer checkOut(){

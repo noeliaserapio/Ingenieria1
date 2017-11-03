@@ -144,7 +144,8 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta);
+		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
 		try {
 			cajero.checkOut();
@@ -166,18 +167,18 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta);
+		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
-		try {
-			cajero.checkOut();
-			fail();
-		} catch (Error e){
-			assertEquals(Cajero.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
-			assertTrue(cajero.libroDeVentas().isEmpty());
-			assertTrue(catalogo.isEmpty());
-			assertTrue(carrito.esVacio());
-		}
-		
+		cajero.checkOut();
+			
+		assertTrue(cajero.libroDeVentas().isEmpty());
+		assertTrue(catalogo.isEmpty());
+		assertTrue(carrito.esVacio());
+		assertTrue(carrito.esVacio());
+				
 	}  
+	
+	
 	
 }
