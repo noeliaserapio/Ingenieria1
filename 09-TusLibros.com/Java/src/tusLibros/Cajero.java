@@ -9,7 +9,7 @@ public class Cajero {
 	private Carrito carrito;
 	private Calendar fecha;
 	private TarjetaDeCredito tarjeta;
-	private Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>();  // puede que sea multiconj
+	private Map<Object,Integer> libroDeVentas;
 	
 	public static final String ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO = "No se puede	hacer checkout de un carrito vacio";
 	

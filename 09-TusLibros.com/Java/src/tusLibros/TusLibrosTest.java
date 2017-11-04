@@ -162,22 +162,36 @@ public class TusLibrosTest {
 	@Test
 	public void test11AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
 		
-		//TODO hay que hacer este test
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
-		Carrito carrito = new Carrito(catalogo);
-		Calendar fecha = new GregorianCalendar();
-		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
-		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
-		
-		cajero.checkOut();
-			
-		assertTrue(cajero.libroDeVentas().isEmpty());
-		assertTrue(catalogo.isEmpty());
-		assertTrue(carrito.esVacio());
-		assertTrue(carrito.esVacio());
+		//TODO hay que hacer este test   
+
 				
-	}  
+	}
+	
+	
+	@Test
+	public void test12AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
+		//TODO hay que hacer este test
+		AutenticadorCliente auten = new AutenticadorCliente();
+		auten.crearCliente(0, "password");
+		assertTrue(auten.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Integer>())));
+				
+	}
+	
+	@Test
+	public void test13NoSePuedeCrearUnClienteConIdYaExistente(){
+		//TODO hay que hacer este test
+
+				
+	}
+	
+	@Test
+	public void test14AlcrearUnClienteSuListaDeCarritosEsVacia(){
+		//TODO hay que hacer este test
+				
+	}
+
+	
+	
 	
 	
 	
