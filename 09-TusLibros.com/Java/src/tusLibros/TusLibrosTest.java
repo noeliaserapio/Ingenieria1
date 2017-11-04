@@ -8,6 +8,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -112,12 +113,32 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test08LaListaDeProductosDeUnCarritoVacioEsVacia(){
+	public void test08AlAgregarProductosDeDistintoTipoTodosFiguranConSusRespectivasCantidades(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		Carrito carrito = new Carrito(catalogo);	
+		carrito.agregar(elem1, 2);
+		carrito.agregar(elem2, 5);
+		assertTrue(catalogo.containsKey(elem1));
+		assertTrue(catalogo.containsKey(elem2));
+		assertTrue(carrito.listar().contains(elem1)); 
+		assertTrue(carrito.listar().contains(elem2));
+		assertEquals(carrito.cantidad(elem1), new Integer(2));
+		assertEquals(carrito.cantidad(elem2), new Integer(5));
+		
+	}
+	
+	
+	@Test
+	public void test09LaListaDeProductosDeUnCarritoVacioEsVacia(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
-		String lista = carrito.listar();
+		Set<Object> lista = carrito.listar();
 		assertTrue(catalogo.containsKey(elem));
 		assertTrue(carrito.esVacio());
 		assertTrue(lista.isEmpty());
@@ -125,21 +146,21 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test09LaListaDeProductosDeUnCarritoConProductosEsNoVacia(){
+	public void test10LaListaDeProductosDeUnCarritoConProductosEsNoVacia(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		catalogo.put(elem, 250);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 2);
-		String lista = carrito.listar();
+		Set<Object> lista = carrito.listar();
 		assertTrue(catalogo.containsKey(elem));
 		assertTrue(!carrito.esVacio());
-		assertNotEquals(lista, "");
+		assertTrue(!lista.isEmpty());
 		
 	}  
 	
 	@Test
-	public void test10CheckOutDeUnCarritoVacioDaError(){
+	public void test11CheckOutDeUnCarritoVacioDaError(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
 		Calendar fecha = new GregorianCalendar();
@@ -160,11 +181,17 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test11AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
+	public void test12AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
 		
 		//TODO hay que hacer este test
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
+		int elem1 = 1;
+		int elem2 = 1;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 310);
+		carrito.agregar(elem1, 6);
+		carrito.agregar(elem2, 4);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
 		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
@@ -179,6 +206,40 @@ public class TusLibrosTest {
 				
 	}  
 	
-	
+	// Asert levanta la excepcion esperada y que no facturo. Tengo que guardar 
+		//todo lo que vendi y asertar que no vendi nada (libro de ventas esta vacio, es una orderCollection no se necesita
+		// una clase).
+		// la tarjeta de credito se tiene que modelar.
+		// La tarjeta al crearla se debe validar el nombre del owner (el nombre no puede ser todos espaciones en blanco,
+		// el numero debe contener 16 digitos). Si se puede crear una tarjeta vencida.
+		// Lo que no voy a poder hacer es comprar con una tarjeta vencida.
+		// La tarjeta  verifica si esta vencida (antropormofismo: darle responsabilidad humana a un objeto).
+		// estasvencida() o estasvencidaAEstaFecha() (se debe usar la segunda, pasar una fecha).
+		// Se desacopla la clase tarjeta de credito de la fecha.
+		// cuando hay una nueva lista de precios se crea una nueva lista, no se modifica.
+		// al carrito le puedo pedir su precio.
+		// cajero new. Checkout con este carrito, tarjeta, fecha. cajero persona. Problema cuando hago el checkout
+		// 
+		// cajero new carrito, fecha y tarjeta. cajero por venta.
+		
+		// se calcula el precio correctamente. devuelve el total el cajero.
+		
+		// no se puede hacer el checkout con un tarjeta expirada ()
+		
+		// en el mercan procesor (antes de enviar el nombre del owner de la tarjeta se debe truncar su longitud
+		//a 30 si por ejemplo es 40.
+		// el test tiene que estar en control de todo.
+		
+		// La interface traduce, es un adapter. Del lado externo devulevo un codigo de retorno y lo transformo
+		// en una excepcion si devuelve un error. 
+		
+		// cuando testeo el cajero, simulo la cara interna (la que lanza la excepcion).
+		// 1 ro configuro objeto simulador.
+		// 2 checkout llamando a la cara interna del merchan procesor con la cara interna.
+		
+		// no puedo hacer checkout de tarjeta robada, el cajaro no habla con el mercna procesor cuando la tarjeta
+		//esta vencida.<
+		// en el checkout tengo qe debitar del mercan procesor.
+		
 	
 }

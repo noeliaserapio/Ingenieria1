@@ -1,6 +1,7 @@
 package tusLibros;
 
 import java.util.Map;
+import java.util.Set;
 
 
 public class Carrito {
@@ -16,13 +17,13 @@ public class Carrito {
 	}
 	
 	public boolean esVacio(){
-		return productos.isEmpty();
+		return productos.esVacio();
 	}
 	
 	public void agregar(Object producto, Integer cantidad){
 		if(cantidad < 1) throw new Error(ERROR_CANTIDAD_NO_PUEDE_SER_NEGATIVA_O_CERO);
 		if(catalogo.containsKey(producto)){
-			productos.put(producto, cantidad);
+			productos.agregar(producto, cantidad);
 		}else{
 			throw new Error(ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO);
 		}
@@ -32,7 +33,7 @@ public class Carrito {
 		return productos.cantidad(producto);
 	}
 
-	public String listar() {
-		return productos.listar();
+	public Set<Object> listar() {
+		return productos.claves();
 	}		
 }

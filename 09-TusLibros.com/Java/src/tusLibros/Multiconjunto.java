@@ -7,23 +7,21 @@ import java.util.TreeMap;
 import java.lang.Integer;
 
 
-public class Multiconjunto<E,Integer> extends HashMap<E,Integer>{
+public class Multiconjunto<E,Integer> {
 
 	private  Map<E,Integer> elementos = new HashMap<E,Integer>();
 	
-	public Integer put(E elemento, Integer cantidad) { 
-		Integer viejoValor = null;
+	public void agregar(E elemento, Integer cantidad) { 
         if( !elementos.containsKey(elemento)){
         	elementos.put(elemento, cantidad);
         } else { 
-        	viejoValor =  elementos.get(elemento);
+        	Integer viejoValor =  elementos.get(elemento);
 			Integer sumaCantidad = ((Integer) new java.lang.Integer(((java.lang.Integer) viejoValor).intValue() + ((java.lang.Integer) cantidad).intValue()));
 			elementos.put(elemento, sumaCantidad);
         }
-        return viejoValor;
     }
 	
-	public boolean isEmpty() {
+	public boolean esVacio() {
 		return elementos.isEmpty();
 	}
 	
@@ -31,13 +29,8 @@ public class Multiconjunto<E,Integer> extends HashMap<E,Integer>{
 		return elementos.get(elemento);
 	}
 	
-	public String listar(){
-		String res = "";
-		Set<E> keys = elementos.keySet();
-		for(E key : keys){
-			res += key + "|" + elementos.get(key);
-		}
-		return res;
+	public Set<E> claves(){
+		return elementos.keySet();
 	}
 	
 }
