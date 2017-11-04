@@ -9,6 +9,7 @@ public class TarjetaDeCredito {
 	private String nombreDuenio;
 	
 	public TarjetaDeCredito(String numeroTarjeta, String fechaExpiracion,String nombreDuenio){
+		validarTarjeta(numeroTarjeta, fechaExpiracion, nombreDuenio);
 		this.numeroTarjeta = numeroTarjeta;
 		this.fechaExpiracion = fechaExpiracion;
 		this.nombreDuenio = nombreDuenio;

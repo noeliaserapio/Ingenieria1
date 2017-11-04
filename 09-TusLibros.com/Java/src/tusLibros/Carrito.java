@@ -35,5 +35,9 @@ public class Carrito {
 
 	public Set<Object> listar() {
 		return productos.claves();
-	}		
+	}	
+	
+	public Map<Object, Integer> catalogo(){
+		return catalogo;
+	}
 }

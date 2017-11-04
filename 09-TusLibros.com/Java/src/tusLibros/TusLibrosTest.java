@@ -122,6 +122,7 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem1, 2);
 		carrito.agregar(elem2, 5);
+		
 		assertTrue(catalogo.containsKey(elem1));
 		assertTrue(catalogo.containsKey(elem2));
 		assertTrue(carrito.listar().contains(elem1)); 
@@ -181,13 +182,33 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test12AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
+	public void test12AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElemento(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		int elem = 1;
+		catalogo.put(elem, 250);
+		carrito.agregar(elem, 1);
+		Calendar fecha = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "Lopez Jose");
+		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
-		//TODO hay que hacer este test
+		int total = cajero.checkOut();
+		
+		assertTrue(catalogo.containsKey(elem));
+		assertTrue(carrito.listar().contains(elem)); 
+		assertEquals(carrito.cantidad(elem), new Integer(1));
+		assertTrue(cajero.libroDeVentas().containsKey(elem));
+		assertEquals(total, 250);
+				
+	}  
+	
+	@Test
+	public void test13AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
-		int elem2 = 1;
+		int elem2 = 2;
 		catalogo.put(elem1, 250);
 		catalogo.put(elem2, 310);
 		carrito.agregar(elem1, 6);
@@ -197,19 +218,22 @@ public class TusLibrosTest {
 		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
-		cajero.checkOut();
-			
-		assertTrue(cajero.libroDeVentas().isEmpty());
-		assertTrue(catalogo.isEmpty());
-		assertTrue(carrito.esVacio());
-		assertTrue(carrito.esVacio());
+		int total = cajero.checkOut();
+		
+		assertTrue(catalogo.containsKey(elem1));
+		assertTrue(catalogo.containsKey(elem2));
+		assertTrue(carrito.listar().contains(elem1)); 
+		assertTrue(carrito.listar().contains(elem2));
+		assertEquals(carrito.cantidad(elem1), new Integer(6));
+		assertEquals(carrito.cantidad(elem2), new Integer(4));
+		assertTrue(cajero.libroDeVentas().containsKey(elem1));
+		assertTrue(cajero.libroDeVentas().containsKey(elem2));
+		assertEquals(total, 250*6+310*4);
 				
 	}  
 	
-	// Asert levanta la excepcion esperada y que no facturo. Tengo que guardar 
-		//todo lo que vendi y asertar que no vendi nada (libro de ventas esta vacio, es una orderCollection no se necesita
-		// una clase).
-		// la tarjeta de credito se tiene que modelar.
+	
+		
 		// La tarjeta al crearla se debe validar el nombre del owner (el nombre no puede ser todos espaciones en blanco,
 		// el numero debe contener 16 digitos). Si se puede crear una tarjeta vencida.
 		// Lo que no voy a poder hacer es comprar con una tarjeta vencida.
@@ -241,5 +265,28 @@ public class TusLibrosTest {
 		//esta vencida.<
 		// en el checkout tengo qe debitar del mercan procesor.
 		
+		
+	@Test
+	public void testXAlcrearUnClienteElMismoSeEncuentraEnElSistema(){
+		//TODO hay que hacer este test
+		AutenticadorCliente auten = new AutenticadorCliente();
+		auten.crearCliente(0, "password");
+		assertTrue(auten.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Integer>())));
+				
+	}
+	
+	@Test
+	public void testXNoSePuedeCrearUnClienteConIdYaExistente(){
+		//TODO hay que hacer este test
+
+				
+	}
+	
+	@Test
+	public void testXAlcrearUnClienteSuListaDeCarritosEsVacia(){
+		//TODO hay que hacer este test
+				
+	}	
 	
 }
+
