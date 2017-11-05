@@ -12,12 +12,13 @@ public class Cliente {
 	private String password;
 	private Map<Object, Integer> catalogo;
 	private List<Carrito> carritos=new ArrayList<Carrito>();
-
-
+	private Map<Object,Integer> libroDeCompras = new HashMap<Object,Integer>();
+	
 	public Cliente(int id, String password,Map<Object, Integer> catalogo) {
 		this.id = id;
 		this.password = password;
 		this.catalogo = catalogo;
+		
 	}
 	
 	@Override
@@ -43,5 +44,16 @@ public class Cliente {
 		return password;
 	}
 	
+	public Map<Object, Integer> getCatalogo() {
+		return catalogo;
+	}
+
+	public List<Carrito> getCarritos() {
+		return carritos;
+	}
+	
+	public Map<Object, Integer> getLibroDeCompras() {
+		return libroDeCompras;
+	}
 
 }
