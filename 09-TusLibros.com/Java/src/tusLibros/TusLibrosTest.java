@@ -212,7 +212,7 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
-		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
 		try {
@@ -220,7 +220,7 @@ public class TusLibrosTest {
 			fail();
 		} catch (Error e){
 			assertEquals(Cajero.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
-			assertTrue(cajero.libroDeVentas().isEmpty());
+			assertTrue(cajero.libroDeVentas().esVacio());
 			assertTrue(catalogo.isEmpty());
 			assertTrue(carrito.esVacio());
 		}
@@ -236,7 +236,7 @@ public class TusLibrosTest {
 		carrito.agregar(elem, 1);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
-		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
 		int total = cajero.checkOut();
@@ -244,7 +244,7 @@ public class TusLibrosTest {
 		assertTrue(catalogo.containsKey(elem));
 		assertTrue(carrito.listar().contains(elem)); 
 		assertEquals(carrito.cantidad(elem), new Integer(1));
-		assertTrue(cajero.libroDeVentas().containsKey(elem));
+		assertEquals(1, cajero.libroDeVentas().cantidad(elem));
 		assertEquals(total, 250);
 				
 	}  
@@ -261,7 +261,7 @@ public class TusLibrosTest {
 		carrito.agregar(elem2, 4);
 		Calendar fecha = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
-		Map<Object,Integer> libroDeVentas = new HashMap<Object, Integer>(); 
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
 		
 		int total = cajero.checkOut();
@@ -272,8 +272,8 @@ public class TusLibrosTest {
 		assertTrue(carrito.listar().contains(elem2));
 		assertEquals(carrito.cantidad(elem1), new Integer(6));
 		assertEquals(carrito.cantidad(elem2), new Integer(4));
-		assertTrue(cajero.libroDeVentas().containsKey(elem1));
-		assertTrue(cajero.libroDeVentas().containsKey(elem2));
+		assertEquals(6, cajero.libroDeVentas().cantidad(elem1));
+		assertEquals(4, cajero.libroDeVentas().cantidad(elem2));
 		assertEquals(total, 250*6+310*4);
 				
 	}  
@@ -566,7 +566,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test32MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
+	public void test34MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 6;
