@@ -15,7 +15,7 @@ public class TarjetaDeCredito {
 		this.nombreDuenio = nombreDuenio;
 	}
 	
-	public boolean estasvencidaAEstaFecha(Calendar fecha){
+	public boolean estasVencidaAEstaFecha(Calendar fecha){
 		// hacer la logica
 		return true;
 	}
