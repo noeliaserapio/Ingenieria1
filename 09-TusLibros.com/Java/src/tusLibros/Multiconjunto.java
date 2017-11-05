@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
-import java.lang.Integer;
 
 
 public class Multiconjunto<E,Integer> {
@@ -25,8 +24,13 @@ public class Multiconjunto<E,Integer> {
 		return elementos.isEmpty();
 	}
 	
-	public Integer cantidad(E elemento) {
-		return elementos.get(elemento);
+	public int cantidad(E elemento) {
+		if(elementos.containsKey(elemento)){
+			return (int) elementos.get(elemento);
+		}else{
+			return 0;
+		}
+
 	}
 	
 	public Set<E> claves(){

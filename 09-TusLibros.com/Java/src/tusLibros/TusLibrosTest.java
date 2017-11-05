@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -277,28 +278,29 @@ public class TusLibrosTest {
 				
 	}  
 
-	
-
-	
-
-
 	@Test
-	public void testXAlcrearUnClienteElMismoSeEncuentraEnElSistema(){
-		//TODO hay que hacer este test
-		AutenticadorCliente auten = new AutenticadorCliente();
-		auten.crearCliente(0, "password");
-		assertTrue(auten.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Integer>())));
-				
+	public void test18AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		assertTrue(interfa.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Integer>())));		
 	}
 	
 	@Test
-	public void testYNoSePuedeCrearUnClienteConIdYaExistente(){
-		//TODO hay que hacer este test
-		
+	public void test19NoSePuedeCrearUnClienteConIdYaExistente(){		
 		try {
-			AutenticadorCliente auten = new AutenticadorCliente();
-			auten.crearCliente(0, "password");
-			auten.crearCliente(0, "pass");
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			interfa.crearCliente(0, "pass");
 			fail();
 		} catch (Error e){
 			assertEquals(AutenticadorCliente.ERROR_ID_CLIENTE_UTILIZADA,e.getMessage());
@@ -308,10 +310,15 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void testZAlcrearUnClienteSuListaDeCarritosEsVacia(){	
-		AutenticadorCliente auten = new AutenticadorCliente();
-		auten.crearCliente(0, "password");
-		for(Cliente cl : auten.getClientesCreados() ){
+	public void test20AlcrearUnClienteSuListaDeCarritosEsVacia(){	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		for(Cliente cl : interfa.getClientesCreados() ){
 			if(cl.getId() == 0){
 				assertTrue(cl.getCarritos().isEmpty());
 				break;
@@ -320,16 +327,262 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void testXAlcrearUnClienteSuLibroDeComprasEsVacia(){	
-		AutenticadorCliente auten = new AutenticadorCliente();
-		auten.crearCliente(0, "password");
-		for(Cliente cl : auten.getClientesCreados() ){
+	public void test21AlcrearUnClienteSuLibroDeComprasEsVacia(){	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		for(Cliente cl : interfa.getClientesCreados() ){
 			if(cl.getId() == 0){
 				assertTrue(cl.getLibroDeCompras().keySet().isEmpty());
 				break;
 			}
 		}			
 	}
+	
+	@Test
+	public void test22CuandoSeAgreganVariosCarritosLaCantidadAumentaEnLaAgregada(){	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		for(Cliente cl : interfa.getClientesCreados() ){
+			if(cl.getId() == 0){
+				int cantidadAnterior = cl.getCarritos().size();
+				cl.agregarNuevosCarritos(5);
+				assertEquals(5,cl.getCarritos().size() - cantidadAnterior);
+				break;
+			}
+		}			
+	}
+	
+	@Test
+	public void test23TodosLosCarritosDeDistintosClientesTienenDistintoID(){	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		interfa.crearCliente(1, "passw");
+		Set<Integer> idsCarritosclientes = new HashSet<Integer>();
+		for(Cliente cl : interfa.getClientesCreados() ){
+			cl.agregarNuevosCarritos(7);
+			idsCarritosclientes.addAll(cl.getCarritos().keySet());
+		}
+		assertEquals(14,idsCarritosclientes.size());
+	}
+	
+	@Test
+	public void test24MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnIdClienteInexistente() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			interfa.crearCarrito(8, "password");
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.NO_SE_ENCUENTRA_CLIENTE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test25MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnCorrectoIdClienteInvalidaContasenia() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			interfa.crearCarrito(0, "pass");
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.CONTRASENIA_INVALIDA,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test26MedianteLaInterfaceAlCrearUnCarritoAumentaLaCantidadDeCarritosDeUnCliente() {	
+
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		interfa.crearCarrito(0, "password");
+		for(Cliente cl : interfa.getClientesCreados() ){
+			if(cl.getId() == 0){
+				int cantidadAnterior = cl.getCarritos().size();
+				cl.agregarNuevoCarrito();
+				assertEquals(1,cl.getCarritos().size() - cantidadAnterior);
+				break;
+			}
+		}
+	}
+	
+	@Test
+	public void test27MedianteLaInterfaceNosePuedeAgregarProductoAUnCarritoParaUnIdClienteInexistente() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			int idCarrito = interfa.crearCarrito(0, "password");
+			Object prod = new Integer(6);
+			interfa.agregarACarrito(++idCarrito, prod, 5);
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.NO_SE_ENCUENTRA_CARRITO,e.getMessage());
+		}
+	}
+
+	@Test
+	public void test28MedianteLaInterfaceAlAgregarUnProductoAunCarritoElmismoSeEnCuentraEnELCarrito() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		int idCarrito = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		int cantidadAnterior=0;
+		for(Cliente cl : interfa.getClientesCreados() ){
+			if(cl.getId() == 0){
+				cl.getCarritos().get(idCarrito);
+				cantidadAnterior = cl.getCarritos().get(idCarrito).cantidad(prod);
+				break;
+			}
+		}	
+		interfa.agregarACarrito(idCarrito, prod, 5);
+		for(Cliente cl : interfa.getClientesCreados() ){
+			if(cl.getId() == 0){
+				assertEquals(5,cl.getCarritos().get(idCarrito).cantidad(prod) - cantidadAnterior);
+				break;
+			}
+		}		
+	}
+	
+	@Test
+	public void test29MedianteLaInterfaceNosePuedeListarUnCarritoParaUnIdClienteInexistente() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			int idCarrito = interfa.crearCarrito(0, "password");
+			interfa.listarCarrito(++idCarrito);
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.NO_SE_ENCUENTRA_CARRITO,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test30MedianteLaInterfaceAlListarUnCarritoSeObtieneQueCuandoNoHayAgregacionesDeProductoEsVacio() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		int idCarrito = interfa.crearCarrito(0, "password");		
+		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarCarrito(idCarrito);
+		assertTrue(contenidoCarrito.esVacio());
+	}
+	
+	
+	@Test
+	public void test31MedianteLaInterfaceAlListarUnCarritoSePuedeObtenerLaCantidadDeElementodDeUnObject() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		int idCarrito = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		interfa.agregarACarrito(idCarrito, prod, 5);		
+		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarCarrito(idCarrito);
+		assertEquals(5,contenidoCarrito.cantidad(prod));
+	}
+	
+	@Test
+	public void test32MedianteLaInterfaceNosePuedeListarLasComprasParaUnIdClienteInexistente() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			interfa.listarComprasCliente(8, "password");
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.NO_SE_ENCUENTRA_CLIENTE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test33MedianteLaInterfaceNosePuedeListarLasComprasParaUnCorrectoIdClienteInvalidaContasenia() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 2;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			interfa.listarComprasCliente(0, "pass");
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.CONTRASENIA_INVALIDA,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test32MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 1;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		int idCarrito = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		interfa.agregarACarrito(idCarrito, prod, 5);		
+		Map<Object, Integer> contenidoCarrito = interfa.listarComprasCliente(0, "password");
+		assertTrue(contenidoCarrito.keySet().isEmpty());
+	}
+	
+
+	
 	
 	
 }
