@@ -231,14 +231,9 @@ public class TusLibrosTest {
 		assertEquals(total, 250*6+310*4);
 				
 	}  
-	
-	
-		
 
-		
-		
 	@Test
-	public void testXAlcrearUnClienteElMismoSeEncuentraEnElSistema(){
+	public void test14AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
 		//TODO hay que hacer este test
 		AutenticadorCliente auten = new AutenticadorCliente();
 		auten.crearCliente(0, "password");
@@ -247,17 +242,45 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void testXNoSePuedeCrearUnClienteConIdYaExistente(){
+	public void test15NoSePuedeCrearUnClienteConIdYaExistente(){
 		//TODO hay que hacer este test
+		
+		try {
+			AutenticadorCliente auten = new AutenticadorCliente();
+			auten.crearCliente(0, "password");
+			auten.crearCliente(0, "pass");
+			fail();
+		} catch (Error e){
+			assertEquals(AutenticadorCliente.ERROR_ID_CLIENTE_UTILIZADA,e.getMessage());
+		}
 
 				
 	}
 	
 	@Test
-	public void testXAlcrearUnClienteSuListaDeCarritosEsVacia(){
-		//TODO hay que hacer este test
-				
-	}	
+	public void test16AlcrearUnClienteSuListaDeCarritosEsVacia(){	
+		AutenticadorCliente auten = new AutenticadorCliente();
+		auten.crearCliente(0, "password");
+		for(Cliente cl : auten.getClientesCreados() ){
+			if(cl.getId() == 0){
+				assertTrue(cl.getCarritos().isEmpty());
+				break;
+			}
+		}			
+	}
+	
+	@Test
+	public void test17AlcrearUnClienteSuLibroDeComprasEsVacia(){	
+		AutenticadorCliente auten = new AutenticadorCliente();
+		auten.crearCliente(0, "password");
+		for(Cliente cl : auten.getClientesCreados() ){
+			if(cl.getId() == 0){
+				assertTrue(cl.getLibroDeCompras().keySet().isEmpty());
+				break;
+			}
+		}			
+	}
+	
 	
 }
 
