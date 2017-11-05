@@ -60,7 +60,7 @@ public class InterfaceRest {
 		throw new Error(NO_SE_ENCUENTRA_CARRITO);
 	}
 	
-	public Map<Object, Integer> listarComprasCliente(int idCliente, String password){
+	public Multiconjunto<Object, Integer> listarComprasCliente(int idCliente, String password){
 		for(Cliente cl : auten.getClientesCreados()){
 			if(cl.getId() == idCliente){
 				if(cl.getPassword().equals(password)){

@@ -337,7 +337,7 @@ public class TusLibrosTest {
 		interfa.crearCliente(0, "password");
 		for(Cliente cl : interfa.getClientesCreados() ){
 			if(cl.getId() == 0){
-				assertTrue(cl.getLibroDeCompras().keySet().isEmpty());
+				assertTrue(cl.getLibroDeCompras().esVacio());
 				break;
 			}
 		}			
@@ -577,8 +577,8 @@ public class TusLibrosTest {
 		int idCarrito = interfa.crearCarrito(0, "password");
 		Object prod = new Integer(6);
 		interfa.agregarACarrito(idCarrito, prod, 5);		
-		Map<Object, Integer> contenidoCarrito = interfa.listarComprasCliente(0, "password");
-		assertTrue(contenidoCarrito.keySet().isEmpty());
+		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarComprasCliente(0, "password");
+		assertTrue(contenidoCarrito.esVacio());
 	}
 	
 

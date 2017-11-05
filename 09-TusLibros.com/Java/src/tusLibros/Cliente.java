@@ -12,7 +12,7 @@ public class Cliente {
 	private String password;
 	private Map<Object, Integer> catalogo;
 	private Map<Integer, Carrito> carritos = new HashMap<Integer, Carrito>();//id, carrito
-	private Map<Object,Integer> libroDeCompras = new HashMap<Object,Integer>();//producto, cantidad
+	private Multiconjunto<Object,Integer> libroDeCompras = new Multiconjunto<Object,Integer>();//producto, cantidad
 	
 	public Cliente(int id, String password,Map<Object, Integer> catalogo) {
 		this.id = id;
@@ -59,7 +59,7 @@ public class Cliente {
 		return carritos;
 	}
 	
-	public Map<Object, Integer> getLibroDeCompras() {
+	public Multiconjunto<Object, Integer> getLibroDeCompras() {
 		return libroDeCompras;
 	}
 
