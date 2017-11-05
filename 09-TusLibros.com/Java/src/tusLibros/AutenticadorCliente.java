@@ -10,6 +10,9 @@ public class AutenticadorCliente {
 	private List<Cliente> clientesCreados = new ArrayList<Cliente>();
 	private Map<Object, Integer> catalogo;
 	
+	public AutenticadorCliente(Map<Object, Integer> catalogo) {
+		this.catalogo = catalogo;
+	}
 	public void crearCliente(int id, String password){
 		for(Cliente cl : clientesCreados){
 			if(cl.getId() == id){

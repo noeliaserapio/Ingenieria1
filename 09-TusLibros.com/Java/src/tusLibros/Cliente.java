@@ -11,8 +11,8 @@ public class Cliente {
 	private int id;
 	private String password;
 	private Map<Object, Integer> catalogo;
-	private List<Carrito> carritos=new ArrayList<Carrito>();
-	private Map<Object,Integer> libroDeCompras = new HashMap<Object,Integer>();
+	private Map<Integer, Carrito> carritos = new HashMap<Integer, Carrito>();//id, carrito
+	private Multiconjunto<Object,Integer> libroDeCompras = new Multiconjunto<Object,Integer>();//producto, cantidad
 	
 	public Cliente(int id, String password,Map<Object, Integer> catalogo) {
 		this.id = id;
@@ -32,9 +32,16 @@ public class Cliente {
 	
 	public void agregarNuevosCarritos(int cantidad) {
 		for(int i=0;i<cantidad;i++){
-			carritos.add(new Carrito(catalogo));
+			agregarNuevoCarrito();
 		}
 	}
+	
+	public int agregarNuevoCarrito() {
+		Carrito nuevoCarrito = new Carrito(catalogo);
+		carritos.put(Carrito.getNumeroCarrito(), nuevoCarrito);
+		return Carrito.getNumeroCarrito();
+	}
+	
 	
 	public int getId() {
 		return id;
@@ -48,11 +55,11 @@ public class Cliente {
 		return catalogo;
 	}
 
-	public List<Carrito> getCarritos() {
+	public Map<Integer, Carrito> getCarritos() {
 		return carritos;
 	}
 	
-	public Map<Object, Integer> getLibroDeCompras() {
+	public Multiconjunto<Object, Integer> getLibroDeCompras() {
 		return libroDeCompras;
 	}
 
