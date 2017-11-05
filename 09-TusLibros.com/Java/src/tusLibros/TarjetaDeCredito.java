@@ -1,5 +1,7 @@
 package tusLibros;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.time.YearMonth;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -17,13 +19,13 @@ public class TarjetaDeCredito {
 
 	
 	public TarjetaDeCredito(String numeroTarjeta, YearMonth fechaExpiracion,String nombreDuenio){
-		validarTarjeta(numeroTarjeta, fechaExpiracion, nombreDuenio);
+		validarTarjeta(numeroTarjeta, nombreDuenio);
 		this.numeroTarjeta = numeroTarjeta;
 		this.fechaExpiracion = fechaExpiracion;
 		this.nombreDuenio = nombreDuenio;
 	}
 	
-	private boolean validarTarjeta(String numeroTarjeta, YearMonth fechaExpiracion,String nombreDuenio){
+	private boolean validarTarjeta(String numeroTarjeta, String nombreDuenio){
 		
 		if(numeroTarjeta.length() != 16) throw new Error(ERROR_TARJETA_DEBE_TENER_16_CARACTERES);
 	
@@ -33,25 +35,13 @@ public class TarjetaDeCredito {
 		return true;
 	}
 
-	public boolean estasVencidaAEstaFecha(Calendar fecha){
-		// hacer la logica
-		return true;
+	public boolean estasVencidaAEstaFecha(LocalDate fecha){
+		int anio = fecha.getYear();
+		Month mes = fecha.getMonth();
+		YearMonth.of(anio, mes);
+		return fechaExpiracion.isBefore(YearMonth.of(fecha.getYear(), fecha.getMonth()));
 	}
-	
-/*	public boolean estasvencidaActualmente(){
-		int mes = Integer.parseInt(fechaExpiracion.substring(0, 2));
-		int anio = Integer.parseInt(fechaExpiracion.substring(2, 6));
 		
-		GregorianCalendar ahora = new GregorianCalendar();
-		GregorianCalendar vencTarj = new GregorianCalendar(anio, mes-1, 1);
-		
-		if(ahora.before(vencTarj) || ahora.equals(vencTarj)){
-			return false;
-		}else{
-			return true;
-		}
-	}  */
-	
 	private boolean esValida(double cantidadDeTransaccion){
 		String[] transacionSplit = new Double(cantidadDeTransaccion).toString().split(".");
 		boolean esValidaCantTransaccion = true;
@@ -67,8 +57,6 @@ public class TarjetaDeCredito {
 			return false;
 		}else if(!esValidaCantTransaccion){
 			return false;
-	//	}else if(fechaExpiracion.length() != 6){
-	//		return false;
 		}
 		return true;
 	}

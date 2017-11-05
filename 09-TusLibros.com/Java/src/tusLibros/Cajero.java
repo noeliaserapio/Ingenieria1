@@ -1,5 +1,6 @@
 package tusLibros;
 
+import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,13 +9,14 @@ import java.util.Set;
 public class Cajero {
 	
 	private Carrito carrito;
-	private Calendar fecha;
+	private LocalDate fecha;
 	private TarjetaDeCredito tarjeta;
 	private Multiconjunto<Object,Integer> libroDeVentas;
 	
 	public static final String ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO = "No se puede	hacer checkout de un carrito vacio";
+	public static final String ERROR_TERJETA_VENCIDA = "No se puede	hacer checkout con una tarjeta vencida";
 	
-	public Cajero(Carrito carrito, Calendar fecha, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas){
+	public Cajero(Carrito carrito, LocalDate fecha, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas){
 		this.carrito = carrito;
 		this.fecha = fecha;
 		this.tarjeta = tarjeta;
@@ -24,6 +26,7 @@ public class Cajero {
 	public int checkOut(){
 		int total = 0;
 		if(carrito.esVacio()) throw new Error(ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO);
+		if(tarjeta.estasVencidaAEstaFecha(fecha)) throw new Error(ERROR_TERJETA_VENCIDA);
 		Set<Object> productos = carrito.listar();
 		for(Object producto : productos){
 			Integer cantidad = carrito.cantidad(producto);
