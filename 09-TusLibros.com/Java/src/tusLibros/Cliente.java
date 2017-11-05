@@ -11,8 +11,9 @@ public class Cliente {
 	private int id;
 	private String password;
 	private Map<Object, Integer> catalogo;
-	private Map<Integer, Carrito> carritos = new HashMap<Integer, Carrito>();//id, carrito
+	private Map<Long, Carrito> carritos = new HashMap<Long, Carrito>();//id, carrito
 	private Multiconjunto<Object,Integer> libroDeCompras = new Multiconjunto<Object,Integer>();//producto, cantidad
+	public static final String NO_SE_ENCUENTRA_CARRITO = "Este cliente no posee el carrito buscado";
 	
 	public Cliente(int id, String password,Map<Object, Integer> catalogo) {
 		this.id = id;
@@ -36,9 +37,9 @@ public class Cliente {
 		}
 	}
 	
-	public int agregarNuevoCarrito() {
+	public long agregarNuevoCarrito() {
 		Carrito nuevoCarrito = new Carrito(catalogo);
-		carritos.put(Carrito.getNumeroCarrito(), nuevoCarrito);
+		carritos.put( Carrito.getNumeroCarrito(), nuevoCarrito);
 		return Carrito.getNumeroCarrito();
 	}
 	
@@ -55,12 +56,20 @@ public class Cliente {
 		return catalogo;
 	}
 
-	public Map<Integer, Carrito> getCarritos() {
+	public Map<Long, Carrito> getCarritos() {
 		return carritos;
 	}
 	
 	public Multiconjunto<Object, Integer> getLibroDeCompras() {
 		return libroDeCompras;
 	}
+	
+	public long checkOutCarrito(long idCarrito, TarjetaDeCredito tarjCred) {	
+		if(!carritos.containsKey(idCarrito)) throw new Error(NO_SE_ENCUENTRA_CARRITO);
+		Cajero op = new Cajero(carritos.get(idCarrito), tarjCred,  libroDeCompras);
+		return op.checkOut().getNumeroTransaccion();
+	}
+	
+	
 
 }

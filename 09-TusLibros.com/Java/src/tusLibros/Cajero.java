@@ -1,6 +1,5 @@
 package tusLibros;
 
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,33 +7,26 @@ import java.util.Set;
 
 public class Cajero {
 	
+	public static long transactionId = 1;
 	private Carrito carrito;
-	private LocalDate fecha;
 	private TarjetaDeCredito tarjeta;
 	private Multiconjunto<Object,Integer> libroDeVentas;
+	private MerchantProcessor merch;
 	
-	public static final String ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO = "No se puede	hacer checkout de un carrito vacio";
-	public static final String ERROR_TERJETA_VENCIDA = "No se puede	hacer checkout con una tarjeta vencida";
-	
-	public Cajero(Carrito carrito, LocalDate fecha, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas){
+	public Cajero(Carrito carrito, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas){
 		this.carrito = carrito;
-		this.fecha = fecha;
 		this.tarjeta = tarjeta;
 		this.libroDeVentas = libroDeVentas;
 	}
 	
-	public int checkOut(){
-		int total = 0;
-		if(carrito.esVacio()) throw new Error(ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO);
-		if(tarjeta.estasVencidaAEstaFecha(fecha)) throw new Error(ERROR_TERJETA_VENCIDA);
-		Set<Object> productos = carrito.listar();
-		for(Object producto : productos){
-			Integer cantidad = carrito.cantidad(producto);
-			Map<Object, Integer> catalogo = carrito.catalogo();
-			total += catalogo.get(producto) * cantidad;
-			libroDeVentas.agregar(producto, cantidad);
-		}
-		return total;
+	public Ticket checkOut(){
+		double totalCompra = carrito.checkOut();
+		String totalCompraString = String.format("%.2f", totalCompra);
+		tarjeta.esValidaParaMerchantProccesor(totalCompraString);
+		tarjeta.noEstaVencidaActualmente();
+		MerchantProcessor.debitarTarjeta(tarjeta, totalCompraString);
+		libroDeVentas.agregarAll(carrito.getProductos());
+		return new Ticket(++transactionId,totalCompra) ;
 	}
 	
 	public Multiconjunto<Object,Integer> libroDeVentas(){

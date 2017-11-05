@@ -24,7 +24,7 @@ public class InterfaceRest {
 		auten.crearCliente(id, password);
 	}
 	
-	public int crearCarrito(int idCliente, String password){
+	public long crearCarrito(int idCliente, String password){
 		for(Cliente cl : auten.getClientesCreados()){
 			if(cl.getId() == idCliente){
 				if(cl.getPassword().equals(password)){
@@ -37,9 +37,9 @@ public class InterfaceRest {
 		throw new Error(NO_SE_ENCUENTRA_CLIENTE);
 	}
 	
-	public void agregarACarrito(int idCarrito, Object producto,int cantidad){
+	public void agregarACarrito(long idCarrito, Object producto,int cantidad){
 		for(Cliente cl : auten.getClientesCreados()){
-			for(Integer idCarr : cl.getCarritos().keySet()){
+			for(Long idCarr : cl.getCarritos().keySet()){
 				if(idCarr == idCarrito){
 					cl.getCarritos().get(idCarr).agregar(producto, cantidad);
 					return;
@@ -49,9 +49,9 @@ public class InterfaceRest {
 		throw new Error(NO_SE_ENCUENTRA_CARRITO);
 	}
 	
-	public Multiconjunto<Object, Integer> listarCarrito(int idCarrito){
+	public Multiconjunto<Object, Integer> listarCarrito(long idCarrito){
 		for(Cliente cl : auten.getClientesCreados()){
-			for(Integer idCarr : cl.getCarritos().keySet()){
+			for(Long idCarr : cl.getCarritos().keySet()){
 				if(idCarr == idCarrito){
 					return cl.getCarritos().get(idCarr).getProductos();
 				}
@@ -71,6 +71,18 @@ public class InterfaceRest {
 			}
 		}
 		throw new Error(NO_SE_ENCUENTRA_CLIENTE);
+	}
+	
+	public long checkOutCarrito(long idCarrito, String numeroTarjeta, String fechaExpiracion, String dueñoTarjeta){
+		for(Cliente cl : auten.getClientesCreados()){
+			for(Long idCarr : cl.getCarritos().keySet()){
+				if(idCarr == idCarrito){
+					TarjetaDeCredito tarjCred = new TarjetaDeCredito(numeroTarjeta,fechaExpiracion,dueñoTarjeta);
+					return cl.checkOutCarrito(idCarrito, tarjCred);
+				}
+			}
+		}
+		throw new Error(NO_SE_ENCUENTRA_CARRITO);
 	}
 	
 	

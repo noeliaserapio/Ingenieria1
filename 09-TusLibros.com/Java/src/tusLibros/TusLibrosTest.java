@@ -2,7 +2,6 @@ package tusLibros;
 
 import static org.junit.Assert.*;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -166,7 +165,7 @@ public class TusLibrosTest {
 	@Test
 	public void test11NoSePuedeCrearUnaTarjetaQueNoTiene16Caracteres(){
 		try {
-			TarjetaDeCredito tarjeta = new TarjetaDeCredito("123456789012456", YearMonth.now(), "LOPEZ JOSE");
+			TarjetaDeCredito tarjeta = new TarjetaDeCredito("123456789012456", "051992", "LOPEZ JOSE");
 			fail();
 		} catch (Error e){
 			assertEquals(TarjetaDeCredito.ERROR_TARJETA_DEBE_TENER_16_CARACTERES, e.getMessage());
@@ -177,7 +176,7 @@ public class TusLibrosTest {
 	@Test
 	public void test12NoSePuedeCrearUnaTarjetaConCaracteresQueNoSeanDigitos(){
 		try {
-			TarjetaDeCredito tarjeta = new TarjetaDeCredito("s123456789012456", YearMonth.now(), "LOPEZ JOSE");
+			TarjetaDeCredito tarjeta = new TarjetaDeCredito("s123456789012456",  "051992", "LOPEZ JOSE");
 			fail();
 		} catch (Error e){
 			assertEquals(TarjetaDeCredito.ERROR_TARJETA_DEBEN_SER_DIGITOS, e.getMessage());
@@ -188,7 +187,7 @@ public class TusLibrosTest {
 	@Test
 	public void test13NoSePuedeCrearUnaTarjetaConDuenioQueNoComienceConLetrasMayusculas(){
 		try {
-			TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), " ");
+			TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",  "051992", " ");
 			fail();
 		} catch (Error e){
 			assertEquals(TarjetaDeCredito.ERROR_DUENIO_FORMATO_INVALIDO, e.getMessage());
@@ -199,7 +198,7 @@ public class TusLibrosTest {
 	@Test
 	public void test14NoSePuedeCrearUnaTarjetaQueContengaCaracteresDistintosALetrasMayusculasYEspacios(){
 		try {
-			TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "JOSE   v");
+			TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",  "051992", "JOSE   v");
 			fail();
 		} catch (Error e){
 			assertEquals(TarjetaDeCredito.ERROR_DUENIO_FORMATO_INVALIDO, e.getMessage());
@@ -211,16 +210,15 @@ public class TusLibrosTest {
 	public void test15CheckOutDeUnCarritoVacioDaError(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
-		LocalDate fecha = LocalDate.now();
-		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",  "051992", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
 		
 		try {
 			cajero.checkOut();
 			fail();
 		} catch (Error e){
-			assertEquals(Cajero.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
+			assertEquals(Carrito.ERROR_NO_SE_PUEDE_HACER_CHECKOUT_DE_CARRITO_VACIO,e.getMessage());
 			assertTrue(cajero.libroDeVentas().esVacio());
 			assertTrue(catalogo.isEmpty());
 			assertTrue(carrito.esVacio());
@@ -229,54 +227,28 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test16NoSePuedeHacerCheckOutConUnaTarjetaVencida(){
+	public void test16AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElemento(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem = 1;
 		catalogo.put(elem, 250);
 		carrito.agregar(elem, 1);
-		LocalDate fecha = LocalDate.now();
-		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.of(2010,12), "LOPEZ JOSE");
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
 		
-		try {
-			cajero.checkOut();
-			fail();
-		} catch (Error e){
-			assertEquals(Cajero.ERROR_TERJETA_VENCIDA, e.getMessage());
-			assertTrue(cajero.libroDeVentas().esVacio());
-			assertTrue(!catalogo.isEmpty());
-			assertTrue(!carrito.esVacio());
-		}
-		
-	}
-	
-	
-	@Test
-	public void test17AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElemento(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
-		Carrito carrito = new Carrito(catalogo);
-		int elem = 1;
-		catalogo.put(elem, 250);
-		carrito.agregar(elem, 1);
-		LocalDate fecha = LocalDate.now();
-		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
-		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
-		
-		int total = cajero.checkOut();
+		double total = cajero.checkOut().getTotalCompra();
 		
 		assertTrue(catalogo.containsKey(elem));
 		assertTrue(carrito.listar().contains(elem)); 
 		assertEquals(carrito.cantidad(elem), new Integer(1));
 		assertEquals(1, cajero.libroDeVentas().cantidad(elem));
-		assertEquals(total, 250);
+		assertTrue(total == 250); 
 				
 	}  
 	
 	@Test
-	public void test18AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
+	public void test17AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
@@ -285,12 +257,11 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 310);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
-		LocalDate fecha = LocalDate.now();
-		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", YearMonth.now(), "LOPEZ JOSE");
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
-		Cajero cajero = new Cajero(carrito, fecha, tarjeta, libroDeVentas);
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
 		
-		int total = cajero.checkOut();
+		double total = cajero.checkOut().getTotalCompra();
 		
 		assertTrue(catalogo.containsKey(elem1));
 		assertTrue(catalogo.containsKey(elem2));
@@ -298,16 +269,14 @@ public class TusLibrosTest {
 		assertTrue(carrito.listar().contains(elem2));
 		assertEquals(carrito.cantidad(elem1), new Integer(6));
 		assertEquals(carrito.cantidad(elem2), new Integer(4));
-		assertEquals(6, cajero.libroDeVentas().cantidad(elem1));
-		assertEquals(4, cajero.libroDeVentas().cantidad(elem2));
-		assertEquals(total, 250*6+310*4);
+		assertEquals(6,cajero.libroDeVentas().cantidad(elem1));
+		assertEquals(4,cajero.libroDeVentas().cantidad(elem2));
+		assertTrue(250*6+310*4 == total );
 				
 	}  
 
-
-
 	@Test
-	public void test19AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
+	public void test18AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 2;
@@ -319,7 +288,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test20NoSePuedeCrearUnClienteConIdYaExistente(){		
+	public void test19NoSePuedeCrearUnClienteConIdYaExistente(){		
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -338,7 +307,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test21AlcrearUnClienteSuListaDeCarritosEsVacia(){	
+	public void test20AlcrearUnClienteSuListaDeCarritosEsVacia(){	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 2;
@@ -355,7 +324,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test22AlcrearUnClienteSuLibroDeComprasEsVacia(){	
+	public void test21AlcrearUnClienteSuLibroDeComprasEsVacia(){	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 2;
@@ -372,7 +341,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test23CuandoSeAgreganVariosCarritosLaCantidadAumentaEnLaAgregada(){	
+	public void test22CuandoSeAgreganVariosCarritosLaCantidadAumentaEnLaAgregada(){	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 2;
@@ -391,7 +360,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test24TodosLosCarritosDeDistintosClientesTienenDistintoID(){	
+	public void test23TodosLosCarritosDeDistintosClientesTienenDistintoID(){	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 2;
@@ -400,7 +369,7 @@ public class TusLibrosTest {
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		interfa.crearCliente(1, "passw");
-		Set<Integer> idsCarritosclientes = new HashSet<Integer>();
+		Set<Long> idsCarritosclientes = new HashSet<Long>();
 		for(Cliente cl : interfa.getClientesCreados() ){
 			cl.agregarNuevosCarritos(7);
 			idsCarritosclientes.addAll(cl.getCarritos().keySet());
@@ -409,7 +378,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test25MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnIdClienteInexistente() {	
+	public void test24MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnIdClienteInexistente() {	
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -426,7 +395,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test26MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnCorrectoIdClienteInvalidaContasenia() {	
+	public void test25MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnCorrectoIdClienteInvalidaContasenia() {	
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -443,7 +412,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test27MedianteLaInterfaceAlCrearUnCarritoAumentaLaCantidadDeCarritosDeUnCliente() {	
+	public void test26MedianteLaInterfaceAlCrearUnCarritoAumentaLaCantidadDeCarritosDeUnCliente() {	
 
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
@@ -464,7 +433,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test28MedianteLaInterfaceNosePuedeAgregarProductoAUnCarritoParaUnIdClienteInexistente() {	
+	public void test27MedianteLaInterfaceNosePuedeAgregarProductoAUnCarritoParaUnIdInexistente() {	
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -473,7 +442,7 @@ public class TusLibrosTest {
 			catalogo.put(elem2, 400);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
-			int idCarrito = interfa.crearCarrito(0, "password");
+			long idCarrito = interfa.crearCarrito(0, "password");
 			Object prod = new Integer(6);
 			interfa.agregarACarrito(++idCarrito, prod, 5);
 			fail();
@@ -483,7 +452,7 @@ public class TusLibrosTest {
 	}
 
 	@Test
-	public void test29MedianteLaInterfaceAlAgregarUnProductoAunCarritoElmismoSeEnCuentraEnELCarrito() {	
+	public void test28MedianteLaInterfaceAlAgregarUnProductoAunCarritoElmismoSeEnCuentraEnELCarrito() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 6;
@@ -491,7 +460,7 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 400);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
-		int idCarrito = interfa.crearCarrito(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
 		Object prod = new Integer(6);
 		int cantidadAnterior=0;
 		for(Cliente cl : interfa.getClientesCreados() ){
@@ -511,7 +480,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test30MedianteLaInterfaceNosePuedeListarUnCarritoParaUnIdClienteInexistente() {	
+	public void test29MedianteLaInterfaceNosePuedeListarUnCarritoParaUnIdClienteInexistente() {	
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -520,7 +489,7 @@ public class TusLibrosTest {
 			catalogo.put(elem2, 400);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
-			int idCarrito = interfa.crearCarrito(0, "password");
+			long idCarrito = interfa.crearCarrito(0, "password");
 			interfa.listarCarrito(++idCarrito);
 			fail();
 		} catch (Error e){
@@ -529,7 +498,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test31MedianteLaInterfaceAlListarUnCarritoSeObtieneQueCuandoNoHayAgregacionesDeProductoEsVacio() {	
+	public void test30MedianteLaInterfaceAlListarUnCarritoSeObtieneQueCuandoNoHayAgregacionesDeProductoEsVacio() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 6;
@@ -537,14 +506,14 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 400);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
-		int idCarrito = interfa.crearCarrito(0, "password");		
+		long idCarrito = interfa.crearCarrito(0, "password");		
 		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarCarrito(idCarrito);
 		assertTrue(contenidoCarrito.esVacio());
 	}
 	
 	
 	@Test
-	public void test32MedianteLaInterfaceAlListarUnCarritoSePuedeObtenerLaCantidadDeElementodDeUnObject() {	
+	public void test31MedianteLaInterfaceAlListarUnCarritoSePuedeObtenerLaCantidadDeElementodDeUnObject() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 6;
@@ -552,7 +521,7 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 400);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
-		int idCarrito = interfa.crearCarrito(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
 		Object prod = new Integer(6);
 		interfa.agregarACarrito(idCarrito, prod, 5);		
 		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarCarrito(idCarrito);
@@ -577,7 +546,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test34MedianteLaInterfaceNosePuedeListarLasComprasParaUnCorrectoIdClienteInvalidaContasenia() {	
+	public void test33MedianteLaInterfaceNosePuedeListarLasComprasParaUnCorrectoIdClienteInvalidaContasenia() {	
 		try {
 			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 			int elem1 = 1;
@@ -594,7 +563,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test35MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
+	public void test34MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 1;
 		int elem2 = 6;
@@ -602,14 +571,183 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 400);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
-		int idCarrito = interfa.crearCarrito(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
 		Object prod = new Integer(6);
 		interfa.agregarACarrito(idCarrito, prod, 5);		
-		Multiconjunto<Object, Integer> contenidoCarrito = interfa.listarComprasCliente(0, "password");
-		assertTrue(contenidoCarrito.esVacio());
+		Multiconjunto<Object, Integer> comprasCliente = interfa.listarComprasCliente(0, "password");
+		assertTrue(comprasCliente.esVacio());
 	}
 	
+	@Test
+	public void test35NoSePuedeHacerCheckOutConTarjetavencida(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 310);
+		carrito.agregar(elem1, 6);
+		carrito.agregar(elem2, 4);
+		Calendar hoy = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) -1), "LOPEZ JOSE");
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
+		
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(TarjetaDeCredito.ERROR_TARJETA_VENCIDA, e.getMessage());
+			assertTrue(cajero.libroDeVentas().esVacio());
+			assertTrue(!catalogo.isEmpty());
+			assertTrue(!carrito.esVacio());
+		}				
+	} 
+	
+	@Test
+	public void test36NoSePuedeHacerCheckOutConTarjetaConDuenioMayorA30Caracters(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 310);
+		carrito.agregar(elem1, 6);
+		carrito.agregar(elem2, 4);
+		Calendar hoy = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSEXXXXXXXXXXXXXXXXXXXXX");
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(TarjetaDeCredito.ERROR_NOMBRE_DUENIO_LARGO, e.getMessage());
+			assertTrue(cajero.libroDeVentas().esVacio());
+			assertTrue(!catalogo.isEmpty());
+			assertTrue(!carrito.esVacio());
+		}				
+	}
+	
+	@Test
+	public void test37NoSePuedeHacerCheckOutConTarjetaConFechaExpiracionMenorDe6Caracters(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 310);
+		carrito.agregar(elem1, 6);
+		carrito.agregar(elem2, 4);
+		Calendar hoy = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "05202", "LOPEZ JOSE");
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(TarjetaDeCredito.ERROR_FECHA_EXPIRACION_INVALIDA, e.getMessage());
+			assertTrue(cajero.libroDeVentas().esVacio());
+			assertTrue(!catalogo.isEmpty());
+			assertTrue(!carrito.esVacio());
+		}				
+	}
+	
+	@Test
+	public void test38NoSePuedeHacerCheckOutConTarjetaConFechaExpiracionMayorDe6Caracters(){
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Carrito carrito = new Carrito(catalogo);
+		int elem1 = 1;
+		int elem2 = 2;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 310);
+		carrito.agregar(elem1, 6);
+		carrito.agregar(elem2, 4);
+		Calendar hoy = new GregorianCalendar();
+		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "0520208", "LOPEZ JOSE");
+		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
+		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
+		try {
+			cajero.checkOut();
+			fail();
+		} catch (Error e){
+			assertEquals(TarjetaDeCredito.ERROR_FECHA_EXPIRACION_INVALIDA, e.getMessage());
+			assertTrue(cajero.libroDeVentas().esVacio());
+			assertTrue(!catalogo.isEmpty());
+			assertTrue(!carrito.esVacio());
+		}				
+	}
+	
+	@Test
+	public void test39MedianteLaInterfaceNosePuedeHacerCheckOutParaUnCarritoParaConIdInexistente() {	
+		try {
+			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			int elem1 = 1;
+			int elem2 = 6;
+			catalogo.put(elem1, 250);
+			catalogo.put(elem2, 400);
+			InterfaceRest interfa = new InterfaceRest(catalogo);
+			interfa.crearCliente(0, "password");
+			long idCarrito = interfa.crearCarrito(0, "password");
+			Object prod = new Integer(6);
+			interfa.agregarACarrito(idCarrito, prod, 5);
+			Calendar hoy = new GregorianCalendar();
+			interfa.checkOutCarrito(++idCarrito, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+			fail();
+		} catch (Error e){
+			assertEquals(InterfaceRest.NO_SE_ENCUENTRA_CARRITO,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void test40MedianteLaInterfaceLuegoDeCheckOutLasComprasDeUnClienteContienenLosElementosDelCarrito() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 7;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		Object prod2 = new Integer(7);
+		interfa.agregarACarrito(idCarrito, prod, 5);
+		interfa.agregarACarrito(idCarrito, prod2, 8);
+		Calendar hoy = new GregorianCalendar();
+		interfa.checkOutCarrito(idCarrito, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+		Multiconjunto<Object, Integer> comprasCliente = interfa.listarComprasCliente(0, "password");
+		assertEquals(5,comprasCliente.cantidad(prod));
+		assertEquals(8,comprasCliente.cantidad(prod2));
+	}
 
+	@Test
+	public void test40MedianteLaInterfaceLosNumerosDeTransaccionPorCheckOutsSonTodosDistintos() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 7;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
+		long idCarrito2 = interfa.crearCarrito(0, "password");
+		long idCarrito3 = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		Object prod2 = new Integer(7);
+		interfa.agregarACarrito(idCarrito, prod, 5);
+		interfa.agregarACarrito(idCarrito2, prod2, 8);
+		interfa.agregarACarrito(idCarrito3, prod2, 9);
+		Calendar hoy = new GregorianCalendar();
+		long transId1= interfa.checkOutCarrito(idCarrito, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+		long transId2= interfa.checkOutCarrito(idCarrito2, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+		long transId3= interfa.checkOutCarrito(idCarrito3, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+		Set<Long> transIds = new HashSet<Long>();
+		transIds.add(transId1);
+		transIds.add(transId2);
+		transIds.add(transId3);
+		assertEquals(3,transIds.size());
+	}
 	
 	
 	

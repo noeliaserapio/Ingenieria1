@@ -10,14 +10,20 @@ public class Multiconjunto<E,Integer> {
 
 	private  Map<E,Integer> elementos = new HashMap<E,Integer>();
 	
-	public void agregar(E elemento, Integer cantidad) { 
+	public void agregar(E elemento, java.lang.Integer cantidad) { 
         if( !elementos.containsKey(elemento)){
-        	elementos.put(elemento, cantidad);
+        	elementos.put(elemento, (Integer) cantidad);
         } else { 
         	Integer viejoValor =  elementos.get(elemento);
 			Integer sumaCantidad = ((Integer) new java.lang.Integer(((java.lang.Integer) viejoValor).intValue() + ((java.lang.Integer) cantidad).intValue()));
 			elementos.put(elemento, sumaCantidad);
         }
+    }
+	
+	public void agregarAll(Multiconjunto<E,Integer> nuevosElementos) { 
+		for(E elem : nuevosElementos.claves()){
+			agregar(elem,new java.lang.Integer(nuevosElementos.cantidad(elem)));
+		}
     }
 	
 	public boolean esVacio() {
