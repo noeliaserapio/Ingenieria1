@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 public class TarjetaDeCredito {
 	
 	private String numeroTarjeta;
+
 	private String fechaExpiracion;
 	private String nombreDuenio;
 	public static final int MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA = 30;
@@ -26,6 +27,28 @@ public class TarjetaDeCredito {
 		this.nombreDuenio = nombreDuenio;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TarjetaDeCredito){
+			return (numeroTarjeta.equals(((TarjetaDeCredito) obj).getNumeroTarjeta()) && nombreDuenio.equals(((TarjetaDeCredito) obj).getNombreDuenio()) && fechaExpiracion.equals(((TarjetaDeCredito) obj).getFechaExpiracion())   );
+		}else{
+			return false;
+		}
+	}
+	
+	public String getNumeroTarjeta() {
+		return numeroTarjeta;
+	}
+
+	public String getFechaExpiracion() {
+		return fechaExpiracion;
+	}
+
+	public String getNombreDuenio() {
+		return nombreDuenio;
+	}
+
+
 	private boolean validarTarjeta(String numeroTarjeta, String fechaExpiracion,String nombreDuenio){
 		
 		if(numeroTarjeta.length() != 16) throw new Error(ERROR_TARJETA_DEBE_TENER_16_CARACTERES);

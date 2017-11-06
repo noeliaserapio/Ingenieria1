@@ -41,6 +41,11 @@ public class Carrito {
 		}
 	}
 	
+	public void setUltimoAccesoCarrito(long ultimoAccesoCarrito) {
+		this.ultimoAccesoCarrito = ultimoAccesoCarrito;
+	}
+
+	
 	public static long getNumeroCarrito() {
 		return numeroCarrito;
 	}
