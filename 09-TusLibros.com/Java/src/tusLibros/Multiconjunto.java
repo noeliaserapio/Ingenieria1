@@ -3,7 +3,6 @@ package tusLibros;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
 
 public class Multiconjunto<E,Integer> {
@@ -25,6 +24,10 @@ public class Multiconjunto<E,Integer> {
 			agregar(elem,new java.lang.Integer(nuevosElementos.cantidad(elem)));
 		}
     }
+	
+	public void clear(){
+		elementos.clear();
+	}
 	
 	public boolean esVacio() {
 		return elementos.isEmpty();

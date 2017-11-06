@@ -29,6 +29,10 @@ public class Carrito {
 		return productos.esVacio();
 	}
 	
+	public void vaciar(){
+		productos.clear();
+	}
+	
 	public void researUltimoAcceso(){
 		if(System.currentTimeMillis() - ultimoAccesoCarrito <= TIEMPO_PERMITIDO_INACTIVIDAD_CARRITO_MILLIS){
 			ultimoAccesoCarrito = System.currentTimeMillis();

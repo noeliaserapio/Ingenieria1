@@ -1,10 +1,5 @@
 package tusLibros;
 
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 public class Cajero {
 	
 	public static long transactionId = 1;
@@ -26,6 +21,7 @@ public class Cajero {
 		tarjeta.noEstaVencidaActualmente();
 		MerchantProcessor.debitarTarjeta(tarjeta, totalCompraString);
 		libroDeVentas.agregarAll(carrito.getProductos());
+		carrito.vaciar();
 		return new Ticket(++transactionId,totalCompra) ;
 	}
 	

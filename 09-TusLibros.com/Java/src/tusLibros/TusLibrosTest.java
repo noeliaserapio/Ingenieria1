@@ -2,13 +2,11 @@ package tusLibros;
 
 import static org.junit.Assert.*;
 
-import java.time.YearMonth;
-import java.util.ArrayList;
+
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,7 +25,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test02CuandoSeAgregaUnProductoAlCarritoNoEstaVacio(){
+	public void test02CuandoSeAgregaUnProductoAlCarritoNoEstaVacioYContieneElemento(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem = 1;
 		catalogo.put(elem, 250);
@@ -63,26 +61,9 @@ public class TusLibrosTest {
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, cantidad);
 		assertTrue(catalogo.containsKey(elem));
-		assertTrue(!carrito.esVacio());
 		assertEquals(carrito.cantidad(elem), cantidad);
 	}
 
-	@Test
-	public void test05NoSePuedenAgregarProductosDeUnTipoQueNoEsDeLaEditorialAlCarrito(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
-		int elem = 1;
-		Carrito carrito = new Carrito(catalogo);	
-	
-		try {
-			carrito.agregar(elem, 5);
-			fail();
-		} catch (Error e){
-			assertEquals(Carrito.ERROR_EL_PRODUCTO_NO_ESTA_EN_CATALOGO,e.getMessage());
-			assertTrue(catalogo.isEmpty());
-			assertTrue(carrito.esVacio());
-		}
-	}
-		
 	@Test
 	public void test06NoPuedeSerMenorAUnoLaCantidadDeProductosAAgregarAlCarrito(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
@@ -165,6 +146,7 @@ public class TusLibrosTest {
 	@Test
 	public void test11NoSePuedeCrearUnaTarjetaQueNoTiene16Caracteres(){
 		try {
+			@SuppressWarnings("unused")
 			TarjetaDeCredito tarjeta = new TarjetaDeCredito("123456789012456", "051992", "LOPEZ JOSE");
 			fail();
 		} catch (Error e){
@@ -176,6 +158,7 @@ public class TusLibrosTest {
 	@Test
 	public void test12NoSePuedeCrearUnaTarjetaConCaracteresQueNoSeanDigitos(){
 		try {
+			@SuppressWarnings("unused")
 			TarjetaDeCredito tarjeta = new TarjetaDeCredito("s123456789012456",  "051992", "LOPEZ JOSE");
 			fail();
 		} catch (Error e){
@@ -187,6 +170,7 @@ public class TusLibrosTest {
 	@Test
 	public void test13NoSePuedeCrearUnaTarjetaConDuenioQueNoComienceConLetrasMayusculas(){
 		try {
+			@SuppressWarnings("unused")
 			TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",  "051992", " ");
 			fail();
 		} catch (Error e){
@@ -195,6 +179,7 @@ public class TusLibrosTest {
 		
 	}
 	
+	@SuppressWarnings("unused")
 	@Test
 	public void test14NoSePuedeCrearUnaTarjetaQueContengaCaracteresDistintosALetrasMayusculasYEspacios(){
 		try {
@@ -227,7 +212,7 @@ public class TusLibrosTest {
 	}
 	
 	@Test
-	public void test16AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElemento(){
+	public void test16AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElementoYSeEncuentraLibroVenta(){
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem = 1;
@@ -240,8 +225,6 @@ public class TusLibrosTest {
 		double total = cajero.checkOut().getTotalCompra();
 		
 		assertTrue(catalogo.containsKey(elem));
-		assertTrue(carrito.listar().contains(elem)); 
-		assertEquals(carrito.cantidad(elem), new Integer(1));
 		assertEquals(1, cajero.libroDeVentas().cantidad(elem));
 		assertTrue(total == 250); 
 				
@@ -265,10 +248,6 @@ public class TusLibrosTest {
 		
 		assertTrue(catalogo.containsKey(elem1));
 		assertTrue(catalogo.containsKey(elem2));
-		assertTrue(carrito.listar().contains(elem1)); 
-		assertTrue(carrito.listar().contains(elem2));
-		assertEquals(carrito.cantidad(elem1), new Integer(6));
-		assertEquals(carrito.cantidad(elem2), new Integer(4));
 		assertEquals(6,cajero.libroDeVentas().cantidad(elem1));
 		assertEquals(4,cajero.libroDeVentas().cantidad(elem2));
 		assertTrue(250*6+310*4 == total );
@@ -639,7 +618,6 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 310);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
-		Calendar hoy = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "05202", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
@@ -664,7 +642,6 @@ public class TusLibrosTest {
 		catalogo.put(elem2, 310);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
-		Calendar hoy = new GregorianCalendar();
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "0520208", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
 		Cajero cajero = new Cajero(carrito, tarjeta, libroDeVentas);
@@ -722,7 +699,7 @@ public class TusLibrosTest {
 	}
 
 	@Test
-	public void test40MedianteLaInterfaceLosNumerosDeTransaccionPorCheckOutsSonTodosDistintos() {	
+	public void test41MedianteLaInterfaceLosNumerosDeTransaccionPorCheckOutsSonTodosDistintos() {	
 		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
 		int elem1 = 7;
 		int elem2 = 6;
@@ -749,7 +726,26 @@ public class TusLibrosTest {
 		assertEquals(3,transIds.size());
 	}
 	
-	
+	@Test
+	public void test42MedianteLaInterfaceLuegoDeCheckOutElCarritoQuedaVacio() {	
+		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		int elem1 = 7;
+		int elem2 = 6;
+		catalogo.put(elem1, 250);
+		catalogo.put(elem2, 400);
+		InterfaceRest interfa = new InterfaceRest(catalogo);
+		interfa.crearCliente(0, "password");
+		long idCarrito = interfa.crearCarrito(0, "password");
+		Object prod = new Integer(6);
+		Object prod2 = new Integer(7);
+		interfa.agregarACarrito(idCarrito, prod, 5);
+		interfa.agregarACarrito(idCarrito, prod2, 8);
+		Calendar hoy = new GregorianCalendar();
+		interfa.checkOutCarrito(idCarrito, "1234567890123456", String.format("%2d%4d", hoy.get(Calendar.MONTH) +1, hoy.get(Calendar.YEAR) +1), "LOPEZ JOSE");
+		assertTrue(interfa.listarCarrito(idCarrito).esVacio());
+		
+	}
+
 	
 }
 
