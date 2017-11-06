@@ -9,12 +9,12 @@ public class Cliente {
 
 	private int id;
 	private String password;
-	private Map<Object, Integer> catalogo;
+	private Map<Object, Double> catalogo;
 	private Map<Long, Carrito> carritos = new HashMap<Long, Carrito>();//id, carrito
 	private Multiconjunto<Object,Integer> libroDeCompras = new Multiconjunto<Object,Integer>();//producto, cantidad
 	public static final String NO_SE_ENCUENTRA_CARRITO = "Este cliente no posee el carrito buscado";
 	
-	public Cliente(int id, String password,Map<Object, Integer> catalogo) {
+	public Cliente(int id, String password,Map<Object, Double> catalogo) {
 		this.id = id;
 		this.password = password;
 		this.catalogo = catalogo;
@@ -51,7 +51,7 @@ public class Cliente {
 		return password;
 	}
 	
-	public Map<Object, Integer> getCatalogo() {
+	public Map<Object, Double> getCatalogo() {
 		return catalogo;
 	}
 

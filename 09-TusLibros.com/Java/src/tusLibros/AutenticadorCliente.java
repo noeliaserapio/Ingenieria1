@@ -8,9 +8,9 @@ public class AutenticadorCliente {
 	
 	public static final String ERROR_ID_CLIENTE_UTILIZADA = "Ese Id ya esta siendo utilizado";
 	private List<Cliente> clientesCreados = new ArrayList<Cliente>();
-	private Map<Object, Integer> catalogo;
+	private Map<Object, Double> catalogo;
 	
-	public AutenticadorCliente(Map<Object, Integer> catalogo) {
+	public AutenticadorCliente(Map<Object, Double> catalogo) {
 		this.catalogo = catalogo;
 	}
 	public void crearCliente(int id, String password){

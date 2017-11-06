@@ -19,16 +19,16 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test01CuandoSeCreaUnCarritoEstaVacio(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);	
 		assertTrue(carrito.esVacio());
 	}
 	
 	@Test
 	public void test02CuandoSeAgregaUnProductoAlCarritoNoEstaVacioYContieneElemento(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 1);
 		assertTrue(catalogo.containsKey(elem));
@@ -37,7 +37,7 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test03NoSePuedeAgregaUnProductoQueNoEsDeLaEditorialAlCarrito(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
 		Carrito carrito = new Carrito(catalogo);	
 	
@@ -54,10 +54,10 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test04CuandoSeAgreganVariosProductosDeUnTipoAlCarritoLaCantidadEsLaAgregada(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
 		Integer cantidad = 5;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, cantidad);
 		assertTrue(catalogo.containsKey(elem));
@@ -66,7 +66,7 @@ public class TusLibrosTest {
 
 	@Test
 	public void test06NoPuedeSerMenorAUnoLaCantidadDeProductosAAgregarAlCarrito(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
 		Carrito carrito = new Carrito(catalogo);	
 		
@@ -83,9 +83,9 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test07AlAgregarElMismoProductoVariasVecesLaCantidadEsLaSumaDeTodasLasCantidades(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 2);
 		carrito.agregar(elem, 5);
@@ -97,11 +97,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test08AlAgregarProductosDeDistintoTipoTodosFiguranConSusRespectivasCantidades(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem1, 2);
 		carrito.agregar(elem2, 5);
@@ -118,9 +118,9 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test09LaListaDeProductosDeUnCarritoVacioEsVacia(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		Carrito carrito = new Carrito(catalogo);	
 		Set<Object> lista = carrito.listar();
 		assertTrue(catalogo.containsKey(elem));
@@ -131,9 +131,9 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test10LaListaDeProductosDeUnCarritoConProductosEsNoVacia(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem = 1;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		Carrito carrito = new Carrito(catalogo);	
 		carrito.agregar(elem, 2);
 		Set<Object> lista = carrito.listar();
@@ -193,7 +193,7 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test15CheckOutDeUnCarritoVacioDaError(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456",  "051992", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
@@ -213,10 +213,10 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test16AlHacerCheckOutDeUnCarritoConUnElementoMeCobraElPrecioDeEseElementoYSeEncuentraLibroVenta(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem = 1;
-		catalogo.put(elem, 250);
+		catalogo.put(elem, 250.0);
 		carrito.agregar(elem, 1);
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "LOPEZ JOSE");
 		Multiconjunto<Object,Integer> libroDeVentas = new Multiconjunto<Object, Integer>(); 
@@ -232,12 +232,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test17AlHacerCheckOutDeUnCarritoMeCobraLaSumaDelPrecioDeSusProductos(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 310);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 310.0);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "022022", "LOPEZ JOSE");
@@ -256,24 +256,24 @@ public class TusLibrosTest {
 
 	@Test
 	public void test18AlcrearUnClienteElMismoSeEncuentraEnElSistema(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
-		assertTrue(interfa.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Integer>())));		
+		assertTrue(interfa.getClientesCreados().contains(new Cliente(0,"password",new HashMap<Object,Double>())));		
 	}
 	
 	@Test
 	public void test19NoSePuedeCrearUnClienteConIdYaExistente(){		
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			interfa.crearCliente(0, "pass");
@@ -287,11 +287,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test20AlcrearUnClienteSuListaDeCarritosEsVacia(){	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		for(Cliente cl : interfa.getClientesCreados() ){
@@ -304,11 +304,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test21AlcrearUnClienteSuLibroDeComprasEsVacia(){	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		for(Cliente cl : interfa.getClientesCreados() ){
@@ -321,11 +321,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test22CuandoSeAgreganVariosCarritosLaCantidadAumentaEnLaAgregada(){	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		for(Cliente cl : interfa.getClientesCreados() ){
@@ -340,11 +340,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test23TodosLosCarritosDeDistintosClientesTienenDistintoID(){	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		interfa.crearCliente(1, "passw");
@@ -359,11 +359,11 @@ public class TusLibrosTest {
 	@Test
 	public void test24MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnIdClienteInexistente() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			interfa.crearCarrito(8, "password");
@@ -376,11 +376,11 @@ public class TusLibrosTest {
 	@Test
 	public void test25MedianteLaInterfaceNosePuedeCrearUnCarritoParaUnCorrectoIdClienteInvalidaContasenia() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			interfa.crearCarrito(0, "pass");
@@ -393,11 +393,11 @@ public class TusLibrosTest {
 	@Test
 	public void test26MedianteLaInterfaceAlCrearUnCarritoAumentaLaCantidadDeCarritosDeUnCliente() {	
 
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		interfa.crearCarrito(0, "password");
@@ -414,11 +414,11 @@ public class TusLibrosTest {
 	@Test
 	public void test27MedianteLaInterfaceNosePuedeAgregarProductoAUnCarritoParaUnIdInexistente() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			long idCarrito = interfa.crearCarrito(0, "password");
@@ -432,11 +432,11 @@ public class TusLibrosTest {
 
 	@Test
 	public void test28MedianteLaInterfaceAlAgregarUnProductoAunCarritoElmismoSeEnCuentraEnELCarrito() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");
@@ -461,11 +461,11 @@ public class TusLibrosTest {
 	@Test
 	public void test29MedianteLaInterfaceNosePuedeListarUnCarritoParaUnIdClienteInexistente() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			long idCarrito = interfa.crearCarrito(0, "password");
@@ -478,11 +478,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test30MedianteLaInterfaceAlListarUnCarritoSeObtieneQueCuandoNoHayAgregacionesDeProductoEsVacio() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");		
@@ -493,11 +493,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test31MedianteLaInterfaceAlListarUnCarritoSePuedeObtenerLaCantidadDeElementodDeUnObject() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");
@@ -510,11 +510,11 @@ public class TusLibrosTest {
 	@Test
 	public void test32MedianteLaInterfaceNosePuedeListarLasComprasParaUnIdClienteInexistente() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			interfa.listarComprasCliente(8, "password");
@@ -527,11 +527,11 @@ public class TusLibrosTest {
 	@Test
 	public void test33MedianteLaInterfaceNosePuedeListarLasComprasParaUnCorrectoIdClienteInvalidaContasenia() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 2;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			interfa.listarComprasCliente(0, "pass");
@@ -543,11 +543,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test34MedianteLaInterfaceAlListarLasComprasDeUnClienteSeObtieneQueCuandoNoHayCheckOutElLibroDeComprasEsVacio() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 1;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");
@@ -559,12 +559,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test35NoSePuedeHacerCheckOutConTarjetavencida(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 310);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 310.0);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
 		Calendar hoy = new GregorianCalendar();
@@ -585,12 +585,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test36NoSePuedeHacerCheckOutConTarjetaConDuenioMayorA30Caracters(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 310);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 310.0);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
 		Calendar hoy = new GregorianCalendar();
@@ -610,12 +610,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test37NoSePuedeHacerCheckOutConTarjetaConFechaExpiracionMenorDe6Caracters(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 310);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 310.0);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "05202", "LOPEZ JOSE");
@@ -634,12 +634,12 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test38NoSePuedeHacerCheckOutConTarjetaConFechaExpiracionMayorDe6Caracters(){
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		Carrito carrito = new Carrito(catalogo);
 		int elem1 = 1;
 		int elem2 = 2;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 310);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 310.0);
 		carrito.agregar(elem1, 6);
 		carrito.agregar(elem2, 4);
 		TarjetaDeCredito tarjeta = new TarjetaDeCredito("1234567890123456", "0520208", "LOPEZ JOSE");
@@ -659,11 +659,11 @@ public class TusLibrosTest {
 	@Test
 	public void test39MedianteLaInterfaceNosePuedeHacerCheckOutParaUnCarritoParaConIdInexistente() {	
 		try {
-			Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+			Map<Object, Double> catalogo = new HashMap<Object, Double>();
 			int elem1 = 1;
 			int elem2 = 6;
-			catalogo.put(elem1, 250);
-			catalogo.put(elem2, 400);
+			catalogo.put(elem1, 250.0);
+			catalogo.put(elem2, 400.0);
 			InterfaceRest interfa = new InterfaceRest(catalogo);
 			interfa.crearCliente(0, "password");
 			long idCarrito = interfa.crearCarrito(0, "password");
@@ -679,11 +679,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test40MedianteLaInterfaceLuegoDeCheckOutLasComprasDeUnClienteContienenLosElementosDelCarrito() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 7;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");
@@ -700,11 +700,11 @@ public class TusLibrosTest {
 
 	@Test
 	public void test41MedianteLaInterfaceLosNumerosDeTransaccionPorCheckOutsSonTodosDistintos() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 7;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");
@@ -728,11 +728,11 @@ public class TusLibrosTest {
 	
 	@Test
 	public void test42MedianteLaInterfaceLuegoDeCheckOutElCarritoQuedaVacio() {	
-		Map<Object, Integer> catalogo = new HashMap<Object, Integer>();
+		Map<Object, Double> catalogo = new HashMap<Object, Double>();
 		int elem1 = 7;
 		int elem2 = 6;
-		catalogo.put(elem1, 250);
-		catalogo.put(elem2, 400);
+		catalogo.put(elem1, 250.0);
+		catalogo.put(elem2, 400.0);
 		InterfaceRest interfa = new InterfaceRest(catalogo);
 		interfa.crearCliente(0, "password");
 		long idCarrito = interfa.crearCarrito(0, "password");

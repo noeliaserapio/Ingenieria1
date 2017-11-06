@@ -16,10 +16,10 @@ public class Carrito {
 	
 	
 	private  Multiconjunto<Object, Integer> productos = new Multiconjunto<Object, Integer>();
-	private Map<Object, Integer> catalogo;
+	private Map<Object, Double> catalogo;
 	private long ultimoAccesoCarrito;
 	
-	public Carrito(Map<Object, Integer>  catalogo){
+	public Carrito(Map<Object, Double>  catalogo){
 		numeroCarrito++;
 		this.catalogo = catalogo;
 		ultimoAccesoCarrito = System.currentTimeMillis();
@@ -63,7 +63,7 @@ public class Carrito {
 		return productos.claves();
 	}	
 	
-	public Map<Object, Integer> catalogo(){
+	public Map<Object, Double> catalogo(){
 		return catalogo;
 	}
 
