@@ -3,6 +3,7 @@ package com.tenpines.advancetdd;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.LineNumberReader;
+import java.util.List;
 
 import junit.framework.TestCase;
 
@@ -71,7 +72,7 @@ public class CustomerImporterTest extends TestCase {
 	public void testImportCustomers(){
 		try {
 			importCustomers();
-		//	session.geE
+			List<Customer> lCustomer = session.createCriteria(Customer.class).list();
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
