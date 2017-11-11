@@ -1,12 +1,11 @@
 package tusLibros;
 
-import java.time.LocalDate;
-import java.time.YearMonth;
 import java.util.GregorianCalendar;
 
 public class TarjetaDeCredito {
 	
 	private String numeroTarjeta;
+
 	private String fechaExpiracion;
 	private String nombreDuenio;
 	public static final int MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA = 30;
@@ -14,12 +13,10 @@ public class TarjetaDeCredito {
 	public static final String ERROR_TARJETA_DEBE_TENER_16_CARACTERES = "La tarjeta debe tener 16 caracteres";
 	public static final String ERROR_TARJETA_DEBEN_SER_DIGITOS = "La tarjeta debe tener todos dígitos";
 	public static final String ERROR_DUENIO_FORMATO_INVALIDO = "El dueño de la tarjeta debe comenzar con letras mayúsculas y solo puede contener letras mayúsculas y espacios.";
-
 	public static final String ERROR_FECHA_EXPIRACION_INVALIDA = "La fecha de expiracion debe tener seis digitos";
 	public static final String ERROR_TARJETA_VENCIDA = "La tarjeta esta vencida";
 	public static final String ERROR_NOMBRE_DUENIO_LARGO = "El nombre del dueño supera los " + MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA;
 	public static final String ERROR_FORMATO_TRANSACTION_AMOUNT = "El formato de la cantidad de transaccion es invalido";
-
 
 
 	
@@ -30,6 +27,28 @@ public class TarjetaDeCredito {
 		this.nombreDuenio = nombreDuenio;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof TarjetaDeCredito){
+			return (numeroTarjeta.equals(((TarjetaDeCredito) obj).getNumeroTarjeta()) && nombreDuenio.equals(((TarjetaDeCredito) obj).getNombreDuenio()) && fechaExpiracion.equals(((TarjetaDeCredito) obj).getFechaExpiracion())   );
+		}else{
+			return false;
+		}
+	}
+	
+	public String getNumeroTarjeta() {
+		return numeroTarjeta;
+	}
+
+	public String getFechaExpiracion() {
+		return fechaExpiracion;
+	}
+
+	public String getNombreDuenio() {
+		return nombreDuenio;
+	}
+
+
 	private boolean validarTarjeta(String numeroTarjeta, String fechaExpiracion,String nombreDuenio){
 		
 		if(numeroTarjeta.length() != 16) throw new Error(ERROR_TARJETA_DEBE_TENER_16_CARACTERES);
@@ -41,16 +60,11 @@ public class TarjetaDeCredito {
 	}
 
 
-	public boolean estasVencidaAEstaFecha(LocalDate fecha){
-		return true;//fechaExpiracion.isBefore(YearMonth.of(fecha.getYear(), fecha.getMonth()));
-	}
-
-
 	
 	public boolean noEstaVencidaActualmente(){
 		int mes = Integer.parseInt(fechaExpiracion.substring(0, 2));
 		int anio = Integer.parseInt(fechaExpiracion.substring(2, 6));
-
+		
 		GregorianCalendar ahora = new GregorianCalendar();
 		GregorianCalendar vencTarj = new GregorianCalendar(anio, mes-1, 1);
 		
@@ -62,7 +76,7 @@ public class TarjetaDeCredito {
 	}  
 	
 	public boolean esValidaParaMerchantProccesor(String cantidadDeTransaccion){
-		if(!cantidadDeTransaccion.matches("^[0-9]{1,15}+\\.+[0-9]{2}")){
+		if(!cantidadDeTransaccion.matches("^[0-9]{1,15}\\.[0-9]{2}")){
 			throw new Error(ERROR_FORMATO_TRANSACTION_AMOUNT);
 		}else if(nombreDuenio.length()>MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA){
 			throw new Error(ERROR_NOMBRE_DUENIO_LARGO);
@@ -71,7 +85,6 @@ public class TarjetaDeCredito {
 		}
 		return true;
 	}
-
 
 }
 

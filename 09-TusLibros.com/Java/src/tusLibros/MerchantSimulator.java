@@ -1,58 +1,30 @@
 package tusLibros;
 
+import java.util.List;
 
-import java.time.YearMonth;
+public class MerchantSimulator implements MerchantProcessor{
 
-public class MerchantSimulator implements MerchantProcesor {
-	
-	public static final int MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA = 30;
-	
-	private int saldo;
-	
-	interface Closure {
-		public <T extends Throwable> T execute();
+	public static final String ERROR_TARJETA_ROBADA = "La tarjeta es robada";
+	public static final String ERROR_TARJETA_INVALIDA = "La tarjeta no existe o es invalida";
 
-	}
-		
-	public MerchantSimulator(int saldo){
-	}
+	private List<TarjetaDeCredito> listaTarjetasRobadas;
+	private List<Cuenta> cuentas;
 	
-	public MerchantSimulator(Closure aClosure){
-		aClosure.execute();
-		
+	public MerchantSimulator(List<TarjetaDeCredito> listaTarjetasRobadas, List<Cuenta> cuentas) {
+		this.listaTarjetasRobadas = listaTarjetasRobadas;
+		this.cuentas = cuentas;
 	}
-	
-	public void ejecutar(Closure aClosure){
-		aClosure.execute();
-		
-	} 
-		
+
 	@Override
-	public void debitarDe(String creditCardNumber,
-			YearMonth creditCardExpiration, String creditCardOwner,
-			double transactionAmout) {
-		// TODO Auto-generated method stub
-		
+	public void debitarTarjeta(TarjetaDeCredito tarj, String cantidadTransaccion) {
+		if(listaTarjetasRobadas.contains(tarj)) throw new Error(ERROR_TARJETA_ROBADA);
+		for(Cuenta cu : cuentas ){
+			if(cu.getTarj().equals(tarj)) {
+				cu.debitar(Double.parseDouble(cantidadTransaccion));
+				return;
+			}
+		}
+		throw new Error(ERROR_TARJETA_INVALIDA);
 	}
 
-	
-/*	private boolean esValida(double cantidadDeTransaccion){
-		String[] transacionSplit = new Double(cantidadDeTransaccion).toString().split(".");
-		boolean esValidaCantTransaccion = true;
-		if(transacionSplit.length == 2){
-			esValidaCantTransaccion = (transacionSplit[1].length() <=2) && (transacionSplit[0].length() <=15);
-		}else{
-			esValidaCantTransaccion = (transacionSplit[1].length() <=15);
-		}
-		
-		if(nombreDuenio.length()>MAXIMA_CANTIDAD_CARACTERES_DUENIO_TARJETA){
-			return false;
-		}else if(numeroTarjeta.length() != 16){
-			return false;
-		}else if(!esValidaCantTransaccion){
-			return false;
-		}
-		return true;
-	}
-*/
 }

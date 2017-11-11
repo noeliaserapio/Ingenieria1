@@ -29,6 +29,10 @@ public class Carrito {
 		return productos.esVacio();
 	}
 	
+	public long getUltimoAccesoCarrito() {
+		return ultimoAccesoCarrito;
+	}
+
 	public void vaciar(){
 		productos.clear();
 	}
@@ -40,6 +44,11 @@ public class Carrito {
 			throw new Error(ERROR_NO_SE_PUEDE_SEGUIR_USANDO_EL_CARRITO);
 		}
 	}
+	
+	public void setUltimoAccesoCarrito(long ultimoAccesoCarrito) {
+		this.ultimoAccesoCarrito = ultimoAccesoCarrito;
+	}
+
 	
 	public static long getNumeroCarrito() {
 		return numeroCarrito;

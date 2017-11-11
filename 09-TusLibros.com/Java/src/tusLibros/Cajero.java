@@ -8,10 +8,11 @@ public class Cajero {
 	private Multiconjunto<Object,Integer> libroDeVentas;
 	private MerchantProcessor merch;
 	
-	public Cajero(Carrito carrito, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas){
+	public Cajero(Carrito carrito, TarjetaDeCredito tarjeta, Multiconjunto<Object,Integer> libroDeVentas, MerchantProcessor merch){
 		this.carrito = carrito;
 		this.tarjeta = tarjeta;
 		this.libroDeVentas = libroDeVentas;
+		this.merch = merch;
 	}
 	
 	public Ticket checkOut(){
@@ -19,7 +20,7 @@ public class Cajero {
 		String totalCompraString = String.format("%.2f", totalCompra);
 		tarjeta.esValidaParaMerchantProccesor(totalCompraString);
 		tarjeta.noEstaVencidaActualmente();
-		MerchantProcessor.debitarTarjeta(tarjeta, totalCompraString);
+		merch.debitarTarjeta(tarjeta, totalCompraString);
 		libroDeVentas.agregarAll(carrito.getProductos());
 		carrito.vaciar();
 		return new Ticket(++transactionId,totalCompra) ;

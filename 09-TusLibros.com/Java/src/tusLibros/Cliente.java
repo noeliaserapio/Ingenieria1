@@ -10,15 +10,16 @@ public class Cliente {
 	private int id;
 	private String password;
 	private Map<Object, Double> catalogo;
+	private MerchantProcessor merch;
 	private Map<Long, Carrito> carritos = new HashMap<Long, Carrito>();//id, carrito
 	private Multiconjunto<Object,Integer> libroDeCompras = new Multiconjunto<Object,Integer>();//producto, cantidad
 	public static final String NO_SE_ENCUENTRA_CARRITO = "Este cliente no posee el carrito buscado";
 	
-	public Cliente(int id, String password,Map<Object, Double> catalogo) {
+	public Cliente(int id, String password,Map<Object, Double> catalogo, MerchantProcessor merch) {
 		this.id = id;
 		this.password = password;
 		this.catalogo = catalogo;
-		
+		this.merch = merch;
 	}
 	
 	@Override
@@ -65,7 +66,7 @@ public class Cliente {
 	
 	public long checkOutCarrito(long idCarrito, TarjetaDeCredito tarjCred) {	
 		if(!carritos.containsKey(idCarrito)) throw new Error(NO_SE_ENCUENTRA_CARRITO);
-		Cajero op = new Cajero(carritos.get(idCarrito), tarjCred,  libroDeCompras);
+		Cajero op = new Cajero(carritos.get(idCarrito), tarjCred,  libroDeCompras,merch);
 		return op.checkOut().getNumeroTransaccion();
 	}
 	
