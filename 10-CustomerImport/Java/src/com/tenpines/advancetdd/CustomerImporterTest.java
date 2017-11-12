@@ -2,6 +2,7 @@ package com.tenpines.advancetdd;
 
 import static org.junit.Assert.*;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -161,7 +162,7 @@ public class CustomerImporterTest {
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
@@ -174,7 +175,7 @@ public class CustomerImporterTest {
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
@@ -187,10 +188,94 @@ public class CustomerImporterTest {
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
+	@Test
+	public void identificationTypeCanOnlyBeDorC() throws IOException {
+		FileReader reader = new FileReader("resources/inputIdentificationType.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void customerNameCanNotBeEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputCustomerName.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_NAME_EMPTY,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void customerLastNameCanNotBeEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputCustomerLastName.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
+		}
+	}
+
+	@Test
+	public void addressStreetNameEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressStreetEmpty.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
+		}
+	}
+	
+	
+	@Test
+	public void addressTownEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressTownEmpty.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressStreetNumb() throws IOException {
+		FileReader reader = new FileReader("resources/inputStreetNumber.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressZipCode() throws IOException {
+		FileReader reader = new FileReader("resources/inputZipCode.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+		}
+	}
 	
 	
 	
