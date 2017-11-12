@@ -276,7 +276,7 @@ public class CustomerImporterTest {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
+			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
 		}
 	}
 	
@@ -288,7 +288,7 @@ public class CustomerImporterTest {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
 		}
 	}
 	
@@ -327,8 +327,8 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void customerLowDigitsIdentificationNumberWhenTypeIsC() throws IOException {
-		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumberWhenTypeIsC.txt");	
+	public void customerFormatIdentificationNumberWhenTypeIsC() throws IOException {
+		FileReader reader = new FileReader("resources/customerFormatIdentificationNumberWhenTypeIsC.txt");	
 		try {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
@@ -336,6 +336,66 @@ public class CustomerImporterTest {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
 		}
 	}
+	
+	@Test
+	public void addressLowCantColumns() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressLowCantColumns.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressHighCantColumns() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressHighCantColums.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressFormatStreetNumber() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressFormatStreetNumber.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressFormatZipCode() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressFormatZipCode.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void addressFormatProvinceEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputAddressFormatProvinceEmpty.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
+		}
+	}
+	
+	
+	
+	
+	
 	
 	
 	
