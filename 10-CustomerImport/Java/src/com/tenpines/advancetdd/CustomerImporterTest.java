@@ -317,7 +317,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void customerLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
-		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumber.txt");	
+		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumberWhenTypeIsD.txt");	
 		try {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
