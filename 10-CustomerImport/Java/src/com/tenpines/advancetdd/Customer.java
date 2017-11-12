@@ -31,6 +31,8 @@ public class Customer {
 	@OneToMany(cascade = CascadeType.ALL)
 	private Set<Address> addresses;
 	
+	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
+	
 	public Customer()
 	{
 		addresses = new HashSet<Address>();
@@ -85,7 +87,7 @@ public class Customer {
 			if (address.isAt(streetName))
 				return address;
 		
-		throw new RuntimeException();
+		throw new RuntimeException(ADDRESS_NOT_FOUND);
 	}
 
 	public int numberOfAddresses() {

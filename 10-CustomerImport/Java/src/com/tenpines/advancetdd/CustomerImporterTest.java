@@ -2,7 +2,6 @@ package com.tenpines.advancetdd;
 
 import static org.junit.Assert.*;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -18,23 +17,50 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+
 public class CustomerImporterTest {
 
 	private Session session;
 
-	@Test
-	public void importsValidDataCorrectly() throws IOException {
-		new CustomerImporter().importCustomers(session, validDateReader());
-
-		assertCustomerCount();
-		assertPepeSanchezWasImportedCorrectly();
-		assertJuanPerezWasImportedCorrectly();		
-	}
-
-	
 	public StringReader validDateReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+		
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public StringReader validDateReaderIncorrectLetter() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("X,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+		
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public StringReader validDateReaderIncorrectLetterA() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("AA,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+		
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public StringReader validDateReaderIncorrectLetterC() {
+		StringWriter writer = new StringWriter();
+		writer.write("CC,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
 		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
 		writer.write("C,Juan,Perez,C,23-25666777-9\n");
@@ -116,5 +142,60 @@ public class CustomerImporterTest {
 		session.beginTransaction();
 		
 	}
+	
+	@Test
+	public void importsValidDataCorrectly() throws IOException {
+		new CustomerImporter().importCustomers(session, validDateReader());
+
+		assertCustomerCount();
+		assertPepeSanchezWasImportedCorrectly();
+		assertJuanPerezWasImportedCorrectly();		
+	}
+	
+	@Test
+	public void eachLineShouldBeginWithCorrectLetter() throws IOException {
+		try {
+			new CustomerImporter().importCustomers(session, validDateReaderIncorrectLetter());
+			assertCustomerCount();
+			assertPepeSanchezWasImportedCorrectly();
+			assertJuanPerezWasImportedCorrectly();	
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void eachAddressLineShouldBeginWithUniqueA() throws IOException {
+		try {
+			new CustomerImporter().importCustomers(session, validDateReaderIncorrectLetterA());
+			assertCustomerCount();
+			assertPepeSanchezWasImportedCorrectly();
+			assertJuanPerezWasImportedCorrectly();	
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void eachCustomerLineShouldBeginWithUniqueC() throws IOException {
+		try {
+			new CustomerImporter().importCustomers(session, validDateReaderIncorrectLetterC());
+			assertCustomerCount();
+			assertPepeSanchezWasImportedCorrectly();
+			assertJuanPerezWasImportedCorrectly();	
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_LINE,e.getMessage());
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
 
 }

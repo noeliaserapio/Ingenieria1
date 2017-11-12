@@ -8,6 +8,8 @@ import org.hibernate.Session;
 
 public class CustomerImporter {
 
+	public static final String INVALID_FORMAT_LINE = "This line hasn't the correct format";
+	
 	public void importCustomers(Session session, Reader fileReader) throws IOException{
 		
 		LineNumberReader lineReader = new LineNumberReader(fileReader);
@@ -16,11 +18,12 @@ public class CustomerImporter {
 		String line = lineReader.readLine(); 
 		while (hasNext(line)) {
 			String[] records = line.split(",");
-			if (isACustomer(line)){
+			if (isACustomer(records)){
 				newCustomer = addNewCustomer(session, records);
-			}
-			else if (isAnAddress(line)) {
+			}else if (isAnAddress(records)) {
 				addAddress(newCustomer, records);
+			}else{
+				throw new RuntimeException(INVALID_FORMAT_LINE);
 			}
 			
 			line = lineReader.readLine();
@@ -55,12 +58,12 @@ public class CustomerImporter {
 		return newCustomer;
 	}
 
-	private boolean isAnAddress(String line) {
-		return line.startsWith("A");
+	private boolean isAnAddress(String[] records) {
+		return records[0].equals("A");
 	}
 
-	private boolean isACustomer(String line) {
-		return line.startsWith("C");
+	private boolean isACustomer(String[] records) {
+		return records[0].equals("C");
 	}
 
 }
