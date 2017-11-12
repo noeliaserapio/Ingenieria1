@@ -71,4 +71,8 @@ public class Address {
 	public void setProvince(String province) {
 		this.province = province;
 	}
+
+	public boolean isAt(String streetName) {
+		return this.streetName.equals(streetName);
+	}
 }

@@ -1,6 +1,5 @@
 package com.tenpines.advancetdd;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -81,16 +80,17 @@ public class Customer {
 		addresses.add(anAddress);
 	}
 
-	public static void main(String[] args){
-		try {
-			CustomerImporterTest.importCustomers();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public void addressAt(String address){
+	public Address addressAt(String streetName) {
+		for (Address address : addresses) 
+			if (address.isAt(streetName))
+				return address;
 		
+		throw new RuntimeException();
 	}
+
+	public int numberOfAddresses() {
+		return addresses.size();
+	}
+
+
 }

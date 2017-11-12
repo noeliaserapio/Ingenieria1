@@ -1,32 +1,112 @@
 package com.tenpines.advancetdd;
 
+import static org.junit.Assert.*;
+
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.LineNumberReader;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.List;
-
-import junit.framework.TestCase;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
-import org.junit.FixMethodOrder;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class CustomerImporterTest extends TestCase {
+public class CustomerImporterTest {
 
-	private static Session session;
-	private static FileReader reader;
+	private Session session;
 
-	public static void importCustomers() throws IOException{
+	@Test
+	public void importsValidDataCorrectly() throws IOException {
+		new CustomerImporter().importCustomers(session, validDateReader());
+
+		assertCustomerCount();
+		assertPepeSanchezWasImportedCorrectly();
+		assertJuanPerezWasImportedCorrectly();		
+	}
+
+	
+	public StringReader validDateReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
 		
-		reader = new FileReader("resources/input.txt");   // ReadStream on: hay que cambiar el tipo y pego todo lo que esta en el archivo.
-		LineNumberReader lineReader = new LineNumberReader(reader);
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+
+	public void assertJuanPerezWasImportedCorrectly() {
+		Customer customer;
+		Address address;
+		customer = customerIdentifiedAs("C", "23-25666777-9");
+		assertEquals("Juan",customer.getFirstName());
+		assertEquals("Perez",customer.getLastName());
+		assertEquals("C",customer.getIdentificationType());
+		assertEquals("23-25666777-9",customer.getIdentificationNumber());
+
+		assertEquals(1,customer.numberOfAddresses());
+		address = customer.addressAt("Alem");
+		assertEquals(1122,address.getStreetNumber());
+		assertEquals("CABA", address.getTown());
+		assertEquals(1001, address.getZipCode());
+		assertEquals("CABA", address.getProvince());
+	}
+
+	public Customer customerIdentifiedAs(String idType, String idNumber) {
+		List<Customer> customers;
+		Customer customer;
+		customers = session.createCriteria(Customer.class).
+				add(Restrictions.eq("identificationType", idType)).
+				add(Restrictions.eq("identificationNumber",idNumber)).list();
+		assertEquals(1,customers.size());
+		customer = customers.get(0);
+		return customer;
+	}
+
+	public void assertPepeSanchezWasImportedCorrectly() {
 		
+		Customer customer = customerIdentifiedAs("D", "22333444");
+		assertEquals("Pepe",customer.getFirstName());
+		assertEquals("Sanchez",customer.getLastName());
+		assertEquals("D",customer.getIdentificationType());
+		assertEquals("22333444",customer.getIdentificationNumber());
+	
+		assertEquals(2,customer.numberOfAddresses());
+		Address address = customer.addressAt("San Martin");
+		assertEquals(3322,address.getStreetNumber());
+		assertEquals("Olivos", address.getTown());
+		assertEquals(1636, address.getZipCode());
+		assertEquals("BsAs", address.getProvince());
+		
+		address = customer.addressAt("Maipu");
+		assertEquals(888,address.getStreetNumber());
+		assertEquals("Florida", address.getTown());
+		assertEquals(1122, address.getZipCode());
+		assertEquals("Buenos Aires", address.getProvince());
+	}
+
+	public void assertCustomerCount() {
+		List<Customer> customers = session.createCriteria(Customer.class).list();
+		assertEquals(2,customers.size());
+	}
+
+	@After
+	public void closeSession() {
+		session.getTransaction().commit();
+		session.close();
+	}
+
+	@Before
+	public void openSession() {
 		Configuration configuration = new Configuration();
 	    configuration.configure();
 	
@@ -35,49 +115,6 @@ public class CustomerImporterTest extends TestCase {
 		session = sessionFactory.openSession();
 		session.beginTransaction();
 		
-		Customer newCustomer = null;
-		String line = lineReader.readLine(); 
-		while (line!=null) {
-			if (line.startsWith("C")){
-				String[] customerData = line.split(",");
-				newCustomer = new Customer();
-				newCustomer.setFirstName(customerData[1]);
-				newCustomer.setLastName(customerData[2]);
-				newCustomer.setIdentificationType(customerData[3]);
-				newCustomer.setIdentificationNumber(customerData[4]);
-				session.persist(newCustomer);
-			}
-			else if (line.startsWith("A")) {
-				String[] addressData = line.split(",");
-				Address newAddress = new Address();
-	
-				newCustomer.addAddress(newAddress);
-				newAddress.setStreetName(addressData[1]);
-				newAddress.setStreetNumber(Integer.parseInt(addressData[2]));
-				newAddress.setTown(addressData[3]);
-				newAddress.setZipCode(Integer.parseInt(addressData[4]));
-				newAddress.setProvince(addressData[5]);
-			}
-			
-			line = lineReader.readLine();
-		}
-			
-		session.getTransaction().commit();
-		session.close();
-		
-		reader.close();
-	}
-	
-	@Test
-	public void testImportCustomers(){
-		try {
-			importCustomers();
-			List<Customer> lCustomer = session.createCriteria(Customer.class).list();
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 
 }
