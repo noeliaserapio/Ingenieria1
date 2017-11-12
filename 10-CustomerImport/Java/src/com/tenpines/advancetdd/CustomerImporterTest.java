@@ -294,8 +294,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void customerLowCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerLowCantColumns.txt");
-		
+		FileReader reader = new FileReader("resources/inputCustomerLowCantColumns.txt");	
 		try {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
@@ -306,8 +305,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void customerHighCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerHighCantColums.txt");
-		
+		FileReader reader = new FileReader("resources/inputCustomerHighCantColums.txt");	
 		try {
 			new CustomerImporter().importCustomers(session, reader);
 			fail();
@@ -316,6 +314,28 @@ public class CustomerImporterTest {
 		}
 	}
 	
+	
+	@Test
+	public void customerLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
+		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumber.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void customerLowDigitsIdentificationNumberWhenTypeIsC() throws IOException {
+		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumberWhenTypeIsC.txt");	
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
+		}
+	}
 	
 	
 	
