@@ -13,7 +13,12 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_CUSTOMER_NAME_EMPTY = "Customer's name is empty";
 	public static final String INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY = "Customer's last name is empty";
 	public static final String INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY = "Customer's identification number is empty";
+	
+	
+	public static final String INVALID_FORMAT_CANT_COLUMNS = "The quantity of columns of this line is invalid";
 
+	
+	
 	public static final String INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY = "Address street name is empty";
 	public static final String INVALID_FORMAT_ADDRESS_TOWN_EMPTY = "Address town is empty";
 	public static final String INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY = "Address province is empty";
@@ -29,7 +34,8 @@ public class CustomerImporter {
 		String line = lineReader.readLine(); 
 		while (hasNext(line)) {
 			String[] records = line.split(",");
-			if (isACustomer(records)){			
+			if (isACustomer(records)){
+				validateNewCustomer(records, line);
 				newCustomer = addNewCustomer(session, records);
 			}else if (isAnAddress(records)) {
 				addAddress(newCustomer, records);
@@ -70,16 +76,23 @@ public class CustomerImporter {
 	private Customer addNewCustomer(Session session, String[] records) {
 		Customer newCustomer;
 		newCustomer = new Customer();
-		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_NAME_EMPTY);
 		newCustomer.setFirstName(records[1]);
-		if(records[2].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY);
 		newCustomer.setLastName(records[2]);
-		if(!records[3].matches("D|C")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_TYPE);
 		newCustomer.setIdentificationType(records[3]);
-		
 		newCustomer.setIdentificationNumber(records[4]);
 		session.persist(newCustomer);
 		return newCustomer;
+	}
+
+	private void validateNewCustomer(String[] records, String line) {
+		int cantColumn = records.length;
+		if(line.endsWith(",")) cantColumn++;
+		if(!(cantColumn == 5)) throw new RuntimeException(INVALID_FORMAT_CANT_COLUMNS);
+		
+		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_NAME_EMPTY);
+		if(records[2].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY);
+		if(!records[3].matches("D|C")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_TYPE);
+		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY);
 	}
 
 	private boolean isAnAddress(String[] records) {

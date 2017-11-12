@@ -227,6 +227,21 @@ public class CustomerImporterTest {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
 		}
 	}
+	
+	@Test
+	public void customerIdentificationNumberCanNotBeEmpty() throws IOException {
+		FileReader reader = new FileReader("resources/inputCustomerIdentificationNumber.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
+		}
+	}
+	
+	
+	
 
 	@Test
 	public void addressStreetNameEmpty() throws IOException {
@@ -254,7 +269,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void addressStreetNumb() throws IOException {
+	public void addressStreetNumberLowValue() throws IOException {
 		FileReader reader = new FileReader("resources/inputStreetNumber.txt");
 		
 		try {
@@ -266,7 +281,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void addressZipCode() throws IOException {
+	public void addressZipCodeLowValue() throws IOException {
 		FileReader reader = new FileReader("resources/inputZipCode.txt");
 		
 		try {
@@ -274,6 +289,30 @@ public class CustomerImporterTest {
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void customerLowCantColumns() throws IOException {
+		FileReader reader = new FileReader("resources/inputCustomerLowCantColumns.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+		}
+	}
+	
+	@Test
+	public void customerHighCantColumns() throws IOException {
+		FileReader reader = new FileReader("resources/inputCustomerHighCantColums.txt");
+		
+		try {
+			new CustomerImporter().importCustomers(session, reader);
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
