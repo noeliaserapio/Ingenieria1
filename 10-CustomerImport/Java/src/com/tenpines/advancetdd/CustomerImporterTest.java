@@ -25,7 +25,7 @@ public class CustomerImporterTest {
 
 	private Session session;
 
-	public StringReader validDateReader() {
+	public StringReader validDataReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
@@ -37,7 +37,7 @@ public class CustomerImporterTest {
 		return fileReader;
 	}
 	
-	public StringReader validDateReaderIncorrectLetter() {
+	public StringReader validDataReaderIncorrectLetter() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
@@ -49,7 +49,7 @@ public class CustomerImporterTest {
 		return fileReader;
 	}
 	
-	public StringReader validDateReaderIncorrectLetterA() {
+	public StringReader validDataReaderIncorrectLetterA() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
@@ -61,7 +61,7 @@ public class CustomerImporterTest {
 		return fileReader;
 	}
 	
-	public StringReader validDateReaderIncorrectLetterC() {
+	public StringReader validDataReaderIncorrectLetterC() {
 		StringWriter writer = new StringWriter();
 		writer.write("CC,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
@@ -123,9 +123,11 @@ public class CustomerImporterTest {
 		assertEquals("Buenos Aires", address.getProvince());
 	}
 
-	public void assertCustomerCount() {
+	
+	
+	public int numberOfCustomers(){
 		List<Customer> customers = session.createCriteria(Customer.class).list();
-		assertEquals(2,customers.size());
+		return customers.size();
 	}
 
 	@After
@@ -148,16 +150,16 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void test01importsValidDataCorrectly() throws IOException {
-		new CustomerImporter(session).importCustomers(validDateReader());
+		new CustomerImporter(session).importCustomers(validDataReader());
 
-		assertCustomerCount();
+		assertEquals(2,numberOfCustomers());
 		assertPepeSanchezWasImportedCorrectly();
 		assertJuanPerezWasImportedCorrectly();		
 	}
 	
 	@Test
 	public void test02WithoutDataThereAreNotError() throws IOException {
-		new CustomerImporter(session).importCustomers(validDateReaderEmpty());
+		new CustomerImporter(session).importCustomers(validDataReaderEmpty());
 		
 		assertThereAreNotCustomersAndNotAddresses();
 				
@@ -180,8 +182,8 @@ public class CustomerImporterTest {
 	@Test
 	public void eachLineShouldBeginWithCorrectLetter() throws IOException {
 		try {
-			new CustomerImporter(session).importCustomers(validDateReaderIncorrectLetter());
-			assertCustomerCount();
+			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetter());
+			assertEquals(2,numberOfCustomers());
 			assertPepeSanchezWasImportedCorrectly();
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
@@ -193,8 +195,8 @@ public class CustomerImporterTest {
 	@Test
 	public void eachAddressLineShouldBeginWithUniqueA() throws IOException {
 		try {
-			new CustomerImporter(session).importCustomers(validDateReaderIncorrectLetterA());
-			assertCustomerCount();
+			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetterA());
+			assertEquals(2,numberOfCustomers());
 			assertPepeSanchezWasImportedCorrectly();
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
@@ -206,8 +208,8 @@ public class CustomerImporterTest {
 	@Test
 	public void eachCustomerLineShouldBeginWithUniqueC() throws IOException {
 		try {
-			new CustomerImporter(session).importCustomers(validDateReaderIncorrectLetterC());
-			assertCustomerCount();
+			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetterC());
+			assertEquals(2,numberOfCustomers());
 			assertPepeSanchezWasImportedCorrectly();
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
@@ -416,14 +418,7 @@ public class CustomerImporterTest {
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	public StringReader validDateReaderEmpty() {
+	public StringReader validDataReaderEmpty() {
 		return new StringReader(new String());
 	}
 	
