@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
@@ -103,11 +104,8 @@ public class CustomerImporterTest {
 
 	public void assertPepeSanchezWasImportedCorrectly() {
 		
-		Customer customer = customerIdentifiedAs("D", "22333444");
-		assertEquals("Pepe",customer.getFirstName());
-		assertEquals("Sanchez",customer.getLastName());
-		assertEquals("D",customer.getIdentificationType());
-		assertEquals("22333444",customer.getIdentificationNumber());
+		assertCustomerPepeSanchez();
+		Customer customer = getCustomerPepeSanchez();
 	
 		assertEquals(2,customer.numberOfAddresses());
 		Address address = customer.addressAt("San Martin");
@@ -123,8 +121,19 @@ public class CustomerImporterTest {
 		assertEquals("Buenos Aires", address.getProvince());
 	}
 
-	
-	
+	private void assertCustomerPepeSanchez() {
+		Customer customer = getCustomerPepeSanchez();
+		assertEquals("Pepe",customer.getFirstName());
+		assertEquals("Sanchez",customer.getLastName());
+		assertEquals("D",customer.getIdentificationType());
+		assertEquals("22333444",customer.getIdentificationNumber());
+	}
+
+	private Customer getCustomerPepeSanchez() {
+		Customer customer = customerIdentifiedAs("D", "22333444");
+		return customer;
+	}
+
 	public int numberOfCustomers(){
 		List<Customer> customers = session.createCriteria(Customer.class).list();
 		return customers.size();
@@ -179,6 +188,18 @@ public class CustomerImporterTest {
 	
 	}
 	
+	@Test
+	public void test04CanHaveCustomerWithoutAddress() throws IOException {
+		new CustomerImporter(session).importCustomers(validDataCustomerWithoutAddress());
+		
+		assertEquals(1,numberOfCustomers());
+		assertCustomerPepeSanchez();
+		assertEquals(0, getCustomerPepeSanchez().numberOfAddresses());
+	
+	}
+	
+	
+
 	@Test
 	public void eachLineShouldBeginWithCorrectLetter() throws IOException {
 		try {
@@ -440,6 +461,14 @@ public class CustomerImporterTest {
 	private StringReader invalidAdrressWithoutCustomer() {
 		StringWriter writer = new StringWriter();
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+	
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	private StringReader validDataCustomerWithoutAddress() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
 	
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;

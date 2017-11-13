@@ -78,11 +78,11 @@ public class CustomerImporter {
 	}
 
 	private void parseAddress() {
-		
-		if(newCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
-		
 		validateAddress();
-		
+		addAddress();
+	}
+
+	private void addAddress() {
 		Address newAddress = new Address();
 
 		newAddress.setStreetName(records[1]);
@@ -94,6 +94,8 @@ public class CustomerImporter {
 	}
 
 	private void validateAddress() {
+		if(newCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
+		
 		validateCantColumns(6);
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
 		if(!records[2].matches("[0-9]{1,9}")) throw new RuntimeException(INVALID_FORMAT_STREET_NUMBER);
