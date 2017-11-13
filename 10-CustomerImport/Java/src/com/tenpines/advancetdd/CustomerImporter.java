@@ -24,13 +24,16 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER = "The format of Customer's identification number is invalid";
 
 	
-	public static final String INVALID_FORMAT_CANT_COLUMNS = "The quantity of columns of this line is invalid";
+	public static final String INVALID_FORMAT_CANT_COLUMNS = "The quantity of columns of thisline is invalid";
+//	public static final String INVALID_FORMAT_CANT_COLUMNS_ADDRESS = "The quantity of columns of this address's line is invalid";
 
 	public static final String INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY = "Address street name is empty";
 	public static final String INVALID_FORMAT_ADDRESS_TOWN_EMPTY = "Address town is empty";
 	public static final String INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY = "Address province is empty";
-	public static final String INVALID_FORMAT_STREET_NUMBER = "The street number is less than 1";
-	public static final String INVALID_FORMAT_ZIP_CODE = "The zip code is less than 1000";
+	public static final String INVALID_FORMAT_STREET_NUMBER_LOW = "The street number is less than 1";
+	public static final String INVALID_FORMAT_STREET_NUMBER = "The format of street is invalid";
+	public static final String INVALID_FORMAT_ZIP_CODE_LOW = "The zip code is less than 1000";
+	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 
 	
 	public CustomerImporter(Session session) {
@@ -40,7 +43,7 @@ public class CustomerImporter {
 	public void importCustomers(Reader fileReader) throws IOException{
 		
 		lineReader = new LineNumberReader(fileReader);
-			
+
 		while (hasNextLine()) {
 			readLine();
 			parseRegister();	
@@ -78,22 +81,27 @@ public class CustomerImporter {
 		
 		if(newCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
 		
+		validateAddress();
+		
 		Address newAddress = new Address();
 
-		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
 		newAddress.setStreetName(records[1]);
-		int streetNum = Integer.parseInt(records[2]);
-		if(streetNum <1) throw new RuntimeException(INVALID_FORMAT_STREET_NUMBER);
-		newAddress.setStreetNumber(streetNum);
-		if(records[3].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_TOWN_EMPTY);
+		newAddress.setStreetNumber(Integer.parseInt(records[2]));
 		newAddress.setTown(records[3]);
-		int zipCode = Integer.parseInt(records[4]);
-		if(zipCode <1000) throw new RuntimeException(INVALID_FORMAT_ZIP_CODE);
-		newAddress.setZipCode(zipCode);	
-
-		newAddress.setProvince(records[5]);
-		
+		newAddress.setZipCode(Integer.parseInt(records[4]));	
+		newAddress.setProvince(records[5]);	
 		newCustomer.addAddress(newAddress);
+	}
+
+	private void validateAddress() {
+		validateCantColumns(6);
+		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
+		if(!records[2].matches("[0-9]{1,9}")) throw new RuntimeException(INVALID_FORMAT_STREET_NUMBER);
+		if(Integer.parseInt(records[2]) <1) throw new RuntimeException(INVALID_FORMAT_STREET_NUMBER_LOW);
+		if(records[3].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_TOWN_EMPTY);
+		if(!records[4].matches("[0-9]{1,9}")) throw new RuntimeException(INVALID_FORMAT_ZIP_CODE);
+		if(Integer.parseInt(records[4]) <1000) throw new RuntimeException(INVALID_FORMAT_ZIP_CODE_LOW);
+		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY);		
 
 	}
 
@@ -108,22 +116,25 @@ public class CustomerImporter {
 		return newCustomer;
 	}
 
+
 	private void validateNewCustomer() {
-		int cantColumn = records.length;
-		if(line.endsWith(",")) cantColumn++;
-		if(!(cantColumn == 5)) throw new RuntimeException(INVALID_FORMAT_CANT_COLUMNS);
-		
+		validateCantColumns(5);	
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_NAME_EMPTY);
 		if(records[2].length() == 0) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY);
 		if(!records[3].matches("D|C")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_TYPE);
-		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY);
-		
+		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY);		
 		if(records[3].equals("D")){
 			if(!records[4].matches("[0-9]{8,9}")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER);
 		}else{
 			if(!records[4].matches("[0-9]{2}-[0-9]{8,9}-[0-9]{1}")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER);
 		}
 
+	}
+
+	private void validateCantColumns(int validCant) {
+		int cantColumn = records.length;
+		if(line.endsWith(",")) cantColumn++;
+		if(!(cantColumn == validCant)) throw new RuntimeException(INVALID_FORMAT_CANT_COLUMNS);
 	}
 
 	private boolean isAddress() {
