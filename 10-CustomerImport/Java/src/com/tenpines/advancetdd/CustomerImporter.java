@@ -14,6 +14,8 @@ public class CustomerImporter {
 	private Customer newCustomer;
 	private Session session;
 	
+	public static final String ADDRESS_WITHOUT_CUSTOMER = "Can not have address without customer";
+	
 	public static final String INVALID_BEGIN_FORMAT_LINE = "This line doesn't start correctly";
 	public static final String INVALID_FORMAT_IDENTIFICATION_TYPE = "The identification type doesn´t have the correct format";
 	public static final String INVALID_FORMAT_CUSTOMER_NAME_EMPTY = "Customer's name is empty";
@@ -73,6 +75,9 @@ public class CustomerImporter {
 	}
 
 	private void parseAddress() {
+		
+		if(newCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
+		
 		Address newAddress = new Address();
 
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);

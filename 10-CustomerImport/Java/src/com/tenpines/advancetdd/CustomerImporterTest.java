@@ -16,9 +16,11 @@ import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerImporterTest {
 
 	private Session session;
@@ -145,12 +147,34 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void importsValidDataCorrectly() throws IOException {
+	public void test01importsValidDataCorrectly() throws IOException {
 		new CustomerImporter(session).importCustomers(validDateReader());
 
 		assertCustomerCount();
 		assertPepeSanchezWasImportedCorrectly();
 		assertJuanPerezWasImportedCorrectly();		
+	}
+	
+	@Test
+	public void test02WithoutDataThereAreNotError() throws IOException {
+		new CustomerImporter(session).importCustomers(validDateReaderEmpty());
+		
+		assertThereAreNotCustomersAndNotAddresses();
+				
+	}
+	
+	@Test
+	public void test03CanNotHaveAddressWithoutCustomer() throws IOException {
+		CustomerImporter customerImporter = new CustomerImporter(session);
+		
+		try{
+			customerImporter.importCustomers(invalidAdrressWithoutCustomer());
+			fail();
+		}catch(RuntimeException e){
+			assertEquals(e.getMessage(), CustomerImporter.ADDRESS_WITHOUT_CUSTOMER);
+			assertThereAreNotCustomersAndNotAddresses();
+		}
+	
 	}
 	
 	@Test
@@ -339,7 +363,31 @@ public class CustomerImporterTest {
 	
 	
 	
+	public StringReader validDateReaderEmpty() {
+		return new StringReader(new String());
+	}
 	
+	private void assertThereAreNotCustomersAndNotAddresses(){
+		assertThereAreNotCustomers();
+		assertThereAreNotAddresses();
+	}
 	
+	private void assertThereAreNotAddresses() {
+		List<Address> address = session.createCriteria(Address.class).list();
+		assertTrue(address.isEmpty());		
+	}
+
+	private void assertThereAreNotCustomers() {
+		List<Customer> customers = session.createCriteria(Customer.class).list();
+		assertTrue(customers.isEmpty());	
+	}
+	
+	private StringReader invalidAdrressWithoutCustomer() {
+		StringWriter writer = new StringWriter();
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+	
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 
 }
