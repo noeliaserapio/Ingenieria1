@@ -12,7 +12,7 @@ public class CustomerImporter {
 	private String line;
 	private String[] records;
 	private Customer newCustomer;
-	private Session session;
+	private PersistentCustomerSystem system;
 	
 	public static final String ADDRESS_WITHOUT_CUSTOMER = "Can not have address without customer";
 	
@@ -36,8 +36,8 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 
 	
-	public CustomerImporter(Session session) {
-		this.session = session;
+	public CustomerImporter(PersistentCustomerSystem system) {
+		this.system = system;
 	}
 	
 	public void importCustomers(Reader fileReader) throws IOException{
@@ -114,10 +114,13 @@ public class CustomerImporter {
 		newCustomer.setLastName(records[2]);
 		newCustomer.setIdentificationType(records[3]);
 		newCustomer.setIdentificationNumber(records[4]);
-		session.persist(newCustomer);
+		persist(newCustomer);
 		return newCustomer;
 	}
 
+	private void persist(Customer newCustomer) {
+		system.persistSystem(this, newCustomer);
+	}
 
 	private void validateNewCustomer() {
 		validateCantColumns(5);	
@@ -147,4 +150,5 @@ public class CustomerImporter {
 		return records[0].equals("C");
 	}
 
+	
 }

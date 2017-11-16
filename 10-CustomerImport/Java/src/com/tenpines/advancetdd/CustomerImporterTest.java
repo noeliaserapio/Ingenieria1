@@ -9,12 +9,6 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.service.ServiceRegistry;
-import org.hibernate.service.ServiceRegistryBuilder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -24,7 +18,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class CustomerImporterTest {
 
-	private Session session;
+	PersistentCustomerSystem system = new PersistentCustomerSystem();
 
 	public StringReader validDataReader() {
 		StringWriter writer = new StringWriter();
@@ -94,9 +88,7 @@ public class CustomerImporterTest {
 	public Customer customerIdentifiedAs(String idType, String idNumber) {
 		List<Customer> customers;
 		Customer customer;
-		customers = session.createCriteria(Customer.class).
-				add(Restrictions.eq("identificationType", idType)).
-				add(Restrictions.eq("identificationNumber",idNumber)).list();
+		customers = system.customersIdentifiedAs(idType, idNumber);
 		assertEquals(1,customers.size());
 		customer = customers.get(0);
 		return customer;
@@ -108,17 +100,22 @@ public class CustomerImporterTest {
 		Customer customer = getCustomerPepeSanchez();
 	
 		assertEquals(2,customer.numberOfAddresses());
-		Address address = customer.addressAt("San Martin");
-		assertEquals(3322,address.getStreetNumber());
-		assertEquals("Olivos", address.getTown());
-		assertEquals(1636, address.getZipCode());
-		assertEquals("BsAs", address.getProvince());
+		Address address;
+		assertPepeSanchezAddressSanMartin(customer);
 		
 		address = customer.addressAt("Maipu");
 		assertEquals(888,address.getStreetNumber());
 		assertEquals("Florida", address.getTown());
 		assertEquals(1122, address.getZipCode());
 		assertEquals("Buenos Aires", address.getProvince());
+	}
+
+	private void assertPepeSanchezAddressSanMartin(Customer customer) {
+		Address address = customer.addressAt("San Martin");
+		assertEquals(3322,address.getStreetNumber());
+		assertEquals("Olivos", address.getTown());
+		assertEquals(1636, address.getZipCode());
+		assertEquals("BsAs", address.getProvince());
 	}
 
 	private void assertCustomerPepeSanchez() {
@@ -135,31 +132,26 @@ public class CustomerImporterTest {
 	}
 
 	public int numberOfCustomers(){
-		List<Customer> customers = session.createCriteria(Customer.class).list();
+		List<Customer> customers = system.customers(this);
 		return customers.size();
 	}
 
 	@After
 	public void closeSession() {
-		session.getTransaction().commit();
-		session.close();
+		system.commit();
+		system.close();
 	}
 
 	@Before
 	public void openSession() {
-		Configuration configuration = new Configuration();
-	    configuration.configure();
-	
-	    ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();        
-	    SessionFactory sessionFactory = configuration.buildSessionFactory(serviceRegistry);
-		session = sessionFactory.openSession();
-		session.beginTransaction();
+		system.configureSession();
+		system.beginTransaction();
 		
 	}
-	
+
 	@Test
 	public void test01importsValidDataCorrectly() throws IOException {
-		new CustomerImporter(session).importCustomers(validDataReader());
+		new CustomerImporter(system).importCustomers(validDataReader());
 
 		assertEquals(2,numberOfCustomers());
 		assertPepeSanchezWasImportedCorrectly();
@@ -168,7 +160,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void test02WithoutDataThereAreNotError() throws IOException {
-		new CustomerImporter(session).importCustomers(validDataReaderEmpty());
+		new CustomerImporter(system).importCustomers(validDataReaderEmpty());
 		
 		assertThereAreNotCustomersAndNotAddresses();
 				
@@ -176,7 +168,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void test03CanNotHaveAddressWithoutCustomer() throws IOException {
-		CustomerImporter customerImporter = new CustomerImporter(session);
+		CustomerImporter customerImporter = new CustomerImporter(system);
 		
 		try{
 			customerImporter.importCustomers(invalidAdrressWithoutCustomer());
@@ -190,7 +182,7 @@ public class CustomerImporterTest {
 	
 	@Test
 	public void test04CanHaveCustomerWithoutAddress() throws IOException {
-		new CustomerImporter(session).importCustomers(validDataCustomerWithoutAddress());
+		new CustomerImporter(system).importCustomers(validDataCustomerWithoutAddress());
 		
 		assertEquals(1,numberOfCustomers());
 		assertCustomerPepeSanchez();
@@ -201,22 +193,24 @@ public class CustomerImporterTest {
 	
 
 	@Test
-	public void eachLineShouldBeginWithCorrectLetter() throws IOException {
+	public void test05eachLineShouldBeginWithCorrectLetter() throws IOException {
+		CustomerImporter customerImporter = new CustomerImporter(system);
 		try {
-			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetter());
-			assertEquals(2,numberOfCustomers());
-			assertPepeSanchezWasImportedCorrectly();
-			assertJuanPerezWasImportedCorrectly();	
+			customerImporter.importCustomers(validDataReaderIncorrectLetter());
+		//	assertEquals(2,numberOfCustomers());
+			//assertPepeSanchezWasImportedCorrectly();
+		//	assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertEquals(1, numberOfCustomers());
 		}
 	}
 	
 	@Test
 	public void eachAddressLineShouldBeginWithUniqueA() throws IOException {
 		try {
-			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetterA());
+			new CustomerImporter(system).importCustomers(validDataReaderIncorrectLetterA());
 			assertEquals(2,numberOfCustomers());
 			assertPepeSanchezWasImportedCorrectly();
 			assertJuanPerezWasImportedCorrectly();	
@@ -229,7 +223,7 @@ public class CustomerImporterTest {
 	@Test
 	public void eachCustomerLineShouldBeginWithUniqueC() throws IOException {
 		try {
-			new CustomerImporter(session).importCustomers(validDataReaderIncorrectLetterC());
+			new CustomerImporter(system).importCustomers(validDataReaderIncorrectLetterC());
 			assertEquals(2,numberOfCustomers());
 			assertPepeSanchezWasImportedCorrectly();
 			assertJuanPerezWasImportedCorrectly();	
@@ -244,7 +238,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputIdentificationType.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
@@ -256,7 +250,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputCustomerName.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_NAME_EMPTY,e.getMessage());
@@ -268,7 +262,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputCustomerLastName.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
@@ -280,7 +274,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputCustomerIdentificationNumber.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
@@ -295,7 +289,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputAddressStreetEmpty.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
@@ -308,7 +302,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputAddressTownEmpty.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers( reader);
+			new CustomerImporter(system).importCustomers( reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
@@ -320,7 +314,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputStreetNumber.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
@@ -332,7 +326,7 @@ public class CustomerImporterTest {
 		FileReader reader = new FileReader("resources/inputZipCode.txt");
 		
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
@@ -343,7 +337,7 @@ public class CustomerImporterTest {
 	public void customerLowCantColumns() throws IOException {
 		FileReader reader = new FileReader("resources/inputCustomerLowCantColumns.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
@@ -354,7 +348,7 @@ public class CustomerImporterTest {
 	public void customerHighCantColumns() throws IOException {
 		FileReader reader = new FileReader("resources/inputCustomerHighCantColums.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
@@ -366,7 +360,7 @@ public class CustomerImporterTest {
 	public void customerLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
 		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumberWhenTypeIsD.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
@@ -377,7 +371,7 @@ public class CustomerImporterTest {
 	public void customerFormatIdentificationNumberWhenTypeIsC() throws IOException {
 		FileReader reader = new FileReader("resources/customerFormatIdentificationNumberWhenTypeIsC.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
@@ -388,7 +382,7 @@ public class CustomerImporterTest {
 	public void addressLowCantColumns() throws IOException {
 		FileReader reader = new FileReader("resources/inputAddressLowCantColumns.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
@@ -399,7 +393,7 @@ public class CustomerImporterTest {
 	public void addressHighCantColumns() throws IOException {
 		FileReader reader = new FileReader("resources/inputAddressHighCantColums.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
@@ -410,7 +404,7 @@ public class CustomerImporterTest {
 	public void addressFormatStreetNumber() throws IOException {
 		FileReader reader = new FileReader("resources/inputAddressFormatStreetNumber.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
@@ -421,7 +415,7 @@ public class CustomerImporterTest {
 	public void addressFormatZipCode() throws IOException {
 		FileReader reader = new FileReader("resources/inputAddressFormatZipCode.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
@@ -432,7 +426,7 @@ public class CustomerImporterTest {
 	public void addressFormatProvinceEmpty() throws IOException {
 		FileReader reader = new FileReader("resources/inputAddressFormatProvinceEmpty.txt");	
 		try {
-			new CustomerImporter(session).importCustomers(reader);
+			new CustomerImporter(system).importCustomers(reader);
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
@@ -449,12 +443,12 @@ public class CustomerImporterTest {
 	}
 	
 	private void assertThereAreNotAddresses() {
-		List<Address> address = session.createCriteria(Address.class).list();
+		List<Address> address = system.session.createCriteria(Address.class).list();
 		assertTrue(address.isEmpty());		
 	}
 
 	private void assertThereAreNotCustomers() {
-		List<Customer> customers = session.createCriteria(Customer.class).list();
+		List<Customer> customers = system.customers(this);
 		assertTrue(customers.isEmpty());	
 	}
 	
