@@ -12,7 +12,7 @@ public class CustomerImporter {
 	private String line;
 	private String[] records;
 	private Customer newCustomer;
-	private PersistentCustomerSystem system;
+	private CustomerSystem system;
 	
 	public static final String ADDRESS_WITHOUT_CUSTOMER = "Can not have address without customer";
 	
@@ -36,7 +36,7 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 
 	
-	public CustomerImporter(PersistentCustomerSystem system) {
+	public CustomerImporter(CustomerSystem system) {
 		this.system = system;
 	}
 	
@@ -119,7 +119,7 @@ public class CustomerImporter {
 	}
 
 	private void persist(Customer newCustomer) {
-		system.persistSystem(this, newCustomer);
+		system.persistSystem(newCustomer);
 	}
 
 	private void validateNewCustomer() {

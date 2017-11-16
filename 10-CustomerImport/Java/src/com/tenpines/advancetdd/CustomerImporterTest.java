@@ -132,7 +132,7 @@ public class CustomerImporterTest {
 	}
 
 	public int numberOfCustomers(){
-		List<Customer> customers = system.customers(this);
+		List<Customer> customers = system.customers();
 		return customers.size();
 	}
 
@@ -448,7 +448,7 @@ public class CustomerImporterTest {
 	}
 
 	private void assertThereAreNotCustomers() {
-		List<Customer> customers = system.customers(this);
+		List<Customer> customers = system.customers();
 		assertTrue(customers.isEmpty());	
 	}
 	
