@@ -3,8 +3,8 @@ package com.tenpines.advancetdd;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
+import java.io.StringReader;
 
-import org.hibernate.Session;
 
 public class CustomerImporter {
 
@@ -13,6 +13,7 @@ public class CustomerImporter {
 	private String[] records;
 	private Customer newCustomer;
 	private CustomerSystem system;
+	private Reader readStream;
 	
 	public static final String ADDRESS_WITHOUT_CUSTOMER = "Can not have address without customer";
 	
@@ -36,20 +37,21 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 
 	
-	public CustomerImporter(CustomerSystem system) {
+	public CustomerImporter(CustomerSystem system, Reader readStream) {
 		this.system = system;
+		this.readStream = readStream;
 	}
 	
-	public void importCustomers(Reader fileReader) throws IOException{
+	public void importCustomers() throws IOException{
 		
-		lineReader = new LineNumberReader(fileReader);
+		lineReader = new LineNumberReader(readStream);
 
 		while (hasNextLine()) {
 			readLine();
 			parseRegister();	
 		}
 			
-		fileReader.close();
+		readStream.close();
 	}
 
 	private void parseRegister() {
@@ -119,7 +121,7 @@ public class CustomerImporter {
 	}
 
 	private void persist(Customer newCustomer) {
-		system.persistSystem(newCustomer);
+		system.addCustomer(newCustomer);
 	}
 
 	private void validateNewCustomer() {

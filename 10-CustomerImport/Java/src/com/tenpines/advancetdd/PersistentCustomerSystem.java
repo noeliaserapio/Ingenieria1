@@ -1,5 +1,7 @@
 package com.tenpines.advancetdd;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.List;
 
 import org.hibernate.Session;
@@ -36,23 +38,12 @@ public class PersistentCustomerSystem implements CustomerSystem  {
 		session = sessionFactory.openSession();
 	}
 
+	
 	/* (non-Javadoc)
-	 * @see com.tenpines.advancetdd.CustomerSystem#customersIdentifiedAs(java.lang.String, java.lang.String)
+	 * @see com.tenpines.advancetdd.CustomerSystem#stop()
 	 */
 	@Override
-	public List<Customer> customersIdentifiedAs(String idType, String idNumber) {
-		List<Customer> customers;
-		customers = session.createCriteria(Customer.class).
-				add(Restrictions.eq("identificationType", idType)).
-				add(Restrictions.eq("identificationNumber",idNumber)).list();
-		return customers;
-	}
-
-	/* (non-Javadoc)
-	 * @see com.tenpines.advancetdd.CustomerSystem#close()
-	 */
-	@Override
-	public void close() {
+	public void stop() {
 		session.close();
 	}
 
@@ -63,22 +54,29 @@ public class PersistentCustomerSystem implements CustomerSystem  {
 	public void commit() {
 		session.getTransaction().commit();
 	}
-
-	/* (non-Javadoc)
-	 * @see com.tenpines.advancetdd.CustomerSystem#customers()
-	 */
-	@Override
-	public List<Customer> customers() {
-		List<Customer> customers = session.createCriteria(Customer.class).list();
-		return customers;
-	}
 	
 	/* (non-Javadoc)
 	 * @see com.tenpines.advancetdd.CustomerSystem#persistSystem(com.tenpines.advancetdd.Customer)
 	 */
 	@Override
-	public void persistSystem(Customer newCustomer) {
+	public void addCustomer(Customer newCustomer) {
 		session.persist(newCustomer);
+	}
+
+	public int numberOfCustomers(){
+		List<Customer> customers = session.createCriteria(Customer.class).list();
+		return customers.size();
+	}
+
+	public Customer customerIdentifiedAs(String idType, String idNumber) {
+		List<Customer> customers;
+		Customer customer;
+		customers = session.createCriteria(Customer.class).
+				add(Restrictions.eq("identificationType", idType)).
+				add(Restrictions.eq("identificationNumber",idNumber)).list();
+		assertEquals(1,customers.size());
+		customer = customers.get(0);
+		return customer;
 	}
 
 }

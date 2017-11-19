@@ -94,5 +94,9 @@ public class Customer {
 		return addresses.size();
 	}
 
+	public boolean isIdentifiedAs(String idType, String idNumber) {
+		return identificationType.equals(idType) && identificationNumber.equals(idNumber);
+	}
+
 
 }

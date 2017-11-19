@@ -1,11 +1,13 @@
 package com.tenpines.advancetdd;
 
+import static org.junit.Assert.assertEquals;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class TransientCustomerSystem implements CustomerSystem {
 	
-	private List<Customer> customers = new ArrayList<Customer>();
+	private List<Customer> customers;
 
 	@Override
 	public void beginTransaction() {
@@ -15,23 +17,23 @@ public class TransientCustomerSystem implements CustomerSystem {
 
 	@Override
 	public void configureSession() {
-		// TODO Auto-generated method stub
-		
+		customers = new ArrayList<Customer>();	
 	}
 
 	@Override
-	public List<Customer> customersIdentifiedAs(String idType, String idNumber) {
+	public Customer customerIdentifiedAs(String idType, String idNumber) {
 		List<Customer> lCustomerRes = new ArrayList<Customer>();
 		for(Customer c : customers){
-			if(c.getIdentificationType().equals(idType) && 
-					c.getIdentificationNumber().equals(idNumber))
-					lCustomerRes.add(c);
+			if(c.isIdentifiedAs(idType, idNumber)){
+				lCustomerRes.add(c);
+			}
 		}
-		return lCustomerRes;
+		assertEquals(1,lCustomerRes.size());
+		return lCustomerRes.get(0);	
 	}
 
 	@Override
-	public void close() {
+	public void stop() {
 		// TODO Auto-generated method stub
 		
 	}
@@ -43,13 +45,13 @@ public class TransientCustomerSystem implements CustomerSystem {
 	}
 
 	@Override
-	public List<Customer> customers() {
-		return customers;
+	public void addCustomer(Customer newCustomer) {
+		customers.add(newCustomer);
 	}
 
 	@Override
-	public void persistSystem(Customer newCustomer) {
-		customers.add(newCustomer);
+	public int numberOfCustomers() {
+		return customers.size();
 	}
 
 }
