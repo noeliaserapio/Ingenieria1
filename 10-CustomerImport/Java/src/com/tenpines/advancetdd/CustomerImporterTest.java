@@ -129,7 +129,7 @@ public class CustomerImporterTest {
 
 	@Before
 	public void openSession() {
-		system = new TransientCustomerSystem();
+		system = Environment.createCutomerSystem();
 		system.configureSession();
 		system.beginTransaction();
 		
