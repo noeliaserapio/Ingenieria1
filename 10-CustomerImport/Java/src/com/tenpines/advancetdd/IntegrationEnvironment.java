@@ -3,7 +3,7 @@ package com.tenpines.advancetdd;
 public class IntegrationEnvironment extends Environment{
 	
 	public static boolean isCurrent(){
-		return false;
+		return true;
 	}
 	
 	public static CustomerSystem createSystem(){

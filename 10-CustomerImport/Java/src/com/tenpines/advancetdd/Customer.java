@@ -1,50 +1,29 @@
 package com.tenpines.advancetdd;
 
 import java.util.HashSet;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table( name = "CUSTOMERS" )
-public class Customer {
+public class Customer extends Party {
 
-	@Id
-	@GeneratedValue
-	private long id;
+
 	@NotEmpty
 	private String firstName;
 	@NotEmpty
 	private String lastName;
-	@Pattern(regexp="D|C")
-	private String identificationType;
-	@NotEmpty
-	private String identificationNumber;
-	@OneToMany(cascade = CascadeType.ALL)
-	private Set<Address> addresses;
-	
-	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
-	
 	public Customer()
 	{
 		addresses = new HashSet<Address>();
 	}
 
-	public long getId() {
-		return id;
-	}
 
-	public void setId(long id) {
-		this.id = id;
-	}
 
 	public String getFirstName() {
 		return firstName;
@@ -62,40 +41,9 @@ public class Customer {
 		this.lastName = lastName;
 	}
 
-	public String getIdentificationType() {
-		return identificationType;
-	}
-
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
-	}
-
-	public String getIdentificationNumber() {
-		return identificationNumber;
-	}
-
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
-	}
-
-	public void addAddress(Address anAddress){
-		addresses.add(anAddress);
-	}
-
-	public Address addressAt(String streetName) {
-		for (Address address : addresses) 
-			if (address.isAt(streetName))
-				return address;
-		
-		throw new RuntimeException(ADDRESS_NOT_FOUND);
-	}
-
-	public int numberOfAddresses() {
-		return addresses.size();
-	}
 
 	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identificationType.equals(idType) && identificationNumber.equals(idNumber);
+		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
 	}
 
 

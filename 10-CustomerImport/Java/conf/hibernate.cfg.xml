@@ -52,6 +52,8 @@
         <property name="hbm2ddl.auto">create</property>
 
         <!-- Names the annotated entity class -->
+        <mapping class="com.tenpines.advancetdd.Identification"/>
+        <mapping class="com.tenpines.advancetdd.Party"/>
         <mapping class="com.tenpines.advancetdd.Address"/>
         <mapping class="com.tenpines.advancetdd.Customer"/>
 

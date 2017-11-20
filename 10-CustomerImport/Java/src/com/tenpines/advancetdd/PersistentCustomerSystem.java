@@ -71,11 +71,13 @@ public class PersistentCustomerSystem implements CustomerSystem  {
 	public Customer customerIdentifiedAs(String idType, String idNumber) {
 		List<Customer> customers;
 		Customer customer;
-		customers = session.createCriteria(Customer.class).
-				add(Restrictions.eq("identificationType", idType)).
-				add(Restrictions.eq("identificationNumber",idNumber)).list();
+		customers = session.createCriteria(Customer.class,"c").
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
+		
+		
 		assertEquals(1,customers.size());
 		customer = customers.get(0);
+		System.out.println(customer);
 		return customer;
 	}
 
