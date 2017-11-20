@@ -28,7 +28,7 @@ public class Importer {
 	public static final String INVALID_FORMAT_ZIP_CODE_LOW = "The zip code is less than 1000";
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 	public static final String INVALID_FORMAT_DOC_DUPLICATE = "The identification number is duplicate";
-
+	public static final String CUSTOMER_NOT_FOUND = "The customer doesn't exit";
 	
 	
 	public Importer() {
@@ -102,9 +102,9 @@ public class Importer {
 		if(!records[3].matches("D|C")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_TYPE);
 		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY);		
 		if(records[3].equals("D")){
-			if(!records[4].matches("[0-9]{8,9}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
+			if(!records[4].matches("[0-9]{8}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
 		}else{
-			if(!records[4].matches("[0-9]{2}-[0-9]{8,9}-[0-9]{1}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
+			if(!records[4].matches("[0-9]{2}-[0-9]{8}-[0-9]{1}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
 		}
 		if(system.existsCustomerIdentifiedAs(records[3], records[4])) throw new RuntimeException(INVALID_FORMAT_DOC_DUPLICATE);
 

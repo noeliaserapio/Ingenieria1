@@ -2,8 +2,6 @@ package com.tenpines.advancetdd;
 
 public interface ErpSystem {
 	
-	public static final String CUSTOMER_NOT_FOUND = "The customer doesn't exit";
-
 	public void beginTransaction();
 
 	public void configureSession();

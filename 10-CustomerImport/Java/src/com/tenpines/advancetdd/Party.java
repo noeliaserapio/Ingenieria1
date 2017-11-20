@@ -15,7 +15,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 
 @Entity  
-@Table(name = "Parties")  
+@Table(name = "PARTIES")  
 @Inheritance(strategy=InheritanceType.JOINED)  
 public class Party {
 	@Id

@@ -11,7 +11,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotEmpty;
 @Entity
-@Table(name="Identifications")
+@Table(name="IDENTIFICATIONS")
 @IdClass(Identification.class)
 public class Identification implements Serializable{
 
