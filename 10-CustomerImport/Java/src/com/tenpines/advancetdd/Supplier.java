@@ -36,5 +36,9 @@ public class Supplier extends Party {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public void addCustomer(Customer c){
+		customers.add(c);
+	}
 
 }

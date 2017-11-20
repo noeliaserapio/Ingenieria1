@@ -120,6 +120,26 @@ public class CustomerImporterTest {
 		Customer customer = (Customer) system.customerIdentifiedAs("D", "22333444");
 		return customer;
 	}
+	
+	public StringReader validDataReaderEmpty() {
+		return new StringReader(new String());
+	}
+	
+	private StringReader invalidAdrressWithoutCustomer() {
+		StringWriter writer = new StringWriter();
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+	
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	private StringReader validDataCustomerWithoutAddress() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
+	
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 
 	@After
 	public void closeSession() {
@@ -160,7 +180,7 @@ public class CustomerImporterTest {
 			customerImporter.importCustomers();
 			fail();
 		}catch(RuntimeException e){
-			assertEquals(e.getMessage(), CustomerImporter.ADDRESS_WITHOUT_CUSTOMER);
+			assertEquals(e.getMessage(), CustomerImporter.ADDRESS_WITHOUT_ASIGNATION);
 			assertEquals(0, system.numberOfCustomers());
 		}
 	
@@ -419,24 +439,25 @@ public class CustomerImporterTest {
 		}
 	}
 	
-	public StringReader validDataReaderEmpty() {
-		return new StringReader(new String());
-	}
-	
-	private StringReader invalidAdrressWithoutCustomer() {
-		StringWriter writer = new StringWriter();
-		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
-	
-		StringReader fileReader = new StringReader(writer.getBuffer().toString());
-		return fileReader;
-	}
-	
-	private StringReader validDataCustomerWithoutAddress() {
+	public StringReader newSupplierReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
-	
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+		writer.write("S,Supplier1,D,123\n");
+		writer.write("NC,Pepe,Pedro,D,12345678\n");
+		writer.write("EC,D,22333444\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs \n");
+		
+		
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
+	
+
+	
+
 
 }

@@ -12,12 +12,11 @@ public class CustomerImporter {
 	private String[] records;
 	private Party lastParty;
 	
-	
 	private CustomerSystem system;
 	private Reader readStream;
 	
-	public static final String ADDRESS_WITHOUT_CUSTOMER = "Can not have address without customer";
-	
+	public static final String ADDRESS_WITHOUT_ASIGNATION = "Can not have address without asignation";
+
 	public static final String INVALID_BEGIN_FORMAT_LINE = "This line doesn't start correctly";
 	public static final String INVALID_FORMAT_IDENTIFICATION_TYPE = "The identification type doesn´t have the correct format";
 	public static final String INVALID_FORMAT_CUSTOMER_NAME_EMPTY = "Customer's name is empty";
@@ -60,6 +59,10 @@ public class CustomerImporter {
 			parseCustomer();
 		}else if(isSupplier()){
 			parseSupplier();
+		}else if (isExistCustomerSup()) {
+			parseCustomerSupExist();
+		}else if (isNewCustomerSup()) {
+			parseCustomerSupNew();
 		}else if (isAddress()) {
 			parseAddress();
 		}else{
@@ -67,22 +70,9 @@ public class CustomerImporter {
 		}
 	}
 
-
-	private void parseSupplier() {
-		validateNewSupplier();
-		lastParty = addNewSupplier();
-		
-	}
-
 	private void validateNewSupplier() {
 		// TODO Auto-generated method stub
 		
-	}
-
-
-	private void parseCustomer() {
-		validateNewCustomer();
-		lastParty = addNewCustomer();
 	}
 
 	private void readLine() {
@@ -98,9 +88,67 @@ public class CustomerImporter {
 		validateAddress();
 		addAddress();
 	}
+	
+	private void parseCustomer() {
+		validateNewCustomer();
+		lastParty = addNewCustomer();
+	}
+	
+	private void parseSupplier() {
+		validateNewSupplier();
+		lastParty = addNewSupplier();
+	}
+	
+	private void parseCustomerSupExist() {
+		
+		Customer customerExis = (Customer) system.customerIdentifiedAs(records[1], records[2]);
+		((Supplier) lastParty).addCustomer( customerExis);
+	}
+	
+	private void parseCustomerSupNew() {
+		validateNewCustomer();
+		((Supplier) lastParty).addCustomer(addNewCustomer());
+	}
+	
+	
+	private Customer addNewCustomer() {
+		Customer newCustomer;
+		newCustomer = new Customer();
+		newCustomer.setFirstName(records[1]);
+		newCustomer.setLastName(records[2]);
+		newCustomer.setIdentificationType(records[3]);
+		newCustomer.setIdentificationNumber(records[4]);
+		persist(newCustomer);
+		return newCustomer;
+	}
+	
+	private Supplier addNewSupplier() {
+		Supplier newSupplier = new Supplier();
+		newSupplier.setName(records[1]);
+		newSupplier.setIdentificationType(records[2]);
+		newSupplier.setIdentificationNumber(records[3]);
+		persist(newSupplier);
+		return newSupplier;
+	}
+
+	
+	
+	private void addAddress() {
+		Address newAddress = new Address();
+		newAddress.setStreetName(records[1]);
+		newAddress.setStreetNumber(Integer.parseInt(records[2]));
+		newAddress.setTown(records[3]);
+		newAddress.setZipCode(Integer.parseInt(records[4]));	
+		newAddress.setProvince(records[5]);	
+		lastParty.addAddress(newAddress);
+	}
+
+	private void persist(Party partie) {
+		system.addParty(partie);
+	}
 
 	private void validateAddress() {
-		if(lastParty == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
+		if(lastParty == null) throw new RuntimeException(ADDRESS_WITHOUT_ASIGNATION);
 		
 		validateCantColumns(6);
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
@@ -111,46 +159,6 @@ public class CustomerImporter {
 		if(Integer.parseInt(records[4]) <1000) throw new RuntimeException(INVALID_FORMAT_ZIP_CODE_LOW);
 		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY);		
 
-	}
-
-	private Customer addNewCustomer() {
-		Customer newCustomer;
-		newCustomer = new Customer();
-		newCustomer.setFirstName(records[1]);
-		newCustomer.setLastName(records[2]);
-		newCustomer.setIdentificationType(records[3]);
-		newCustomer.setIdentificationNumber(records[4]);
-		persistCustomer(newCustomer);
-		return newCustomer;
-	}
-	
-	private Party addNewSupplier() {
-		Supplier newSupplier = new Supplier();
-		newSupplier.setName(records[1]);
-		newSupplier.setIdentificationType(records[2]);
-		newSupplier.setIdentificationNumber(records[3]);
-		persistSupplier(newSupplier);
-		return newSupplier;
-	}
-	
-	private void persistSupplier(Supplier newSupplier) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void addAddress() {
-		Address newAddress = new Address();
-
-		newAddress.setStreetName(records[1]);
-		newAddress.setStreetNumber(Integer.parseInt(records[2]));
-		newAddress.setTown(records[3]);
-		newAddress.setZipCode(Integer.parseInt(records[4]));	
-		newAddress.setProvince(records[5]);	
-		lastParty.addAddress(newAddress);
-	}
-
-	private void persistCustomer(Customer newCustomer) {
-		system.addParty(newCustomer);
 	}
 
 	private void validateNewCustomer() {
@@ -164,7 +172,6 @@ public class CustomerImporter {
 		}else{
 			if(!records[4].matches("[0-9]{2}-[0-9]{8,9}-[0-9]{1}")) throw new RuntimeException(INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER);
 		}
-
 	}
 
 	private void validateCantColumns(int validCant) {
@@ -185,6 +192,11 @@ public class CustomerImporter {
 		return records[0].equals("S");
 	}
 
-
+	private boolean isExistCustomerSup() {
+		return records[0].equals("EC");
+	}
 	
+	private boolean isNewCustomerSup() {
+		return records[0].equals("NC");
+	}
 }
