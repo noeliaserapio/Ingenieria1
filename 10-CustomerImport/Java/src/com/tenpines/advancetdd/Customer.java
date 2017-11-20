@@ -3,8 +3,6 @@ package com.tenpines.advancetdd;
 import java.util.HashSet;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.NotEmpty;
@@ -12,7 +10,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Entity
 @Table( name = "CUSTOMERS" )
 public class Customer extends Party {
-
 
 	@NotEmpty
 	private String firstName;
@@ -22,8 +19,6 @@ public class Customer extends Party {
 	{
 		addresses = new HashSet<Address>();
 	}
-
-
 
 	public String getFirstName() {
 		return firstName;
@@ -40,11 +35,5 @@ public class Customer extends Party {
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-
-
-	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
-	}
-
 
 }

@@ -26,27 +26,15 @@ public class Supplier extends Party {
 	public Supplier()
 	{
 		addresses = new HashSet<Address>();
+		customers= new HashSet<Customer>();
 	}
 
-	public void addAddress(Address anAddress){
-		addresses.add(anAddress);
+	public String getName() {
+		return name;
 	}
 
-	public Address addressAt(String streetName) {
-		for (Address address : addresses) 
-			if (address.isAt(streetName))
-				return address;
-		
-		throw new RuntimeException(ADDRESS_NOT_FOUND);
+	public void setName(String name) {
+		this.name = name;
 	}
-
-	public int numberOfAddresses() {
-		return addresses.size();
-	}
-
-	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
-	}
-
 
 }

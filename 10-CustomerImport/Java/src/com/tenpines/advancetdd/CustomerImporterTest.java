@@ -70,7 +70,7 @@ public class CustomerImporterTest {
 	public void assertJuanPerezWasImportedCorrectly() {
 		Customer customer;
 		Address address;
-		customer = system.customerIdentifiedAs("C", "23-25666777-9");
+		customer = (Customer) system.customerIdentifiedAs("C", "23-25666777-9");
 		assertEquals("Juan",customer.getFirstName());
 		assertEquals("Perez",customer.getLastName());
 		assertEquals("C",customer.getIdentificationType());
@@ -117,7 +117,7 @@ public class CustomerImporterTest {
 	}
 
 	private Customer getCustomerPepeSanchez() {
-		Customer customer = system.customerIdentifiedAs("D", "22333444");
+		Customer customer = (Customer) system.customerIdentifiedAs("D", "22333444");
 		return customer;
 	}
 

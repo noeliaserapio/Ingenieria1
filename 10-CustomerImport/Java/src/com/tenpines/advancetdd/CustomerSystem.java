@@ -2,19 +2,19 @@ package com.tenpines.advancetdd;
 
 public interface CustomerSystem {
 
-	public abstract void beginTransaction();
+	public void beginTransaction();
 
-	public abstract void configureSession();
+	public void configureSession();
 
-	public abstract Customer customerIdentifiedAs(String idType,
+	public Party customerIdentifiedAs(String idType,
 			String idNumber);
 
-	public abstract void stop();
+	public void stop();
 
-	public abstract void commit();
+	public void commit();
 
-	public abstract void addCustomer(Customer newCustomer);
+	public void addParty(Party newCustomer);
 	
-	public abstract int numberOfCustomers();
+	public int numberOfCustomers();
 	
 }

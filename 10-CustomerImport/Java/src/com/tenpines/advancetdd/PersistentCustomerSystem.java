@@ -59,26 +59,26 @@ public class PersistentCustomerSystem implements CustomerSystem  {
 	 * @see com.tenpines.advancetdd.CustomerSystem#persistSystem(com.tenpines.advancetdd.Customer)
 	 */
 	@Override
-	public void addCustomer(Customer newCustomer) {
-		session.persist(newCustomer);
+	public void addParty(Party newParti) {
+		session.persist(newParti);
 	}
-
+	@Override
 	public int numberOfCustomers(){
-		List<Customer> customers = session.createCriteria(Customer.class).list();
+		List<Customer> customers = session.createCriteria(Party.class).list();
 		return customers.size();
 	}
-
-	public Customer customerIdentifiedAs(String idType, String idNumber) {
-		List<Customer> customers;
-		Customer customer;
-		customers = session.createCriteria(Customer.class,"c").
+	@Override
+	public Party customerIdentifiedAs(String idType, String idNumber) {
+		List<Party> parties;
+		Party partie;
+		parties = session.createCriteria(Party.class,"c").
 				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		
 		
-		assertEquals(1,customers.size());
-		customer = customers.get(0);
-		System.out.println(customer);
-		return customer;
+		assertEquals(1,parties.size());
+		partie = parties.get(0);
+		System.out.println(partie);
+		return partie;
 	}
 
 }

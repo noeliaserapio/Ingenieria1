@@ -70,4 +70,8 @@ public class Party {
 		return addresses.size();
 	}
 
+	public boolean isIdentifiedAs(String idType, String idNumber) {
+		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
+	}
+
 }

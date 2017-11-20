@@ -3,7 +3,6 @@ package com.tenpines.advancetdd;
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
-import java.io.StringReader;
 
 
 public class CustomerImporter {
@@ -11,7 +10,9 @@ public class CustomerImporter {
 	private LineNumberReader lineReader;
 	private String line;
 	private String[] records;
-	private Customer newCustomer;
+	private Party lastParty;
+	
+	
 	private CustomerSystem system;
 	private Reader readStream;
 	
@@ -57,6 +58,8 @@ public class CustomerImporter {
 	private void parseRegister() {
 		if (isCustomer()){
 			parseCustomer();
+		}else if(isSupplier()){
+			parseSupplier();
 		}else if (isAddress()) {
 			parseAddress();
 		}else{
@@ -64,9 +67,22 @@ public class CustomerImporter {
 		}
 	}
 
+
+	private void parseSupplier() {
+		validateNewSupplier();
+		lastParty = addNewSupplier();
+		
+	}
+
+	private void validateNewSupplier() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 	private void parseCustomer() {
 		validateNewCustomer();
-		newCustomer = addNewCustomer();
+		lastParty = addNewCustomer();
 	}
 
 	private void readLine() {
@@ -75,8 +91,7 @@ public class CustomerImporter {
 
 	private boolean hasNextLine() throws IOException {
 		line = lineReader.readLine(); 
-		boolean hayLinea = line!=null;
-		return hayLinea;
+		return line!=null;
 	}
 
 	private void parseAddress() {
@@ -84,19 +99,8 @@ public class CustomerImporter {
 		addAddress();
 	}
 
-	private void addAddress() {
-		Address newAddress = new Address();
-
-		newAddress.setStreetName(records[1]);
-		newAddress.setStreetNumber(Integer.parseInt(records[2]));
-		newAddress.setTown(records[3]);
-		newAddress.setZipCode(Integer.parseInt(records[4]));	
-		newAddress.setProvince(records[5]);	
-		newCustomer.addAddress(newAddress);
-	}
-
 	private void validateAddress() {
-		if(newCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
+		if(lastParty == null) throw new RuntimeException(ADDRESS_WITHOUT_CUSTOMER);
 		
 		validateCantColumns(6);
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
@@ -116,12 +120,37 @@ public class CustomerImporter {
 		newCustomer.setLastName(records[2]);
 		newCustomer.setIdentificationType(records[3]);
 		newCustomer.setIdentificationNumber(records[4]);
-		persist(newCustomer);
+		persistCustomer(newCustomer);
 		return newCustomer;
 	}
+	
+	private Party addNewSupplier() {
+		Supplier newSupplier = new Supplier();
+		newSupplier.setName(records[1]);
+		newSupplier.setIdentificationType(records[2]);
+		newSupplier.setIdentificationNumber(records[3]);
+		persistSupplier(newSupplier);
+		return newSupplier;
+	}
+	
+	private void persistSupplier(Supplier newSupplier) {
+		// TODO Auto-generated method stub
+		
+	}
 
-	private void persist(Customer newCustomer) {
-		system.addCustomer(newCustomer);
+	private void addAddress() {
+		Address newAddress = new Address();
+
+		newAddress.setStreetName(records[1]);
+		newAddress.setStreetNumber(Integer.parseInt(records[2]));
+		newAddress.setTown(records[3]);
+		newAddress.setZipCode(Integer.parseInt(records[4]));	
+		newAddress.setProvince(records[5]);	
+		lastParty.addAddress(newAddress);
+	}
+
+	private void persistCustomer(Customer newCustomer) {
+		system.addParty(newCustomer);
 	}
 
 	private void validateNewCustomer() {
@@ -151,6 +180,11 @@ public class CustomerImporter {
 	private boolean isCustomer() {
 		return records[0].equals("C");
 	}
+	
+	private boolean isSupplier() {
+		return records[0].equals("S");
+	}
+
 
 	
 }

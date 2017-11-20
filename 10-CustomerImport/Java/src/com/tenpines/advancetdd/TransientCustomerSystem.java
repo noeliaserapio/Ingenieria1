@@ -7,7 +7,7 @@ import java.util.List;
 
 public class TransientCustomerSystem implements CustomerSystem {
 	
-	private List<Customer> customers;
+	private List<Party> parties;
 
 	@Override
 	public void beginTransaction() {
@@ -17,19 +17,19 @@ public class TransientCustomerSystem implements CustomerSystem {
 
 	@Override
 	public void configureSession() {
-		customers = new ArrayList<Customer>();	
+		parties = new ArrayList<Party>();	
 	}
 
 	@Override
-	public Customer customerIdentifiedAs(String idType, String idNumber) {
-		List<Customer> lCustomerRes = new ArrayList<Customer>();
-		for(Customer c : customers){
+	public Party customerIdentifiedAs(String idType, String idNumber) {
+		List<Party> lPartiesRes = new ArrayList<Party>();
+		for(Party c : parties){
 			if(c.isIdentifiedAs(idType, idNumber)){
-				lCustomerRes.add(c);
+				lPartiesRes.add(c);
 			}
 		}
-		assertEquals(1,lCustomerRes.size());
-		return lCustomerRes.get(0);	
+		assertEquals(1,lPartiesRes.size());
+		return lPartiesRes.get(0);	
 	}
 
 	@Override
@@ -45,13 +45,13 @@ public class TransientCustomerSystem implements CustomerSystem {
 	}
 
 	@Override
-	public void addCustomer(Customer newCustomer) {
-		customers.add(newCustomer);
+	public void addParty(Party newPartie) {
+		parties.add(newPartie);
 	}
 
 	@Override
 	public int numberOfCustomers() {
-		return customers.size();
+		return parties.size();
 	}
 
 }
