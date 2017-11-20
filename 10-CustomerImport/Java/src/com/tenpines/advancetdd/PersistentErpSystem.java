@@ -76,6 +76,14 @@ public class PersistentErpSystem implements ErpSystem  {
 		return customer;
 	}
 	
+	@Override
+	public boolean existsCustomerIdentifiedAs(String idType, String idNumber) {
+		
+		List<Customer> customers = session.createCriteria(Customer.class,"c").
+				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+		return (customers.size() > 0);
+	}
+	
 	//Supplier
 	@Override
 	public void addSupplier(Supplier newSupplier) {
@@ -90,12 +98,18 @@ public class PersistentErpSystem implements ErpSystem  {
 	public Supplier supplierIdentifiedAs(String idType, String idNumber) {
 		
 		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
-				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
 		
-		
-		assertEquals(1,supliers.size());
 		Supplier suplier = supliers.get(0);
 		return suplier;
+	}
+	
+	@Override
+	public boolean existsSupplierIdentifiedAs(String idType, String idNumber) {
+		
+		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
+				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+		return supliers.size()>0;
 	}
 
 }

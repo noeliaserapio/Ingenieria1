@@ -39,7 +39,6 @@ public class TransientErpSystem implements ErpSystem {
 				lCustomerRes.add(c);
 			}
 		}
-		assertEquals(1,lCustomerRes.size());
 		return lCustomerRes.get(0);	
 	}
 
@@ -52,6 +51,16 @@ public class TransientErpSystem implements ErpSystem {
 	@Override
 	public int numberOfCustomers() {
 		return customers.size();
+	}
+	
+	@Override
+	public boolean existsCustomerIdentifiedAs(String idType, String idNumber) {
+		for(Customer c : customers){
+			if(c.isIdentifiedAs(idType, idNumber)){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -72,8 +81,19 @@ public class TransientErpSystem implements ErpSystem {
 				lSupplierRes.add(s);
 			}
 		}
-		assertEquals(1,lSupplierRes.size());
 		return lSupplierRes.get(0);	
 	}
+	
+	
+	@Override
+	public boolean existsSupplierIdentifiedAs(String idType, String idNumber) {
+		for(Supplier s : suppliers){
+			if(s.isIdentifiedAs(idType, idNumber)){
+				return true;
+			}
+		}
+		return false;
+	}
+
 
 }

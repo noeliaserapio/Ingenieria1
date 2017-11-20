@@ -41,4 +41,8 @@ public class Supplier extends Party {
 		customers.add(c);
 	}
 
+	public Set<Customer> getCustomers() {
+		return customers;
+	}
+
 }
