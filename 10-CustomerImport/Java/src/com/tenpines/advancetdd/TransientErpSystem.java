@@ -39,8 +39,11 @@ public class TransientErpSystem implements ErpSystem {
 				lCustomerRes.add(c);
 			}
 		}
-		assertEquals(1,lCustomerRes.size());
-		return lCustomerRes.get(0);	
+		if(lCustomerRes.size() == 1){
+			return lCustomerRes.get(0);	
+		}else{
+			throw new Error(ErpSystem.CUSTOMER_NOT_FOUND);
+		}
 	}
 
 

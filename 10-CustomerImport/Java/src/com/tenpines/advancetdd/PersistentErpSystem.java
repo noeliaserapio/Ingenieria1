@@ -71,9 +71,11 @@ public class PersistentErpSystem implements ErpSystem  {
 				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
 		
 		
-		assertEquals(1,customers.size());
-		Customer customer = customers.get(0);
-		return customer;
+		if(customers.size() == 1){
+			return customers.get(0);	
+		}else{
+			throw new Error(ErpSystem.CUSTOMER_NOT_FOUND);
+		}
 	}
 	
 	//Supplier

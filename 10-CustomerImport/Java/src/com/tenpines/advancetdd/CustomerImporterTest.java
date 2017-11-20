@@ -439,11 +439,22 @@ public class CustomerImporterTest {
 		}
 	}
 	
-	public StringReader newSupplierReader() {
+	public StringReader newSupplierWithNewCustomerReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,12345675\n");
-		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs \n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		
+		
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public StringReader newSupplierWithExistingCustomerReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("EC,D,5456774\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		
 		
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
@@ -451,8 +462,75 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void test01importsValidDataCorrec() throws IOException {
-		new SupplierImporter(system, newSupplierReader()).importSuppliers();	
+	public void testImportValidSupplierWithNewCustomerCorrectly() throws IOException {
+		new SupplierImporter(system, newSupplierWithNewCustomerReader()).importSuppliers();
+		
+		assertEquals(1,system.numberOfSuppliers());
+		assertSupplier1NewCustomerWasImportedCorrectly();
+	}
+
+	private void assertSupplier1NewCustomerWasImportedCorrectly() {
+		Supplier supplier;
+		Address address;
+		supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
+		assertSupplier1(supplier);
+
+		assertEquals(1, supplier.numberOfCustomers());
+		Customer customerS = (Customer) supplier.customerIdentifiedAs("D", "12345675");
+		assertEquals("Pepe",customerS.getFirstName());
+		assertEquals("Pedro",customerS.getLastName());
+		assertEquals("D",customerS.getIdentificationType());
+		assertEquals("12345675",customerS.getIdentificationNumber());
+		
+		assertEquals(1, system.numberOfCustomers());
+		Customer customer = (Customer) system.customerIdentifiedAs("D", "12345675");
+		assertEquals("Pepe",customer.getFirstName());
+		assertEquals("Pedro",customer.getLastName());
+		assertEquals("D",customer.getIdentificationType());
+		assertEquals("12345675",customer.getIdentificationNumber());
+		
+		assertEquals(1, supplier.numberOfAddresses());
+		address = supplier.addressAt("Irigoyen");
+		assertEquals(3322,address.getStreetNumber());
+		assertEquals("Olivos", address.getTown());
+		assertEquals(1636, address.getZipCode());
+		assertEquals("BsAs", address.getProvince());
+		
+	}
+
+	private void assertSupplier1(Supplier supplier) {
+		assertEquals("Supplier1",supplier.getName());
+		assertEquals("D",supplier.getIdentificationType());
+		assertEquals("12345678",supplier.getIdentificationNumber());
+	}
+	
+	private void assertSupplier1NotExistingCustomerWasImportedCorrectly() {
+		Supplier supplier;
+		Address address;
+		supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
+		assertSupplier1(supplier);
+
+//		assertEquals(0, supplier.numberOfCustomers());
+		
+//		assertEquals(0, system.numberOfCustomers());
+		
+//		assertEquals(0, supplier.numberOfAddresses());
+	
+	}
+	
+	@Test
+	public void testCanNotImportSupplierWithoutExistingCustomer() throws IOException {
+		SupplierImporter supplierI = new SupplierImporter(system, newSupplierWithExistingCustomerReader());
+		
+		try {
+			supplierI.importSuppliers();
+			fail();
+		}catch(Error e){
+			assertEquals(ErpSystem.CUSTOMER_NOT_FOUND, e.getMessage());
+			assertEquals(1,system.numberOfSuppliers());
+			assertSupplier1NotExistingCustomerWasImportedCorrectly();
+		}
+		
 	}
 	
 
