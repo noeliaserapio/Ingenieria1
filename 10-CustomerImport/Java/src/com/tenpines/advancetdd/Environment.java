@@ -3,7 +3,7 @@ package com.tenpines.advancetdd;
 public class Environment {
 
 	
-	public static CustomerSystem createCutomerSystem(){
+	public static ErpSystem createCutomerSystem(){
 		if(IntegrationEnvironment.isCurrent()){
 			return IntegrationEnvironment.createSystem();
 		}else if(DevelopEnvironment.isCurrent()){

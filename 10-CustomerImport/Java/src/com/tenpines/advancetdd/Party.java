@@ -8,6 +8,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Pattern;
+
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 
 @Entity  
@@ -17,8 +21,12 @@ public class Party {
 	@Id
 	@GeneratedValue
 	private long id;
-	@OneToOne(cascade = CascadeType.ALL)
-	protected Identification identification = new Identification();
+
+	@Pattern(regexp = "D|C")
+	private String identificationType;;
+
+	@NotEmpty
+	private String identificationNumber;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	protected Set<Address> addresses;
@@ -29,30 +37,6 @@ public class Party {
 		super();
 	}
 	
-	public long getId() {
-		return id;
-	}
-
-	public void setId(long id) {
-		this.id = id;
-	}
-
-	
-	public String getIdentificationType() {
-		return identification.getIdentificationType();
-	}
-
-	public void setIdentificationType(String identificationType) {
-		this.identification.setIdentificationType(identificationType);
-	}
-
-	public String getIdentificationNumber() {
-		return identification.getIdentificationNumber();
-	}
-
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identification.setIdentificationNumber(identificationNumber);
-	}
 	
 	public void addAddress(Address anAddress){
 		addresses.add(anAddress);
@@ -71,7 +55,27 @@ public class Party {
 	}
 
 	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
+		return identificationType.equals(idType) && identificationNumber.equals(idNumber);
 	}
+	
+	public String getIdentificationType() {
+		return identificationType;
+	}
+
+
+	public void setIdentificationType(String identificationType) {
+		this.identificationType = identificationType;
+	}
+
+
+	public String getIdentificationNumber() {
+		return identificationNumber;
+	}
+
+
+	public void setIdentificationNumber(String identificationNumber) {
+		this.identificationNumber = identificationNumber;
+	}
+
 
 }

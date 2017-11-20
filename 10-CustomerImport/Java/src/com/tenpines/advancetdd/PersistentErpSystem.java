@@ -11,10 +11,10 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.service.ServiceRegistry;
 import org.hibernate.service.ServiceRegistryBuilder;
 
-public class PersistentCustomerSystem implements CustomerSystem  {
+public class PersistentErpSystem implements ErpSystem  {
 	public Session session;
 
-	public PersistentCustomerSystem() {
+	public PersistentErpSystem() {
 	}
 
 	/* (non-Javadoc)
@@ -54,31 +54,48 @@ public class PersistentCustomerSystem implements CustomerSystem  {
 	public void commit() {
 		session.getTransaction().commit();
 	}
-	
-	/* (non-Javadoc)
-	 * @see com.tenpines.advancetdd.CustomerSystem#persistSystem(com.tenpines.advancetdd.Customer)
-	 */
+	//customer
 	@Override
-	public void addParty(Party newParti) {
-		session.persist(newParti);
+	public void addCustomer(Customer newCustom) {
+		session.persist(newCustom);
 	}
 	@Override
 	public int numberOfCustomers(){
-		List<Customer> customers = session.createCriteria(Party.class).list();
+		List<Customer> customers = session.createCriteria(Customer.class).list();
 		return customers.size();
 	}
 	@Override
-	public Party customerIdentifiedAs(String idType, String idNumber) {
-		List<Party> parties;
-		Party partie;
-		parties = session.createCriteria(Party.class,"c").
+	public Customer customerIdentifiedAs(String idType, String idNumber) {
+		
+		List<Customer> customers = session.createCriteria(Customer.class,"c").
+				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+		
+		
+		assertEquals(1,customers.size());
+		Customer customer = customers.get(0);
+		return customer;
+	}
+	
+	//Supplier
+	@Override
+	public void addSupplier(Supplier newSupplier) {
+		session.persist(newSupplier);
+	}
+	@Override
+	public int numberOfSuppliers(){
+		List<Supplier> supliers = session.createCriteria(Supplier.class).list();
+		return supliers.size();
+	}
+	@Override
+	public Supplier supplierIdentifiedAs(String idType, String idNumber) {
+		
+		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
 				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		
 		
-		assertEquals(1,parties.size());
-		partie = parties.get(0);
-		System.out.println(partie);
-		return partie;
+		assertEquals(1,supliers.size());
+		Supplier suplier = supliers.get(0);
+		return suplier;
 	}
 
 }

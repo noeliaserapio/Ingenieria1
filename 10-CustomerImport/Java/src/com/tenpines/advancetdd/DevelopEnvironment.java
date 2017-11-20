@@ -6,8 +6,8 @@ public class DevelopEnvironment extends Environment{
 		return !IntegrationEnvironment.isCurrent();
 	}
 	
-	public static CustomerSystem createSystem(){
-		return new TransientCustomerSystem();
+	public static ErpSystem createSystem(){
+		return new TransientErpSystem();
 	}
 
 }

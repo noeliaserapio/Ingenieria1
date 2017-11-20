@@ -5,12 +5,12 @@ import java.io.LineNumberReader;
 import java.io.Reader;
 
 
-public class CustomerImporter {
+public class SupplierImporter {
 
 	private LineNumberReader lineReader;
 	private String line;
 	private String[] records;
-	private Customer lastCustomer;
+	private Supplier lastSupplier;
 	
 	private ErpSystem system;
 	private Reader readStream;
@@ -37,27 +37,40 @@ public class CustomerImporter {
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 
 	
-	public CustomerImporter(ErpSystem system, Reader readStream) {
+	public SupplierImporter(ErpSystem system, Reader readStream) {
 		this.system = system;
 		this.readStream = readStream;
 	}
 	
-	public void importCustomers() throws IOException{
+	public void importSuppliers() throws IOException{
+		
 		lineReader = new LineNumberReader(readStream);
+
 		while (hasNextLine()) {
 			readLine();
 			parseRegister();	
-		}			
+		}
+			
+		readStream.close();
 	}
 
 	private void parseRegister() {
-		if (isCustomer()){
-			parseCustomer();
+		if(isSupplier()){
+			parseSupplier();
+		}else if (isExistCustomerSup()) {
+			parseCustomerSupExist();
+		}else if (isNewCustomerSup()) {
+			parseCustomerSupNew();
 		}else if (isAddress()) {
 			parseAddress();
 		}else{
 			throw new RuntimeException(INVALID_BEGIN_FORMAT_LINE);
 		}
+	}
+
+	private void validateNewSupplier() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void readLine() {
@@ -74,12 +87,42 @@ public class CustomerImporter {
 		addAddress();
 	}
 	
-	private void parseCustomer() {
-		validateNewCustomer();
-		lastCustomer = addNewCustomer();
+	private void parseSupplier() {
+		validateNewSupplier();
+		lastSupplier = addNewSupplier();
 	}
 	
+	private void parseCustomerSupExist() {
+		
+		Customer customerExis = (Customer) system.customerIdentifiedAs(records[1], records[2]);
+		 lastSupplier.addCustomer( customerExis);
+	}
+	
+	private void parseCustomerSupNew() {
+		validateNewCustomer();
+		 lastSupplier.addCustomer(addNewCustomer());
+	}
+	
+	
+	private Supplier addNewSupplier() {
+		Supplier newSupplier = new Supplier();
+		newSupplier.setName(records[1]);
+		newSupplier.setIdentificationType(records[2]);
+		newSupplier.setIdentificationNumber(records[3]);
+		persist(newSupplier);
+		return newSupplier;
+	}
 
+	private void addAddress() {
+		Address newAddress = new Address();
+		newAddress.setStreetName(records[1]);
+		newAddress.setStreetNumber(Integer.parseInt(records[2]));
+		newAddress.setTown(records[3]);
+		newAddress.setZipCode(Integer.parseInt(records[4]));	
+		newAddress.setProvince(records[5]);	
+		lastSupplier.addAddress(newAddress);
+	}
+	
 	private Customer addNewCustomer() {
 		Customer newCustomer;
 		newCustomer = new Customer();
@@ -91,22 +134,16 @@ public class CustomerImporter {
 		return newCustomer;
 	}
 
-	private void addAddress() {
-		Address newAddress = new Address();
-		newAddress.setStreetName(records[1]);
-		newAddress.setStreetNumber(Integer.parseInt(records[2]));
-		newAddress.setTown(records[3]);
-		newAddress.setZipCode(Integer.parseInt(records[4]));	
-		newAddress.setProvince(records[5]);	
-		lastCustomer.addAddress(newAddress);
+	private void persist(Supplier newSupplier) {
+		system.addSupplier(newSupplier);
 	}
-
+	
 	private void persist(Customer newCustomer) {
 		system.addCustomer(newCustomer);
 	}
 
 	private void validateAddress() {
-		if(lastCustomer == null) throw new RuntimeException(ADDRESS_WITHOUT_ASIGNATION);
+		if(lastSupplier == null) throw new RuntimeException(ADDRESS_WITHOUT_ASIGNATION);
 		
 		validateCantColumns(6);
 		if(records[1].length() == 0) throw new RuntimeException(INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY);
@@ -142,8 +179,15 @@ public class CustomerImporter {
 		return records[0].equals("A");
 	}
 
-	private boolean isCustomer() {
-		return records[0].equals("C");
+	private boolean isSupplier() {
+		return records[0].equals("S");
+	}
+
+	private boolean isExistCustomerSup() {
+		return records[0].equals("EC");
 	}
 	
+	private boolean isNewCustomerSup() {
+		return records[0].equals("NC");
+	}
 }
