@@ -180,7 +180,7 @@ public class CustomerImporterTest {
 			customerImporter.importCustomers();
 			fail();
 		}catch(RuntimeException e){
-			assertEquals(e.getMessage(), CustomerImporter.ADDRESS_WITHOUT_ASIGNATION);
+			assertEquals(e.getMessage(), Importer.ADDRESS_WITHOUT_ASIGNATION);
 			assertEquals(0, system.numberOfCustomers());
 		}
 	
@@ -208,7 +208,7 @@ public class CustomerImporterTest {
 		//	assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 			assertEquals(1, system.numberOfCustomers());
 		}
 	}
@@ -222,7 +222,7 @@ public class CustomerImporterTest {
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
@@ -235,7 +235,7 @@ public class CustomerImporterTest {
 			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
@@ -247,7 +247,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
 		}
 	}
 	
@@ -259,7 +259,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_NAME_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_NAME_EMPTY,e.getMessage());
 		}
 	}
 	
@@ -271,7 +271,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
 		}
 	}
 	
@@ -283,7 +283,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
 		}
 	}
 	
@@ -298,7 +298,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
 		}
 	}
 	
@@ -311,7 +311,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
 		}
 	}
 	
@@ -323,7 +323,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
 		}
 	}
 	
@@ -335,7 +335,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
 		}
 	}
 	
@@ -346,7 +346,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
@@ -357,7 +357,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
@@ -369,7 +369,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
 		}
 	}
 	
@@ -380,7 +380,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CUSTOMER_IDENTIFICATION_NUMBER,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
 		}
 	}
 	
@@ -391,7 +391,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
@@ -402,7 +402,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
@@ -413,7 +413,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
 		}
 	}
 	
@@ -424,7 +424,7 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE,e.getMessage());
 		}
 	}
 	
@@ -435,8 +435,21 @@ public class CustomerImporterTest {
 			new CustomerImporter(system, reader).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
-			assertEquals(CustomerImporter.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
+			assertEquals(Importer.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
 		}
+	}
+	
+
+
+	public StringReader validTipDocReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,D,22333444\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
 	}
 	
 	public StringReader newSupplierWithNewCustomerReader() {
@@ -444,19 +457,17 @@ public class CustomerImporterTest {
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,12345675\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
-		
-		
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
-	}
+		}		
+		
+		
 	
 	public StringReader newSupplierWithExistingCustomerReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("EC,D,5456774\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
-		
-		
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
@@ -510,11 +521,11 @@ public class CustomerImporterTest {
 		supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
 		assertSupplier1(supplier);
 
-//		assertEquals(0, supplier.numberOfCustomers());
+		assertEquals(0, supplier.numberOfCustomers());
 		
-//		assertEquals(0, system.numberOfCustomers());
+		assertEquals(0, system.numberOfCustomers());
 		
-//		assertEquals(0, supplier.numberOfAddresses());
+		assertEquals(0, supplier.numberOfAddresses());
 	
 	}
 	
@@ -526,11 +537,91 @@ public class CustomerImporterTest {
 			supplierI.importSuppliers();
 			fail();
 		}catch(Error e){
-			assertEquals(ErpSystem.CUSTOMER_NOT_FOUND, e.getMessage());
+			assertEquals(Importer.CUSTOMER_NOT_FOUND, e.getMessage());
 			assertEquals(1,system.numberOfSuppliers());
 			assertSupplier1NotExistingCustomerWasImportedCorrectly();
 		}
+	}
 		
+
+	public void testCanNotImportCustomerWithRepeatedDoc() throws IOException {
+		try {
+			new CustomerImporter(system, validTipDocReader()).importCustomers();
+			fail();
+		}catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_DOC_DUPLICATE,e.getMessage());
+		}
+	}
+
+	public StringReader validTipDocSupplReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("NC,Pepe,Pedro,D,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs \n");
+		writer.write("S,Sup1,D,12345678\n");
+		writer.write("NC,Pepe,Pedro,D,17645666\n");
+		writer.write("A,Alberti,1258,Olivos,1636,BsAs \n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	@Test
+	public void testCanNotImportSupplierWithRepeatedDoc() throws IOException {
+		try {
+			new SupplierImporter(system, validTipDocSupplReader()).importSuppliers();
+			fail();
+		}catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_DOC_DUPLICATE,e.getMessage());
+		}
+	}
+	
+	public StringReader newSupplierReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("NC,Pepe,Pedro,D,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		writer.write("S,Supplier2,D,123547698\n");
+		writer.write("NC,Pepe,Pedro,D,14785214\n");
+		writer.write("A,Irigoyen,1264,Olivos,1666,BsAs\n");
+		writer.write("EC,D,14785214\n");
+		writer.write("A,Misiones,1345,Olivos,1636,BsAs\n");
+		writer.write("S,Supplier3,D,12345432\n");
+		writer.write("NC,Pablo,Juan,D,12345678\n");
+		writer.write("A,Irigoyen,1264,Olivos,1636,BsAs\n");
+		writer.write("A,Misiones,1345,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public void assertSupplier1WasImportedCorrectly() {
+		Address address;
+		Supplier supp = system.supplierIdentifiedAs("D", "12345678");
+		assertEquals("Supplier1",supp.getName());
+		assertEquals("D",supp.getIdentificationType());
+		assertEquals("12345678",supp.getIdentificationNumber());
+
+		assertEquals(1,supp.numberOfAddresses());
+		address = supp.addressAt("Irigoyen");
+		assertEquals(3322,address.getStreetNumber());
+		assertEquals("Olivos", address.getTown());
+		assertEquals(1636, address.getZipCode());
+		assertEquals("BsAs", address.getProvince());
+		
+		assertEquals(1,supp.getCustomers().size());
+		Customer c =(Customer) supp.getCustomers().toArray()[0];
+		
+		assertEquals("Pepe",c.getFirstName());
+		assertEquals("Pedro",c.getLastName());
+		assertEquals("D",c.getIdentificationType());
+		assertEquals("12345666",c.getIdentificationNumber());
+		
+	}
+	
+	@Test
+	public void testImportsValidDataSupplierCorrec() throws IOException {
+		new SupplierImporter(system, newSupplierReader()).importSuppliers();
+		assertSupplier1WasImportedCorrectly();
+
 	}
 	
 

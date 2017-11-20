@@ -61,4 +61,8 @@ public class Supplier extends Party {
 		return lCustomerRes.get(0);	
 	}
 
+	public Set<Customer> getCustomers() {
+		return customers;
+	}
+
 }
