@@ -23,10 +23,10 @@ public class Party {
 	private long id;
 
 	@Pattern(regexp = "D|C")
-	private String identificationType;;
+	protected String identificationType;;
 
 	@NotEmpty
-	private String identificationNumber;
+	protected String identificationNumber;
 
 	@OneToMany(cascade = CascadeType.ALL)
 	protected Set<Address> addresses;

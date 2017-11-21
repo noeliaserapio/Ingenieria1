@@ -20,6 +20,15 @@ public class Customer extends Party {
 		addresses = new HashSet<Address>();
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Customer){
+			return (identificationType.equals(((Customer) obj).getIdentificationType()) && identificationNumber.equals(((Customer) obj).getIdentificationNumber())) ;
+		}else{
+			return false;
+		}
+	}
+	
 	public String getFirstName() {
 		return firstName;
 	}

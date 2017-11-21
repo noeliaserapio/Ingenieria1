@@ -574,21 +574,21 @@ public class CustomerImporterTest {
 			assertEquals(Importer.INVALID_FORMAT_DOC_DUPLICATE,e.getMessage());
 		}
 	}
-	
 	public StringReader newSupplierReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,12345666\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		writer.write("S,Supplier2,D,123547698\n");
-		writer.write("NC,Pepe,Pedro,D,14785214\n");
+		writer.write("NC,Carlos,Pedro,D,14785214\n");
 		writer.write("A,Irigoyen,1264,Olivos,1666,BsAs\n");
-		writer.write("EC,D,14785214\n");
+		writer.write("EC,D,12345666\n");
 		writer.write("A,Misiones,1345,Olivos,1636,BsAs\n");
 		writer.write("S,Supplier3,D,12345432\n");
-		writer.write("NC,Pablo,Juan,D,12345678\n");
+		writer.write("EC,D,14785214\n");
 		writer.write("A,Irigoyen,1264,Olivos,1636,BsAs\n");
-		writer.write("A,Misiones,1345,Olivos,1636,BsAs\n");
+		writer.write("A,Misiones,1345,Olivos,1638,BsAs\n");
+
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
@@ -617,13 +617,99 @@ public class CustomerImporterTest {
 		
 	}
 	
+	public void assertSupplier2WasImportedCorrectly() {
+		Address address;
+		Supplier supp = system.supplierIdentifiedAs("D", "123547698");
+		assertEquals("Supplier2",supp.getName());
+		assertEquals("D",supp.getIdentificationType());
+		assertEquals("123547698",supp.getIdentificationNumber());
+
+		assertEquals(2,supp.numberOfAddresses());
+		address = supp.addressAt("Irigoyen");
+		assertEquals(1264,address.getStreetNumber());
+		assertEquals("Olivos", address.getTown());
+		assertEquals(1666, address.getZipCode());
+		assertEquals("BsAs", address.getProvince());
+		
+		assertEquals(2,supp.getCustomers().size());
+		for(Customer cus :supp.getCustomers() ){
+			if(cus.getFirstName().equals("Carlos")){
+				assertEquals("Pedro",cus.getLastName());
+				assertEquals("D",cus.getIdentificationType());
+				assertEquals("14785214",cus.getIdentificationNumber());
+			}else{
+				assertEquals("Pepe",cus.getFirstName());
+				assertEquals("Pedro",cus.getLastName());
+				assertEquals("D",cus.getIdentificationType());
+				assertEquals("12345666",cus.getIdentificationNumber());	
+			}
+		}
+	}
+	
+	private void assertSupplier3WasImportedCorrectly() {
+		Supplier supp = system.supplierIdentifiedAs("D", "12345432");
+		assertEquals("Supplier3",supp.getName());
+		assertEquals("D",supp.getIdentificationType());
+		assertEquals("12345432",supp.getIdentificationNumber());
+
+		assertEquals(2,supp.numberOfAddresses());
+		
+		for(Address adr : supp.getAddresses() ){
+			if(adr.getStreetName().equals("Irigoyen")){
+				assertEquals(1264,adr.getStreetNumber());
+				assertEquals("Olivos", adr.getTown());
+				assertEquals(1636, adr.getZipCode());
+				assertEquals("BsAs", adr.getProvince());
+			}else{
+				assertEquals("Misiones",adr.getStreetName());
+				assertEquals("Olivos",adr.getTown());
+				assertEquals(1638,adr.getZipCode());
+				assertEquals("BsAs",adr.getProvince());	
+			}
+		}
+		
+		assertEquals(1,supp.getCustomers().size());
+		Customer c =(Customer) supp.getCustomers().toArray()[0];
+		
+		assertEquals("Carlos",c.getFirstName());
+		assertEquals("Pedro",c.getLastName());
+		assertEquals("D",c.getIdentificationType());
+		assertEquals("14785214",c.getIdentificationNumber());
+		
+	}
+	
+	
+	
 	@Test
 	public void testImportsValidDataSupplierCorrec() throws IOException {
 		new SupplierImporter(system, newSupplierReader()).importSuppliers();
 		assertSupplier1WasImportedCorrectly();
-
+		assertSupplier2WasImportedCorrectly();
+		assertSupplier3WasImportedCorrectly();
 	}
 	
+	public StringReader newSupplierCientRepetidoReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("NC,Pepe,Pedro,D,12345666\n");
+		writer.write("EC,D,12345666\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testNosePuedeAgregar() throws IOException {
+		try {
+			new SupplierImporter(system, newSupplierCientRepetidoReader()).importSuppliers();
+		} catch (RuntimeException e) {
+			assertEquals(Supplier.NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER,e.getMessage());
+		}
+	}
+
+
+	
+
 
 	
 

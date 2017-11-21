@@ -2,7 +2,10 @@ package com.tenpines.advancetdd;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -62,6 +65,14 @@ public class PersistentErpSystem implements ErpSystem  {
 	@Override
 	public int numberOfCustomers(){
 		List<Customer> customers = session.createCriteria(Customer.class).list();
+		for(Customer c1 :customers ){
+			for(Customer c2 :customers){
+				if(c1!=c2 && c1.equals(c2)){
+					customers.remove(c1);
+					break;
+				}
+			}
+		}	
 		return customers.size();
 	}
 	@Override
