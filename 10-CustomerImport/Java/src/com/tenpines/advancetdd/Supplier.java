@@ -9,10 +9,9 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
@@ -24,7 +23,7 @@ public class Supplier extends Party {
 	@NotEmpty
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private Set<Customer> customers;
 	
 	
@@ -50,12 +49,7 @@ public class Supplier extends Party {
 				throw new RuntimeException(NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER);
 			}
 		}
-		Customer existCustomer = new Customer();
-		existCustomer.setFirstName(c.getFirstName());
-		existCustomer.setLastName(c.getLastName());
-		existCustomer.setIdentificationType(c.getIdentificationType());
-		existCustomer.setIdentificationNumber(c.getIdentificationNumber());
-		customers.add(existCustomer);
+		customers.add(c);
 	}
 	
 	public int numberOfCustomers(){
