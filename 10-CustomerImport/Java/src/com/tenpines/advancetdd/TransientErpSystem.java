@@ -1,7 +1,5 @@
 package com.tenpines.advancetdd;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 

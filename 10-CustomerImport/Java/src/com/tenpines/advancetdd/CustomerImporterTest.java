@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 
 import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -517,7 +516,6 @@ public class CustomerImporterTest {
 	
 	private void assertSupplier1NotExistingCustomerWasImportedCorrectly() {
 		Supplier supplier;
-		Address address;
 		supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
 		assertSupplier1(supplier);
 

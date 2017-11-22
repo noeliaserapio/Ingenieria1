@@ -3,7 +3,6 @@ package com.tenpines.advancetdd;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
@@ -15,6 +14,10 @@ import org.hibernate.validator.constraints.NotEmpty;
 @IdClass(Identification.class)
 public class Identification implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1707524195227803326L;
 	@Id
 	@Pattern(regexp = "D|C")
 	private String identificationType;;

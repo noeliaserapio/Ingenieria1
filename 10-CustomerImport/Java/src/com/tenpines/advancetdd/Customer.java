@@ -23,7 +23,7 @@ public class Customer extends Party {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof Customer){
-			return (identificationType.equals(((Customer) obj).getIdentificationType()) && identificationNumber.equals(((Customer) obj).getIdentificationNumber())) ;
+			return (identification.getIdentificationType().equals(((Customer) obj).getIdentificationType()) && identification.getIdentificationNumber().equals(((Customer) obj).getIdentificationNumber())) ;
 		}else{
 			return false;
 		}

@@ -8,10 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 
 @Entity  
@@ -22,11 +18,8 @@ public class Party {
 	@GeneratedValue
 	private long id;
 
-	@Pattern(regexp = "D|C")
-	protected String identificationType;;
-
-	@NotEmpty
-	protected String identificationNumber;
+	@ManyToOne(cascade = CascadeType.ALL)
+	protected Identification identification = new Identification();
 
 	@OneToMany(cascade = CascadeType.ALL)
 	protected Set<Address> addresses;
@@ -55,26 +48,26 @@ public class Party {
 	}
 
 	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identificationType.equals(idType) && identificationNumber.equals(idNumber);
+		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
 	}
 	
 	public String getIdentificationType() {
-		return identificationType;
+		return identification.getIdentificationType();
 	}
 
 
 	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
+		this.identification.setIdentificationType(identificationType);
 	}
 
 
 	public String getIdentificationNumber() {
-		return identificationNumber;
+		return identification.getIdentificationNumber();
 	}
 
 
 	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
+		this.identification.setIdentificationNumber(identificationNumber);
 	}
 
 

@@ -1,11 +1,6 @@
 package com.tenpines.advancetdd;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -71,7 +66,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public Customer customerIdentifiedAs(String idType, String idNumber) {
 		
 		List<Customer> customers = session.createCriteria(Customer.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return customers.get(0);		
 	}
 	
@@ -79,7 +74,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public boolean existsCustomerIdentifiedAs(String idType, String idNumber) {
 		
 		List<Customer> customers = session.createCriteria(Customer.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return (customers.size() > 0);
 	}
 	
@@ -97,7 +92,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public Supplier supplierIdentifiedAs(String idType, String idNumber) {
 		
 		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		
 		Supplier suplier = supliers.get(0);
 		return suplier;
@@ -107,7 +102,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public boolean existsSupplierIdentifiedAs(String idType, String idNumber) {
 		
 		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return supliers.size()>0;
 	}
 
