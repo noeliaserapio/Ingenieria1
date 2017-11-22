@@ -860,6 +860,47 @@ public class CustomerImporterTest {
 		new SupplierImporter(system, validDataReaderEmpty()).importSuppliers();
 		assertEquals(0, system.numberOfSuppliers());			
 	}
+	
+	
+	
+	public StringReader supplierReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,Supplier1,D,12345666\n");
+		writer.write("EC,D,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		writer.write("S,Supplier2,D,123547698\n");
+		writer.write("NC,Carlos,Pedro,D,14785214\n");
+		writer.write("A,Irigoyen,1264,Olivos,1666,BsAs\n");
+		writer.write("EC,D,12345666\n");
+		writer.write("A,Misiones,1345,Olivos,1636,BsAs\n");
+		writer.write("S,Supplier3,D,12345432\n");
+		writer.write("EC,D,14785214\n");
+		writer.write("A,Irigoyen,1264,Olivos,1636,BsAs\n");
+		writer.write("A,Misiones,1345,Olivos,1638,BsAs\n");
+
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	public StringReader customerReader() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Pedro,D,12345666\n");
+		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
+		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
+		writer.write("C,Juan,Perez,C,23-25666777-9\n");
+		writer.write("A,Alem,1122,CABA,1001,CABA\n");
+
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testImportCustomerAndSupplierCorrectly() throws IOException {
+		new CustomerImporter(system, customerReader()).importCustomers();
+		new SupplierImporter(system, supplierReader()).importSuppliers();
+
+	}
 
 
 	

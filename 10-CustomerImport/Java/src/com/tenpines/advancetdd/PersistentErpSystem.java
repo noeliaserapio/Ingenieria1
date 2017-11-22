@@ -54,7 +54,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	}
 	//customer
 	@Override
-	public void addCustomer(Customer newCustom) {
+	public void persist(Customer newCustom) {
 		session.persist(newCustom);
 	}
 	@Override
@@ -80,7 +80,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	
 	//Supplier
 	@Override
-	public void addSupplier(Supplier newSupplier) {
+	public void persist(Supplier newSupplier) {
 		session.persist(newSupplier);
 	}
 	@Override

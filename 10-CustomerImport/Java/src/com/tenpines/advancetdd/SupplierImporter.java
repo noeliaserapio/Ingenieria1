@@ -55,12 +55,8 @@ public class SupplierImporter extends Importer {
 
 	protected Supplier addNewSupplier() {
 		Supplier newSupplier = new Supplier(records[1],records[2],records[3]);
-		persist(newSupplier);
+		system.persist(newSupplier);
 		return newSupplier;
-	}
-	
-	void persist(Supplier newSupplier) {
-		system.addSupplier(newSupplier);
 	}
 	
 	boolean isSupplier() {

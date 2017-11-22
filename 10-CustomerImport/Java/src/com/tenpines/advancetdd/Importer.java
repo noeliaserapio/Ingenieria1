@@ -47,7 +47,7 @@ public abstract class Importer {
 
 	protected Customer addNewCustomer() {
 		Customer newCustomer = new Customer(records[1],records[2],records[3],records[4]);
-		persist(newCustomer);
+		system.persist(newCustomer);
 		return newCustomer;
 	}
 
@@ -66,10 +66,6 @@ public abstract class Importer {
 		newAddress.setZipCode(Integer.parseInt(records[4]));	
 		newAddress.setProvince(records[5]);
 		return newAddress;
-	}
-
-	private void persist(Customer newCustomer) {
-		system.addCustomer(newCustomer);
 	}
 
 	private void validateAddress() {
