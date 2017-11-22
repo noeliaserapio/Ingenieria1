@@ -24,25 +24,21 @@ public class Supplier extends Party {
 	private String name;
 	
 	@ManyToMany(cascade = CascadeType.ALL)
-	private Set<Customer> customers;
+	private Set<Customer> customers = new HashSet<Customer>();
 	
 	
 	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
 	
-	public Supplier()
+	public Supplier(String name, String identificationType, String identificationNumber)
 	{
-		addresses = new HashSet<Address>();
-		customers= new HashSet<Customer>();
+		super(identificationType,identificationNumber);
+		this.name = name;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public void addCustomer(Customer c){
 		for(Customer cus : customers){
 			if(c.isIdentifiedAs(cus.getIdentificationType(), cus.getIdentificationNumber())){

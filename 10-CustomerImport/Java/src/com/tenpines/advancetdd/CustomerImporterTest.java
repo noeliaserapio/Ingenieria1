@@ -574,7 +574,7 @@ public class CustomerImporterTest {
 	}
 	public StringReader newSupplierReader() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("S,Supplier1,D,12345666\n");
 		writer.write("NC,Pepe,Pedro,D,12345666\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		writer.write("S,Supplier2,D,123547698\n");
@@ -593,10 +593,10 @@ public class CustomerImporterTest {
 	
 	public void assertSupplier1WasImportedCorrectly() {
 		Address address;
-		Supplier supp = system.supplierIdentifiedAs("D", "12345678");
+		Supplier supp = system.supplierIdentifiedAs("D", "12345666");
 		assertEquals("Supplier1",supp.getName());
 		assertEquals("D",supp.getIdentificationType());
-		assertEquals("12345678",supp.getIdentificationNumber());
+		assertEquals("12345666",supp.getIdentificationNumber());
 
 		assertEquals(1,supp.numberOfAddresses());
 		address = supp.addressAt("Irigoyen");

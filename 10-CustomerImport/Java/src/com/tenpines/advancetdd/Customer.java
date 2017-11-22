@@ -1,7 +1,5 @@
 package com.tenpines.advancetdd;
 
-import java.util.HashSet;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -15,34 +13,19 @@ public class Customer extends Party {
 	private String firstName;
 	@NotEmpty
 	private String lastName;
-	public Customer()
+	public Customer(String firstName, String lastName, String identificationType, String identificationNumber)
 	{
-		addresses = new HashSet<Address>();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if(obj instanceof Customer){
-			return (identification.getIdentificationType().equals(((Customer) obj).getIdentificationType()) && identification.getIdentificationNumber().equals(((Customer) obj).getIdentificationNumber())) ;
-		}else{
-			return false;
-		}
+		super(identificationType,identificationNumber);
+		this.firstName = firstName;
+		this.lastName = lastName;
 	}
 	
 	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
 	public String getLastName() {
 		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 }

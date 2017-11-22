@@ -52,11 +52,7 @@ public class Importer {
 	}
 
 	protected Customer addNewCustomer() {
-		Customer newCustomer = new Customer();
-		newCustomer.setFirstName(records[1]);
-		newCustomer.setLastName(records[2]);
-		newCustomer.setIdentificationType(records[3]);
-		newCustomer.setIdentificationNumber(records[4]);
+		Customer newCustomer = new Customer(records[1],records[2],records[3],records[4]);
 		persist(newCustomer);
 		return newCustomer;
 	}

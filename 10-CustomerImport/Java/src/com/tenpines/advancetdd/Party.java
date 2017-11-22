@@ -1,5 +1,6 @@
 package com.tenpines.advancetdd;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -18,16 +19,16 @@ public class Party {
 	@GeneratedValue
 	private long id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	protected Identification identification = new Identification();
+	@OneToOne(cascade = CascadeType.ALL)
+	protected Identification identification;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	protected Set<Address> addresses;
+	protected Set<Address> addresses = new HashSet<Address>();
 	
 	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
 
-	public Party() {
-		super();
+	public Party(String identificationType, String identificationNumber) {
+		identification = new Identification(identificationType,identificationNumber);
 	}
 	
 	
@@ -56,18 +57,8 @@ public class Party {
 	}
 
 
-	public void setIdentificationType(String identificationType) {
-		this.identification.setIdentificationType(identificationType);
-	}
-
-
 	public String getIdentificationNumber() {
 		return identification.getIdentificationNumber();
-	}
-
-
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identification.setIdentificationNumber(identificationNumber);
 	}
 
 
