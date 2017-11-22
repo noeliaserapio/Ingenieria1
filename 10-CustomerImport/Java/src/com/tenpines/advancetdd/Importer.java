@@ -52,21 +52,10 @@ public abstract class Importer {
 	}
 
 	private void addAddress() {
-		Address newAddress = setNewAddress();	
-		lastParty.addAddress(newAddress);
+		lastParty.addAddress(new Address(records[1],Integer.parseInt(records[2]),records[3],Integer.parseInt(records[4]),records[5]));
 	}
 
 
-
-	protected Address setNewAddress() {
-		Address newAddress = new Address();
-		newAddress.setStreetName(records[1]);
-		newAddress.setStreetNumber(Integer.parseInt(records[2]));
-		newAddress.setTown(records[3]);
-		newAddress.setZipCode(Integer.parseInt(records[4]));	
-		newAddress.setProvince(records[5]);
-		return newAddress;
-	}
 
 	private void validateAddress() {
 		if(lastParty == null) throw new RuntimeException(ADDRESS_WITHOUT_ASIGNATION);
