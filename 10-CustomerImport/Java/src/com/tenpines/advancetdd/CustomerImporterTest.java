@@ -2,7 +2,6 @@ package com.tenpines.advancetdd;
 
 import static org.junit.Assert.*;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -201,10 +200,7 @@ public class CustomerImporterTest {
 	public void test05eachLineShouldBeginWithCorrectLetter() throws IOException {
 		CustomerImporter customerImporter = new CustomerImporter(system, validDataReaderIncorrectLetter());
 		try {
-			customerImporter.importCustomers();
-		//	assertEquals(2,numberOfCustomers());
-			//assertPepeSanchezWasImportedCorrectly();
-		//	assertJuanPerezWasImportedCorrectly();	
+			customerImporter.importCustomers();	
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
@@ -216,9 +212,6 @@ public class CustomerImporterTest {
 	public void eachAddressLineShouldBeginWithUniqueA() throws IOException {
 		try {
 			new CustomerImporter(system, validDataReaderIncorrectLetterA()).importCustomers();
-			assertEquals(2,system.numberOfCustomers());
-			assertPepeSanchezWasImportedCorrectly();
-			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
@@ -229,209 +222,366 @@ public class CustomerImporterTest {
 	public void eachCustomerLineShouldBeginWithUniqueC() throws IOException {
 		try {
 			new CustomerImporter(system, validDataReaderIncorrectLetterC()).importCustomers();
-			assertEquals(2,system.numberOfCustomers());
-			assertPepeSanchezWasImportedCorrectly();
-			assertJuanPerezWasImportedCorrectly();	
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
 		}
 	}
 	
+	public StringReader inputIdentificationType() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n" +
+						"A,San Martin,3322,Olivos,1636,BsAs\n"+
+						"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+						"C,Juan,Perez,X,23-25666777-9\n"+
+						"A,Alem,1122,CABA,1001,CABA\n");
+							
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
-	public void identificationTypeCanOnlyBeDorC() throws IOException {
-		FileReader reader = new FileReader("resources/inputIdentificationType.txt");
-		
+	public void identificationTypeCanOnlyBeDorC() throws IOException {		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputIdentificationType()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
 		}
 	}
 	
+	public StringReader inputCustomerName() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,,Sanchez,D,22333444\n"+
+				"A,San Martin,3322,Olivos,1636,BsAs\n"+
+				"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+				"C,Juan,Perez,C,23-25666777-9\n"+
+				"A,Alem,1122,CABA,1001,CABA\n");
+							
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
-	public void customerNameCanNotBeEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerName.txt");
-		
+	public void customerNameCanNotBeEmpty() throws IOException {		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputCustomerName()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_NAME_EMPTY,e.getMessage());
 		}
 	}
 	
+	public StringReader inputCustomerLastName() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");
+							
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+
 	@Test
 	public void customerLastNameCanNotBeEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerLastName.txt");
-		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputCustomerLastName()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CUSTOMER_LAST_NAME_EMPTY,e.getMessage());
 		}
 	}
 	
+	public StringReader inputCustomerIdentificationNumber() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");
+							
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
 	public void customerIdentificationNumberCanNotBeEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerIdentificationNumber.txt");
-		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputCustomerIdentificationNumber()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
 		}
 	}
 	
-	
-	
+	public StringReader inputAddressStreetEmpty() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");
+							
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 
 	@Test
-	public void addressStreetNameEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressStreetEmpty.txt");
-		
+	public void addressStreetNameEmpty() throws IOException {		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputAddressStreetEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
 		}
 	}
-	
+	public StringReader inputAddressTownEmpty() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 	
 	@Test
 	public void addressTownEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressTownEmpty.txt");
-		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputAddressTownEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
 		}
 	}
-	
+	public StringReader inputStreetNumber() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,0,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 	@Test
 	public void addressStreetNumberLowValue() throws IOException {
-		FileReader reader = new FileReader("resources/inputStreetNumber.txt");
-		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputStreetNumber()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
 		}
 	}
+	public StringReader inputZipCode() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,999,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 	
 	@Test
 	public void addressZipCodeLowValue() throws IOException {
-		FileReader reader = new FileReader("resources/inputZipCode.txt");
-		
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputZipCode()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
 		}
 	}
 	
+	public StringReader inputCustomerLowCantColumns() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
 	public void customerLowCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerLowCantColumns.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputCustomerLowCantColumns()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
+	
+	public StringReader inputCustomerHighCantColums() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444,extraa\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	
 	@Test
 	public void customerHighCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputCustomerHighCantColums.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputCustomerHighCantColums()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
+	public StringReader customerLowDigitsIdentificationNumberWhenTypeIsD() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,2233344\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
 	
 	@Test
-	public void customerLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
-		FileReader reader = new FileReader("resources/customerLowDigitsIdentificationNumberWhenTypeIsD.txt");	
+	public void customertestLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, customerLowDigitsIdentificationNumberWhenTypeIsD() ).importCustomers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
+		}
+	}
+	public StringReader customerFormatIdentificationNumberWhenTypeIsC() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-97\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	
+	@Test
+	public void customertestFormatIdentificationNumberWhenTypeIsC() throws IOException {
+		try {
+			new CustomerImporter(system, customerFormatIdentificationNumberWhenTypeIsC()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
 		}
 	}
 	
-	@Test
-	public void customerFormatIdentificationNumberWhenTypeIsC() throws IOException {
-		FileReader reader = new FileReader("resources/customerFormatIdentificationNumberWhenTypeIsC.txt");	
-		try {
-			new CustomerImporter(system, reader).importCustomers();
-			fail();
-		} catch (RuntimeException e) {
-			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
-		}
+	public StringReader inputAddressLowCantColumns() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
 	}
 	
 	@Test
 	public void addressLowCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressLowCantColumns.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputAddressLowCantColumns()).importCustomers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+		}
+	}
+	public StringReader inputAddressHighCantColums() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+		"A,San Martin,3322,Olivos,1636,BsAs\n"+
+		"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+		"C,Juan,Perez,C,23-25666777-9\n"+
+		"A,Alem,1122,CABA,1001,CABA,extraa\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void addressHighCantColumns() throws IOException {
+		try {
+			new CustomerImporter(system, inputAddressHighCantColums()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
 		}
 	}
 	
-	@Test
-	public void addressHighCantColumns() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressHighCantColums.txt");	
-		try {
-			new CustomerImporter(system, reader).importCustomers();
-			fail();
-		} catch (RuntimeException e) {
-			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
-		}
+	public StringReader inputAddressFormatStreetNumber() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,streetNumber,CABA,1001,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
 	}
 	
 	@Test
 	public void addressFormatStreetNumber() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressFormatStreetNumber.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system,  inputAddressFormatStreetNumber()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
 		}
 	}
 	
+	public StringReader inputAddressFormatZipCode() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,zipCode,CABA\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
 	public void addressFormatZipCode() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressFormatZipCode.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputAddressFormatZipCode()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE,e.getMessage());
 		}
 	}
 	
+	public StringReader inputAddressFormatProvinceEmpty() {
+		StringWriter writer = new StringWriter();
+		writer.write("C,Pepe,Sanchez,D,22333444\n"+
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
+					"C,Juan,Perez,C,23-25666777-9\n"+
+					"A,Alem,1122,CABA,1001,\n");				
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
 	@Test
 	public void addressFormatProvinceEmpty() throws IOException {
-		FileReader reader = new FileReader("resources/inputAddressFormatProvinceEmpty.txt");	
 		try {
-			new CustomerImporter(system, reader).importCustomers();
+			new CustomerImporter(system, inputAddressFormatProvinceEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
@@ -458,7 +608,7 @@ public class CustomerImporterTest {
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
-		}		
+	}		
 		
 		
 	
@@ -697,12 +847,18 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testNosePuedeAgregar() throws IOException {
+	public void testNosePuedeAgregarClienteRepetidoParaSupplier() throws IOException {
 		try {
 			new SupplierImporter(system, newSupplierCientRepetidoReader()).importSuppliers();
 		} catch (RuntimeException e) {
 			assertEquals(Supplier.NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER,e.getMessage());
 		}
+	}
+	
+	@Test
+	public void testWithoutDataThereAreNotErrorSupplier() throws IOException {
+		new SupplierImporter(system, validDataReaderEmpty()).importSuppliers();
+		assertEquals(0, system.numberOfSuppliers());			
 	}
 
 

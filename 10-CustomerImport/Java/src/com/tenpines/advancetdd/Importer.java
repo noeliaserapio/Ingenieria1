@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 
-public class Importer {
+public abstract class Importer {
 
 	protected LineNumberReader lineReader;
 	private String line;
@@ -30,12 +30,6 @@ public class Importer {
 	public static final String INVALID_FORMAT_DOC_DUPLICATE = "The identification number is duplicate";
 	public static final String CUSTOMER_NOT_FOUND = "The customer doesn't exit";
 	
-	
-	public Importer() {
-		super();
-	}
-
-
 
 	protected void readLine() {
 		records = line.split(",");
