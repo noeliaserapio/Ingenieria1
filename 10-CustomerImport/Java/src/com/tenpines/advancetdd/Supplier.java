@@ -18,7 +18,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 @Table( name = "SUPPLIERS" )
 public class Supplier extends Party {
 
-	public static final String NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER = "No se puede agregar un cliente repetido para este supplier";
+	public static final String CAN_NOT_ADD_REPEATED_CLIENT_FOR_SUPPLIER = "Can not add repeated client for this supplier";
 
 	@NotEmpty
 	private String name;
@@ -42,7 +42,7 @@ public class Supplier extends Party {
 	public void addCustomer(Customer c){
 		for(Customer cus : customers){
 			if(c.isIdentifiedAs(cus.getIdentificationType(), cus.getIdentificationNumber())){
-				throw new RuntimeException(NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER);
+				throw new RuntimeException(CAN_NOT_ADD_REPEATED_CLIENT_FOR_SUPPLIER);
 			}
 		}
 		customers.add(c);

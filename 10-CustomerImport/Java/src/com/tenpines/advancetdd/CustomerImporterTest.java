@@ -17,7 +17,7 @@ public class CustomerImporterTest {
 
 	ErpSystem system;
 
-	public StringReader validDataReader() {
+	public StringReader validCustomerReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
@@ -155,7 +155,7 @@ public class CustomerImporterTest {
 
 	@Test
 	public void test01importsValidCustomersCorrectly() throws IOException {
-		new CustomerImporter(system, validDataReader()).importCustomers();
+		new CustomerImporter(system, validCustomerReader()).importCustomers();
 		
 		assertEquals(2,system.numberOfCustomers());
 		assertPepeSanchezWasImportedCorrectly();
@@ -239,23 +239,22 @@ public class CustomerImporterTest {
 	
 	public StringReader inputIdentificationType() {
 		StringWriter writer = new StringWriter();
-		writer.write("C,Pepe,Sanchez,D,22333444\n" +
-						"A,San Martin,3322,Olivos,1636,BsAs\n"+
-						"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-						"C,Juan,Perez,X,23-25666777-9\n"+
-						"A,Alem,1122,CABA,1001,CABA\n");
+		writer.write("C,Pepe,Sanchez,X,22333444\n" +
+					"A,San Martin,3322,Olivos,1636,BsAs\n"+
+					"A,Maipu,888,Florida,1122,Buenos Aires\n");
 							
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
 	@Test
-	public void identificationTypeCanOnlyBeDorC() throws IOException {		
+	public void test08IdentificationTypeCanOnlyBeDorC() throws IOException {		
 		try {
 			new CustomerImporter(system, inputIdentificationType()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
+			assertEquals(0, system.numberOfCustomers());
 		}
 	}
 	
@@ -272,12 +271,13 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void customerNameCanNotBeEmpty() throws IOException {		
+	public void test09CustomerNameCanNotBeEmpty() throws IOException {		
 		try {
 			new CustomerImporter(system, inputCustomerName()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_NAME_EMPTY,e.getMessage());
+			assertEquals(0, system.numberOfCustomers());
 		}
 	}
 	
@@ -291,7 +291,7 @@ public class CustomerImporterTest {
 	}
 
 	@Test
-	public void customerLastNameCanNotBeEmpty() throws IOException {
+	public void test10CustomerLastNameCanNotBeEmpty() throws IOException {
 		try {
 			new CustomerImporter(system, inputCustomerLastName()).importCustomers();
 			fail();
@@ -312,7 +312,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void customerIdentificationNumberCanNotBeEmpty() throws IOException {
+	public void test11CustomerIdentificationNumberCanNotBeEmpty() throws IOException {
 		try {
 			new CustomerImporter(system, inputCustomerIdentificationNumber()).importCustomers();
 			fail();
@@ -333,12 +333,13 @@ public class CustomerImporterTest {
 	}
 
 	@Test
-	public void addressStreetNameEmpty() throws IOException {		
+	public void test12AddressStreetNameEmpty() throws IOException {		
 		try {
 			new CustomerImporter(system, inputAddressStreetEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_STREET_NAME_EMPTY,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	public StringReader inputAddressTownEmpty() {
@@ -351,51 +352,50 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void addressTownEmpty() throws IOException {
+	public void test13AddressTownEmpty() throws IOException {
 		try {
 			new CustomerImporter(system, inputAddressTownEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_TOWN_EMPTY,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	public StringReader inputStreetNumber() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 					"A,San Martin,3322,Olivos,1636,BsAs\n"+
-					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-					"C,Juan,Perez,C,23-25666777-9\n"+
-					"A,Alem,0,CABA,1001,CABA\n");				
+					"A,Maipu,0,Florida,1122,Buenos Aires\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	@Test
-	public void addressStreetNumberLowValue() throws IOException {
+	public void test14AddressStreetNumberLowValue() throws IOException {
 		try {
 			new CustomerImporter(system, inputStreetNumber()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER_LOW,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	public StringReader inputZipCode() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 					"A,San Martin,3322,Olivos,1636,BsAs\n"+
-					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-					"C,Juan,Perez,C,23-25666777-9\n"+
-					"A,Alem,1122,CABA,999,CABA\n");				
+					"A,Maipu,888,Florida,999,Buenos Aires\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
 	@Test
-	public void addressZipCodeLowValue() throws IOException {
+	public void test15AddressZipCodeLowValue() throws IOException {
 		try {
 			new CustomerImporter(system, inputZipCode()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE_LOW,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	
@@ -408,7 +408,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void customerLowCantColumns() throws IOException {
+	public void test16CustomerLowCantColumns() throws IOException {
 		try {
 			new CustomerImporter(system, inputCustomerLowCantColumns()).importCustomers();
 			fail();
@@ -429,7 +429,7 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void customerHighCantColumns() throws IOException {
+	public void test17CustomerHighCantColumns() throws IOException {
 		try {
 			new CustomerImporter(system, inputCustomerHighCantColums()).importCustomers();
 			fail();
@@ -449,7 +449,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void customertestLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
+	public void test18CustomertestLowDigitsIdentificationNumberWhenTypeIsD() throws IOException {
 		try {
 			new CustomerImporter(system, customerLowDigitsIdentificationNumberWhenTypeIsD() ).importCustomers();
 			fail();
@@ -469,7 +469,7 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void customertestFormatIdentificationNumberWhenTypeIsC() throws IOException {
+	public void test19CustomertestFormatIdentificationNumberWhenTypeIsC() throws IOException {
 		try {
 			new CustomerImporter(system, customerFormatIdentificationNumberWhenTypeIsC()).importCustomers();
 			fail();
@@ -491,20 +491,19 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void addressLowCantColumns() throws IOException {
+	public void test20AddressLowCantColumns() throws IOException {
 		try {
 			new CustomerImporter(system, inputAddressLowCantColumns()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	public StringReader inputAddressHighCantColums() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 		"A,San Martin,3322,Olivos,1636,BsAs\n"+
-		"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-		"C,Juan,Perez,C,23-25666777-9\n"+
 		"A,Alem,1122,CABA,1001,CABA,extraa\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
@@ -512,12 +511,13 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void addressHighCantColumns() throws IOException {
+	public void test21AddressHighCantColumns() throws IOException {
 		try {
 			new CustomerImporter(system, inputAddressHighCantColums()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();	
 		}
 	}
 	
@@ -525,20 +525,19 @@ public class CustomerImporterTest {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 					"A,San Martin,3322,Olivos,1636,BsAs\n"+
-					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-					"C,Juan,Perez,C,23-25666777-9\n"+
 					"A,Alem,streetNumber,CABA,1001,CABA\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
 	@Test
-	public void addressFormatStreetNumber() throws IOException {
+	public void test22AddressFormatStreetNumber() throws IOException {
 		try {
 			new CustomerImporter(system,  inputAddressFormatStreetNumber()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_STREET_NUMBER,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	
@@ -546,20 +545,19 @@ public class CustomerImporterTest {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 					"A,San Martin,3322,Olivos,1636,BsAs\n"+
-					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-					"C,Juan,Perez,C,23-25666777-9\n"+
 					"A,Alem,1122,CABA,zipCode,CABA\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
 	@Test
-	public void addressFormatZipCode() throws IOException {
+	public void test23AddressFormatZipCode() throws IOException {
 		try {
 			new CustomerImporter(system, inputAddressFormatZipCode()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ZIP_CODE,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	
@@ -567,20 +565,19 @@ public class CustomerImporterTest {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n"+
 					"A,San Martin,3322,Olivos,1636,BsAs\n"+
-					"A,Maipu,888,Florida,1122,Buenos Aires\n"+
-					"C,Juan,Perez,C,23-25666777-9\n"+
 					"A,Alem,1122,CABA,1001,\n");				
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
 	@Test
-	public void addressFormatProvinceEmpty() throws IOException {
+	public void test24AddressFormatProvinceEmpty() throws IOException {
 		try {
 			new CustomerImporter(system, inputAddressFormatProvinceEmpty()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_ADDRESS_PROVINCE_EMPTY,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	
@@ -595,7 +592,7 @@ public class CustomerImporterTest {
 	}		
 	
 	@Test
-	public void testImportValidSupplierWithNewCustomerCorrectly() throws IOException {
+	public void test25ImportValidSupplierWithNewCustomerCorrectly() throws IOException {
 		new SupplierImporter(system, newSupplierWithNewCustomerReader()).importSuppliers();
 		assertEquals(1,system.numberOfSuppliers());
 		assertSupplier1NewCustomerWasImportedCorrectly();
@@ -645,14 +642,28 @@ public class CustomerImporterTest {
 		return fileReader;
 	}
 	
+	private void assertSupplier1NotExistingCustomerWasImportedCorrectly() {
+ 		Supplier supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
+  		assertSupplier1(supplier);
+  
+ 		assertEquals(0, supplier.numberOfCustomers());
+  		
+ 		assertEquals(0, system.numberOfCustomers());
+  		
+ 		assertEquals(0, supplier.numberOfAddresses());
+  	
+  	}
+	
 	@Test
-	public void testCanNotImportExistingCustomerInSupplierIfCustomerNotExist() throws IOException {
+	public void test26CanNotImportExistingCustomerInSupplierIfCustomerNotExist() throws IOException {
 		SupplierImporter supplierI = new SupplierImporter(system, newSupplierWithNoExistingCustomerReader());
 		try {
 			supplierI.importSuppliers();
 			fail();
 		}catch(Error e){
 			assertEquals(Importer.CUSTOMER_NOT_FOUND, e.getMessage());
+			assertEquals(1,system.numberOfSuppliers());
+  			assertSupplier1NotExistingCustomerWasImportedCorrectly();
 		}
 	}
 
@@ -761,7 +772,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testImportExistingClientsOfSuppliersCorrec() throws IOException {
+	public void test27ImportExistingClientsOfSuppliersCorrec() throws IOException {
 		new SupplierImporter(system, newSupplierReader()).importSuppliers();
 		assertSupplier1WasImportedCorrectly();
 		assertSupplier2WasImportedCorrectly();
@@ -802,7 +813,7 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testImportExistingClientsOfSuppliersImportedFromCustomerImporter() throws IOException {
+	public void test28ImportExistingClientsOfSuppliersImportedFromCustomerImporter() throws IOException {
 		new CustomerImporter(system, customerReader()).importCustomers();
 		new SupplierImporter(system, supplierReader()).importSuppliers();
 		assertSupplier1WasImportedCorrectly();
@@ -810,7 +821,7 @@ public class CustomerImporterTest {
 		assertSupplier3WasImportedCorrectly();
 	}
 
-	public StringReader newSupplierCientRepetidoReader() {
+	public StringReader newSupplierCientRepeatedReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,12345666\n");
@@ -819,40 +830,63 @@ public class CustomerImporterTest {
 		return fileReader;
 	}
 	
+	public void assertSupplier1WithClientNotRepeated() {
+		
+		assertEquals(1, system.numberOfSuppliers());
+		Supplier supp = system.supplierIdentifiedAs("D", "12345678");
+		assertEquals("Supplier1",supp.getName());
+		assertEquals("D",supp.getIdentificationType());
+		assertEquals("12345678",supp.getIdentificationNumber());
+
+		assertEquals(1, system.numberOfCustomers());
+		assertEquals(1,supp.numberOfCustomers());
+		Customer c = supp.customerIdentifiedAs("D", "12345666");
+		assertEquals("Pepe",c.getFirstName());
+		assertEquals("Pedro",c.getLastName());
+		assertEquals("D",c.getIdentificationType());
+		assertEquals("12345666",c.getIdentificationNumber());
+		
+	}
 	
 	@Test
-	public void testNosePuedeAgregarClienteRepetidoParaSupplier() throws IOException {
+	public void test30CanNotAddRepeatedClientForSupplier() throws IOException {
+		SupplierImporter supI = new SupplierImporter(system, newSupplierCientRepeatedReader());
 		try {
-			new SupplierImporter(system, newSupplierCientRepetidoReader()).importSuppliers();
+			supI.importSuppliers();
 		} catch (RuntimeException e) {
-			assertEquals(Supplier.NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER,e.getMessage());
+			assertEquals(Supplier.CAN_NOT_ADD_REPEATED_CLIENT_FOR_SUPPLIER,e.getMessage());
+			assertSupplier1WithClientNotRepeated();
 		}
 	}
 	
 	@Test
-	public void testWithoutDataThereAreNotErrorSupplier() throws IOException {
+	public void test31WithoutDataThereAreNotErrorSupplier() throws IOException {
 		new SupplierImporter(system, validDataReaderEmpty()).importSuppliers();
 		assertEquals(0, system.numberOfSuppliers());			
 	}
 	
 	
-	public StringReader validTipDocReader() {
+	public StringReader validDuplicateTipDocReader() {
 		StringWriter writer = new StringWriter();
 		writer.write("C,Pepe,Sanchez,D,22333444\n");
 		writer.write("A,San Martin,3322,Olivos,1636,BsAs\n");
-		writer.write("A,Maipu,888,Florida,1122,Buenos Aires\n");
 		writer.write("C,Juan,Perez,D,22333444\n");
 		writer.write("A,Alem,1122,CABA,1001,CABA\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
-	public void testCanNotImportCustomerWithRepeatedDoc() throws IOException {
+	@Test
+	public void test32CanNotImportCustomerWithRepeatedDoc() throws IOException {
+		CustomerImporter custI = new CustomerImporter(system, validDuplicateTipDocReader());
 		try {
-			new CustomerImporter(system, validTipDocReader()).importCustomers();
+			custI.importCustomers();
 			fail();
 		}catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_DOC_DUPLICATE,e.getMessage());
+			assertEquals(1, system.numberOfCustomers());
+			Customer c = system.customerIdentifiedAs("D", "22333444");
+			assertPepeSanchezAddressSanMartin(c);
 		}
 	}
 	
@@ -867,7 +901,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithIncorrectIdType() throws IOException {
+	public void test33CanNotImportSupplierWithIncorrectIdType() throws IOException {
 		try {
 			new SupplierImporter(system, newSupplierIconcorrectIdentificationType()).importSuppliers();
 			fail();
@@ -887,7 +921,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithNameEmpty() throws IOException {
+	public void test34CanNotImportSupplierWithNameEmpty() throws IOException {
 		try {
 			new SupplierImporter(system, newSupplierNameEmpty()).importSuppliers();
 			fail();
@@ -907,7 +941,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithIdNumberEmpty() throws IOException {
+	public void test35CanNotImportSupplierWithIdNumberEmpty() throws IOException {
 		try {
 			new SupplierImporter(system, newSupplierIdNumberEmpty()).importSuppliers();
 			fail();
@@ -927,7 +961,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithIdNumberInvalid() throws IOException {
+	public void test36CanNotImportSupplierWithIdNumberInvalid() throws IOException {
 		try {
 			new SupplierImporter(system, newSupplierIdNumberInvalid()).importSuppliers();
 			fail();
@@ -941,7 +975,6 @@ public class CustomerImporterTest {
 		StringWriter writer = new StringWriter();
 		writer.write("S,Supplier1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,12345666\n");
-		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs \n");
 		writer.write("S,Sup1,D,12345678\n");
 		writer.write("NC,Pepe,Pedro,D,17645666\n");
 		writer.write("A,Alberti,1258,Olivos,1636,BsAs \n");
@@ -950,21 +983,21 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithRepeatedDoc() throws IOException {
+	public void test37CanNotImportSupplierWithRepeatedDoc() throws IOException {
 		try {
 			new SupplierImporter(system, validTipDocSupplReader()).importSuppliers();
 			fail();
 		}catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_DOC_DUPLICATE,e.getMessage());
-			assertEquals(1, system.numberOfSuppliers());
+			assertSupplier1WithClientNotRepeated();
 		}
 	}
 	
 	
 	public StringReader supplierCustomExist() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345666\n");
-		writer.write("EC,D,12345666\n");
+		writer.write("S,SupName,D,22333444\n");
+		writer.write("EC,D,22333444\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
@@ -972,21 +1005,24 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testCannotImportSupplierWithExistentCustomer() throws IOException {
+	public void test38CanNotImportSupplierWithExistentCustomer() throws IOException {
 		try {
-			new CustomerImporter(system, customerReader()).importCustomers();
+			new CustomerImporter(system, validCustomerReader()).importCustomers();
 			new SupplierImporter(system, supplierCustomExist()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME,e.getMessage());
-			assertEquals(0, system.numberOfSuppliers());
+			assertEquals(2,system.numberOfCustomers());
+			assertPepeSanchezWasImportedCorrectly();
+			assertJuanPerezWasImportedCorrectly();		
+			assertEquals(0, system.numberOfSuppliers());			
 		}
 	}
 	
 	public StringReader customerSupplierExist() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345666\n");
-		writer.write("NC,Pepe,Pedro,D,12345666\n");
+		writer.write("S,Supplier1,D,12345678\n");
+		writer.write("NC,Pepe,Pedro,D,12345678\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
@@ -994,40 +1030,55 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testCannotImportnewCustomerWithExistentSupplier() throws IOException {
+	public void test39CanNotImportnewCustomerWithExistentSupplier() throws IOException {
 		try {
 			new SupplierImporter(system, customerSupplierExist()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME,e.getMessage());
+			assertEquals(1, system.numberOfSuppliers());
+			Supplier supplier = (Supplier) system.supplierIdentifiedAs("D","12345678");
+			assertSupplier1(supplier);
 			assertEquals(0, system.numberOfCustomers());
 		}
 	}
 	
 	public StringReader supplierExistCustomerInvalidIdType() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345668\n");
+		writer.write("S,Pepe,D,22333444\n");
 		writer.write("EC,x,12345666\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
 		return fileReader;
 	}
 	
+public void assertSupplierPepe() {
+		
+		assertEquals(1, system.numberOfSuppliers());
+		Supplier supp = system.supplierIdentifiedAs("D", "22333444");
+		assertEquals("Pepe",supp.getName());
+		assertEquals("D",supp.getIdentificationType());
+		assertEquals("22333444",supp.getIdentificationNumber());
+
+		assertEquals(0, supp.numberOfCustomers());
+		
+	}
 	
 	@Test
-	public void testCannotImportExistentCustomerInvalidIdType() throws IOException {
+	public void test40CanNotImportExistentCustomerInvalidIdType() throws IOException {
 		try {
-			new CustomerImporter(system, customerReader()).importCustomers();
+			new CustomerImporter(system, validCustomerReader()).importCustomers();
 			new SupplierImporter(system, supplierExistCustomerInvalidIdType()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
+			assertTotalCustomerAndOnlySupplierImport();
 		}
 	}
 	
 	public StringReader supplierExistCustomerEmptyIdNumber() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345668\n");
+		writer.write("S,Pepe,D,22333444\n");
 		writer.write("EC,D,\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
@@ -1036,19 +1087,20 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testCannotImportExistentCustomerEmptyIdNumber() throws IOException {
+	public void test41CanNotImportExistentCustomerEmptyIdNumber() throws IOException {
+		new CustomerImporter(system, validCustomerReader()).importCustomers();
 		try {
-			new CustomerImporter(system, customerReader()).importCustomers();
 			new SupplierImporter(system, supplierExistCustomerEmptyIdNumber()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
+			assertTotalCustomerAndOnlySupplierImport();
 		}
 	}
 	
 	public StringReader supplierExistCustomerInvalidIdNumber() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345668\n");
+		writer.write("S,Pepe,D,22333444\n");
 		writer.write("EC,D,idNumb\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
@@ -1057,19 +1109,20 @@ public class CustomerImporterTest {
 	
 	
 	@Test
-	public void testCannotImportExistentCustomerInvalidIdNumber() throws IOException {
+	public void test42CanNotImportExistentCustomerInvalidIdNumber() throws IOException {
 		try {
-			new CustomerImporter(system, customerReader()).importCustomers();
+			new CustomerImporter(system, validCustomerReader()).importCustomers();
 			new SupplierImporter(system, supplierExistCustomerInvalidIdNumber()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
+			assertTotalCustomerAndOnlySupplierImport();
 		}
 	}
 	
 	public StringReader supplierExistCustomerInvalidCantColumns() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,SupName,D,12345668\n");
+		writer.write("S,Pepe,D,22333444\n");
 		writer.write("EC,D,12345666,extra\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		StringReader fileReader = new StringReader(writer.getBuffer().toString());
@@ -1077,24 +1130,22 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCannotImportExistentCustomerInvalidCantColumns() throws IOException {
+	public void test43CanNotImportExistentCustomerInvalidCantColumns() throws IOException {
 		try {
-			new CustomerImporter(system, customerReader()).importCustomers();
+			new CustomerImporter(system, validCustomerReader()).importCustomers();
 			new SupplierImporter(system, supplierExistCustomerInvalidCantColumns()).importSuppliers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+			assertTotalCustomerAndOnlySupplierImport();
 		}
 	}
 
-
-	
-	
-	
-	
-
-
-	
-
+	private void assertTotalCustomerAndOnlySupplierImport() {
+		assertEquals(2,system.numberOfCustomers());
+		assertPepeSanchezWasImportedCorrectly();
+		assertJuanPerezWasImportedCorrectly();	
+		assertSupplierPepe();
+	}
 
 }
