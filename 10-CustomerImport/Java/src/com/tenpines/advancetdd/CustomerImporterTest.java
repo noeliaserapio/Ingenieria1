@@ -156,7 +156,7 @@ public class CustomerImporterTest {
 	}
 
 	@Test
-	public void test01importsValidDataCorrectly() throws IOException {
+	public void test01importsValidCustomersCorrectly() throws IOException {
 		new CustomerImporter(system, validDataReader()).importCustomers();
 
 		assertEquals(2,system.numberOfCustomers());
@@ -165,7 +165,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void test02WithoutDataThereAreNotError() throws IOException {
+	public void test02WithoutCustomerThereAreNotError() throws IOException {
 		new CustomerImporter(system, validDataReaderEmpty()).importCustomers();
 		
 		assertEquals(0, system.numberOfCustomers());
@@ -530,7 +530,7 @@ public class CustomerImporterTest {
 	}
 	
 	@Test
-	public void testCanNotImportSupplierWithoutExistingCustomer() throws IOException {
+	public void testCanNotImportExistingCustomerInSupplierIfCustomerNotExist() throws IOException {
 		SupplierImporter supplierI = new SupplierImporter(system, newSupplierWithExistingCustomerReader());
 		
 		try {
