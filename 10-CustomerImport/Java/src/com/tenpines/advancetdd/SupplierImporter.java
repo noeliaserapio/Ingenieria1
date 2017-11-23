@@ -37,10 +37,17 @@ public class SupplierImporter extends Importer {
 	}
 	
 	private void parseCustomerSupExist() {
-		if(!system.existsCustomerIdentifiedAs(records[1], records[2])) throw new Error(CUSTOMER_NOT_FOUND); 
-		
+		validateCustomerExist();
 		Customer customerExis = (Customer) system.customerIdentifiedAs(records[1], records[2]);
 		 ((Supplier) lastParty).addCustomer( customerExis);
+	}
+	
+	private void validateCustomerExist() {
+		validateCantColumns(3);	
+		if(!records[1].matches("D|C")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_TYPE);
+		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY);
+		if(!records[2].matches("[0-9]{1,9}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
+		if(!system.existsCustomerIdentifiedAs(records[1], records[2])) throw new Error(CUSTOMER_NOT_FOUND); 
 	}
 
 	private void parseCustomerSupNew() {

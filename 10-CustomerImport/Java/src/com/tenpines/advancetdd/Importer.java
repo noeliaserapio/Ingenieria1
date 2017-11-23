@@ -7,7 +7,7 @@ import java.io.Reader;
 public abstract class Importer {
 
 	protected LineNumberReader lineReader;
-	private String line;
+	protected String line;
 	protected String[] records;
 	protected ErpSystem system;
 	protected Reader readStream;
@@ -29,7 +29,7 @@ public abstract class Importer {
 	public static final String INVALID_FORMAT_ZIP_CODE = "The format of zip code is invalid";
 	public static final String INVALID_FORMAT_DOC_DUPLICATE = "The identification number is duplicate";
 	public static final String CUSTOMER_NOT_FOUND = "The customer doesn't exit";
-	
+	public static final String CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME = "Customer and supplier with same identification but different name";
 
 	protected void readLine() {
 		records = line.split(",");
@@ -82,7 +82,12 @@ public abstract class Importer {
 			if(!records[4].matches("[0-9]{2}-[0-9]{8}-[0-9]{1}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
 		}
 		if(system.existsCustomerIdentifiedAs(records[3], records[4])) throw new RuntimeException(INVALID_FORMAT_DOC_DUPLICATE);
-
+		if(system.existsSupplierIdentifiedAs(records[3], records[4])){
+			Supplier sup = system.supplierIdentifiedAs(records[3], records[4]);
+			if(!sup.getName().equals(records[1])){
+				throw new RuntimeException(CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME);
+			}
+		}
 	}
 	
 	protected void validateNewSupplier() {
@@ -92,10 +97,15 @@ public abstract class Importer {
 		if(line.endsWith(",")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY);		
 		if(!records[3].matches("[0-9]{1,9}")) throw new RuntimeException(INVALID_FORMAT_IDENTIFICATION_NUMBER);
 		if(system.existsSupplierIdentifiedAs(records[2], records[3])) throw new RuntimeException(INVALID_FORMAT_DOC_DUPLICATE);
-
+		if(system.existsCustomerIdentifiedAs(records[2], records[3])){
+			Customer cus = system.customerIdentifiedAs(records[2], records[3]);
+			if(!cus.getFirstName().equals(records[1])){
+				throw new RuntimeException(CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME);
+			}
+		}
 	}
 
-	private void validateCantColumns(int validCant) {
+	protected void validateCantColumns(int validCant) {
 		int cantColumn = records.length;
 		if(line.endsWith(",")) cantColumn++;
 		if(!(cantColumn == validCant)) throw new RuntimeException(INVALID_FORMAT_CANT_COLUMNS);
