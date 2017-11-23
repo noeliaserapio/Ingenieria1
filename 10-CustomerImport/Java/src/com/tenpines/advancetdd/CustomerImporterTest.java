@@ -647,7 +647,7 @@ public class CustomerImporterTest {
 	public void assertSupplier1WasImportedCorrectly() {
 		Address address;
 		Supplier supp = system.supplierIdentifiedAs("D", "12345666");
-		assertEquals("Supplier1",supp.getName());
+		assertEquals("Pepe",supp.getName());
 		assertEquals("D",supp.getIdentificationType());
 		assertEquals("12345666",supp.getIdentificationNumber());
 
@@ -731,7 +731,7 @@ public class CustomerImporterTest {
 	
 	public StringReader newSupplierReader() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,Supplier1,D,12345666\n");
+		writer.write("S,Pepe,D,12345666\n");
 		writer.write("NC,Pepe,Pedro,D,12345666\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		writer.write("S,Supplier2,D,123547698\n");
@@ -759,7 +759,7 @@ public class CustomerImporterTest {
 	
 	public StringReader supplierReader() {
 		StringWriter writer = new StringWriter();
-		writer.write("S,Supplier1,D,12345666\n");
+		writer.write("S,Pepe,D,12345666\n");
 		writer.write("EC,D,12345666\n");
 		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
 		writer.write("S,Supplier2,D,123547698\n");
@@ -947,6 +947,138 @@ public class CustomerImporterTest {
 			assertEquals(1, system.numberOfSuppliers());
 		}
 	}
+	
+	
+	public StringReader supplierCustomExist() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345666\n");
+		writer.write("EC,D,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testCannotImportSupplierWithExistentCustomer() throws IOException {
+		try {
+			new CustomerImporter(system, customerReader()).importCustomers();
+			new SupplierImporter(system, supplierCustomExist()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME,e.getMessage());
+			assertEquals(0, system.numberOfSuppliers());
+		}
+	}
+	
+	public StringReader customerSupplierExist() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345666\n");
+		writer.write("NC,Pepe,Pedro,D,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testCannotImportnewCustomerWithExistentSupplier() throws IOException {
+		try {
+			new SupplierImporter(system, customerSupplierExist()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.CUSTOMER_AND_SUPPLIER_SAME_IDENTIFICATION_DIFFERENT_NAME,e.getMessage());
+			assertEquals(0, system.numberOfCustomers());
+		}
+	}
+	
+	public StringReader supplierExistCustomerInvalidIdType() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345668\n");
+		writer.write("EC,x,12345666\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testCannotImportExistentCustomerInvalidIdType() throws IOException {
+		try {
+			new CustomerImporter(system, customerReader()).importCustomers();
+			new SupplierImporter(system, supplierExistCustomerInvalidIdType()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_TYPE,e.getMessage());
+		}
+	}
+	
+	public StringReader supplierExistCustomerEmptyIdNumber() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345668\n");
+		writer.write("EC,D,\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testCannotImportExistentCustomerEmptyIdNumber() throws IOException {
+		try {
+			new CustomerImporter(system, customerReader()).importCustomers();
+			new SupplierImporter(system, supplierExistCustomerEmptyIdNumber()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER_EMPTY,e.getMessage());
+		}
+	}
+	
+	public StringReader supplierExistCustomerInvalidIdNumber() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345668\n");
+		writer.write("EC,D,idNumb\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	
+	@Test
+	public void testCannotImportExistentCustomerInvalidIdNumber() throws IOException {
+		try {
+			new CustomerImporter(system, customerReader()).importCustomers();
+			new SupplierImporter(system, supplierExistCustomerInvalidIdNumber()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_IDENTIFICATION_NUMBER,e.getMessage());
+		}
+	}
+	
+	public StringReader supplierExistCustomerInvalidCantColumns() {
+		StringWriter writer = new StringWriter();
+		writer.write("S,SupName,D,12345668\n");
+		writer.write("EC,D,12345666,extra\n");
+		writer.write("A,Irigoyen,3322,Olivos,1636,BsAs\n");
+		StringReader fileReader = new StringReader(writer.getBuffer().toString());
+		return fileReader;
+	}
+	
+	@Test
+	public void testCannotImportExistentCustomerInvalidCantColumns() throws IOException {
+		try {
+			new CustomerImporter(system, customerReader()).importCustomers();
+			new SupplierImporter(system, supplierExistCustomerInvalidCantColumns()).importSuppliers();
+			fail();
+		} catch (RuntimeException e) {
+			assertEquals(Importer.INVALID_FORMAT_CANT_COLUMNS,e.getMessage());
+		}
+	}
+
+
+	
+	
+	
 	
 
 
