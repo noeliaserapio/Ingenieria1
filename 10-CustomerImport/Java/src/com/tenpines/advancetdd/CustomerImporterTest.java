@@ -196,34 +196,44 @@ public class CustomerImporterTest {
 	
 
 	@Test
-	public void test05eachLineShouldBeginWithCorrectLetter() throws IOException {
+	public void test05EachLineShouldBeginWithCorrectLetter() throws IOException {
 		CustomerImporter customerImporter = new CustomerImporter(system, validDataReaderIncorrectLetter());
 		try {
 			customerImporter.importCustomers();	
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
-			assertEquals(1, system.numberOfCustomers());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
+	}
+
+	private void assertCustomerPepeSanchezAddressSanMartin() {
+		assertEquals(1, system.numberOfCustomers());
+		assertCustomerPepeSanchez();
+		Customer customer = getCustomerPepeSanchez();	
+		assertEquals(1,customer.numberOfAddresses());
+		assertPepeSanchezAddressSanMartin(customer);
 	}
 	
 	@Test
-	public void eachAddressLineShouldBeginWithUniqueA() throws IOException {
+	public void test06EachAddressLineShouldBeginWithUniqueA() throws IOException {
 		try {
 			new CustomerImporter(system, validDataReaderIncorrectLetterA()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertCustomerPepeSanchezAddressSanMartin();
 		}
 	}
 	
 	@Test
-	public void eachCustomerLineShouldBeginWithUniqueC() throws IOException {
+	public void test07EachCustomerLineShouldBeginWithUniqueC() throws IOException {
 		try {
 			new CustomerImporter(system, validDataReaderIncorrectLetterC()).importCustomers();
 			fail();
 		} catch (RuntimeException e) {
 			assertEquals(Importer.INVALID_BEGIN_FORMAT_LINE,e.getMessage());
+			assertEquals(0, system.numberOfCustomers());
 		}
 	}
 	
