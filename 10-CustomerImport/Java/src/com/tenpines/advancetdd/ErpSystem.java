@@ -15,11 +15,11 @@ public interface ErpSystem {
 	
 	public boolean existsCustomerIdentifiedAs(String idType, String idNumber);
 
-	public void addCustomer(Customer newCustomer);
+	public void persist(Customer newCustomer);
 	
 	public int numberOfCustomers();
     //supplier
-	public void addSupplier(Supplier newSupplier);
+	public void persist(Supplier newSupplier);
 
 	public int numberOfSuppliers();
 

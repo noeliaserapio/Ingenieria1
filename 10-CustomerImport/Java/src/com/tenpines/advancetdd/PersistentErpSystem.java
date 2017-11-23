@@ -1,7 +1,5 @@
 package com.tenpines.advancetdd;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.List;
 
 import org.hibernate.Session;
@@ -56,7 +54,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	}
 	//customer
 	@Override
-	public void addCustomer(Customer newCustom) {
+	public void persist(Customer newCustom) {
 		session.persist(newCustom);
 	}
 	@Override
@@ -68,7 +66,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public Customer customerIdentifiedAs(String idType, String idNumber) {
 		
 		List<Customer> customers = session.createCriteria(Customer.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return customers.get(0);		
 	}
 	
@@ -76,13 +74,13 @@ public class PersistentErpSystem implements ErpSystem  {
 	public boolean existsCustomerIdentifiedAs(String idType, String idNumber) {
 		
 		List<Customer> customers = session.createCriteria(Customer.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return (customers.size() > 0);
 	}
 	
 	//Supplier
 	@Override
-	public void addSupplier(Supplier newSupplier) {
+	public void persist(Supplier newSupplier) {
 		session.persist(newSupplier);
 	}
 	@Override
@@ -94,7 +92,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public Supplier supplierIdentifiedAs(String idType, String idNumber) {
 		
 		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		
 		Supplier suplier = supliers.get(0);
 		return suplier;
@@ -104,7 +102,7 @@ public class PersistentErpSystem implements ErpSystem  {
 	public boolean existsSupplierIdentifiedAs(String idType, String idNumber) {
 		
 		List<Supplier> supliers = session.createCriteria(Supplier.class,"c").
-				add(Restrictions.eq("c.identificationNumber",  idNumber)).add(Restrictions.eq("c.identificationType",  idType)).list();
+				add(Restrictions.eq("c.identification.identificationNumber",  idNumber)).add(Restrictions.eq("c.identification.identificationType",  idType)).list();
 		return supliers.size()>0;
 	}
 

@@ -1,5 +1,6 @@
 package com.tenpines.advancetdd;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -8,10 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.Pattern;
-
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 
 @Entity  
@@ -22,19 +19,16 @@ public class Party {
 	@GeneratedValue
 	private long id;
 
-	@Pattern(regexp = "D|C")
-	private String identificationType;;
-
-	@NotEmpty
-	private String identificationNumber;
+	@OneToOne(cascade = CascadeType.ALL)
+	protected Identification identification;
 
 	@OneToMany(cascade = CascadeType.ALL)
-	protected Set<Address> addresses;
+	protected Set<Address> addresses = new HashSet<Address>();
 	
 	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
 
-	public Party() {
-		super();
+	public Party(String identificationType, String identificationNumber) {
+		identification = new Identification(identificationType,identificationNumber);
 	}
 	
 	
@@ -55,26 +49,16 @@ public class Party {
 	}
 
 	public boolean isIdentifiedAs(String idType, String idNumber) {
-		return identificationType.equals(idType) && identificationNumber.equals(idNumber);
+		return identification.getIdentificationType().equals(idType) && identification.getIdentificationNumber().equals(idNumber);
 	}
 	
 	public String getIdentificationType() {
-		return identificationType;
-	}
-
-
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
+		return identification.getIdentificationType();
 	}
 
 
 	public String getIdentificationNumber() {
-		return identificationNumber;
-	}
-
-
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
+		return identification.getIdentificationNumber();
 	}
 
 

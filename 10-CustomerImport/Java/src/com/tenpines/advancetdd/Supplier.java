@@ -9,40 +9,42 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.validator.constraints.NotEmpty;
 
 @Entity
 @Table( name = "SUPPLIERS" )
 public class Supplier extends Party {
 
+	public static final String NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER = "No se puede agregar un cliente repetido para este supplier";
+
 	@NotEmpty
 	private String name;
 	
-	@OneToMany(cascade = CascadeType.ALL)
-	private Set<Customer> customers;
+	@ManyToMany(cascade = CascadeType.ALL)
+	private Set<Customer> customers = new HashSet<Customer>();
 	
 	
 	public static final String ADDRESS_NOT_FOUND = "The address doesn't correspond to this customer";
 	
-	public Supplier()
+	public Supplier(String name, String identificationType, String identificationNumber)
 	{
-		addresses = new HashSet<Address>();
-		customers= new HashSet<Customer>();
+		super(identificationType,identificationNumber);
+		this.name = name;
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 	public void addCustomer(Customer c){
+		for(Customer cus : customers){
+			if(c.isIdentifiedAs(cus.getIdentificationType(), cus.getIdentificationNumber())){
+				throw new RuntimeException(NO_SE_PUEDE_AGREGAR_UN_CLIENTE_REPETIDO_PARA_ESTE_SUPPLIER);
+			}
+		}
 		customers.add(c);
 	}
 	
@@ -63,6 +65,10 @@ public class Supplier extends Party {
 
 	public Set<Customer> getCustomers() {
 		return customers;
+	}
+
+	public Set<Address> getAddresses() {
+		return addresses;
 	}
 
 }

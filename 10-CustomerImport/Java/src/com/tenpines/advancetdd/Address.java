@@ -26,51 +26,37 @@ public class Address {
 	@NotEmpty
 	private String province;
 	
-	public Address()
-	{}
-	
-	public Address(String streetName) {
+
+	public Address(String streetName, int streetNumber, String town, int zipCode, String province) {
 		this.streetName = streetName;
+		this.streetNumber = streetNumber;
+		this.town = town;
+		this.zipCode = zipCode;
+		this.province = province;
 	}
 
 	public String getStreetName() {
 		return streetName;
 	}
 	
-	public void setStreetName(String streetName) {
-		this.streetName = streetName;
-	}
-	
 	public int getStreetNumber() {
 		return streetNumber;
 	}
 	
-	public void setStreetNumber(int streetNumber) {
-		this.streetNumber = streetNumber;
-	}
 	public String getTown() {
 		return town;
 	}
 	
-	public void setTown(String town) {
-		this.town = town;
-	}
 	
 	public int getZipCode() {
 		return zipCode;
 	}
 	
-	public void setZipCode(int zipCode) {
-		this.zipCode = zipCode;
-	}
 	
 	public String getProvince() {
 		return province;
 	}
 	
-	public void setProvince(String province) {
-		this.province = province;
-	}
 
 	public boolean isAt(String streetName) {
 		return this.streetName.equals(streetName);

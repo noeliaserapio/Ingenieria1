@@ -1,7 +1,5 @@
 package com.tenpines.advancetdd;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class TransientErpSystem implements ErpSystem {
 
 
 	@Override
-	public void addCustomer(Customer newCustomer) {
+	public void persist(Customer newCustomer) {
 		customers.add(newCustomer);
 	}
 
@@ -64,7 +62,7 @@ public class TransientErpSystem implements ErpSystem {
 	}
 
 	@Override
-	public void addSupplier(Supplier newSupplier) {
+	public void persist(Supplier newSupplier) {
 		suppliers.add(newSupplier);
 	}
 

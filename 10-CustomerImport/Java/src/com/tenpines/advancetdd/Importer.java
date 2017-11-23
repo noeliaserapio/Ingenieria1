@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.LineNumberReader;
 import java.io.Reader;
 
-public class Importer {
+public abstract class Importer {
 
 	protected LineNumberReader lineReader;
 	private String line;
@@ -30,12 +30,6 @@ public class Importer {
 	public static final String INVALID_FORMAT_DOC_DUPLICATE = "The identification number is duplicate";
 	public static final String CUSTOMER_NOT_FOUND = "The customer doesn't exit";
 	
-	
-	public Importer() {
-		super();
-	}
-
-
 
 	protected void readLine() {
 		records = line.split(",");
@@ -52,35 +46,16 @@ public class Importer {
 	}
 
 	protected Customer addNewCustomer() {
-		Customer newCustomer = new Customer();
-		newCustomer.setFirstName(records[1]);
-		newCustomer.setLastName(records[2]);
-		newCustomer.setIdentificationType(records[3]);
-		newCustomer.setIdentificationNumber(records[4]);
-		persist(newCustomer);
+		Customer newCustomer = new Customer(records[1],records[2],records[3],records[4]);
+		system.persist(newCustomer);
 		return newCustomer;
 	}
 
 	private void addAddress() {
-		Address newAddress = setNewAddress();	
-		lastParty.addAddress(newAddress);
+		lastParty.addAddress(new Address(records[1],Integer.parseInt(records[2]),records[3],Integer.parseInt(records[4]),records[5]));
 	}
 
 
-
-	protected Address setNewAddress() {
-		Address newAddress = new Address();
-		newAddress.setStreetName(records[1]);
-		newAddress.setStreetNumber(Integer.parseInt(records[2]));
-		newAddress.setTown(records[3]);
-		newAddress.setZipCode(Integer.parseInt(records[4]));	
-		newAddress.setProvince(records[5]);
-		return newAddress;
-	}
-
-	private void persist(Customer newCustomer) {
-		system.addCustomer(newCustomer);
-	}
 
 	private void validateAddress() {
 		if(lastParty == null) throw new RuntimeException(ADDRESS_WITHOUT_ASIGNATION);

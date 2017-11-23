@@ -3,7 +3,6 @@ package com.tenpines.advancetdd;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 import javax.persistence.Table;
@@ -15,6 +14,14 @@ import org.hibernate.validator.constraints.NotEmpty;
 @IdClass(Identification.class)
 public class Identification implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1707524195227803326L;
+	private static long numId = 0;
+	
+	@Id
+	private Long iden;;
 	@Id
 	@Pattern(regexp = "D|C")
 	private String identificationType;;
@@ -22,40 +29,23 @@ public class Identification implements Serializable{
 	@NotEmpty
 	private String identificationNumber;
 
-
-
-	public Identification() {
-
-	}
+	public Identification() {;
+		this.iden = ++numId;
+	}	
 	
-	@Override
-	public String toString() {
-		return "Identification [" + ", identificationType=" + identificationType
-				+ ", identificationNumber=" + identificationNumber + "]";
-	}
-
 	public Identification(String identificationType, String identificationNumber) {
 		super();
 		this.identificationType = identificationType;
 		this.identificationNumber = identificationNumber;
+		this.iden = ++numId;
 	}	
-	
-
-
 
 	public String getIdentificationType() {
 		return identificationType;
 	}
 	
-	public void setIdentificationType(String identificationType) {
-		this.identificationType = identificationType;
-	}
-
 	public String getIdentificationNumber() {
 		return identificationNumber;
 	}
 
-	public void setIdentificationNumber(String identificationNumber) {
-		this.identificationNumber = identificationNumber;
-	}
 }
